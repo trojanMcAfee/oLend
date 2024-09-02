@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pendle/core-v2": "^5.0.4",
+    "dotenv": "^16.4.5",
     "hardhat": "^2.22.10"
   },
   "devDependencies": {

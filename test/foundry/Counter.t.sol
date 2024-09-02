@@ -1,24 +1,34 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// pragma solidity 0.8.26;
+pragma solidity >=0.8.23 <0.9.0;
+
 
 import {Test, console} from "../../lib/forge-std/src/Test.sol";
-import {Counter} from "../../contracts/Counter.sol";
+import {Storage} from "../../contracts/Storage.sol";
+import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandardizedYield.sol";
+import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 
-contract CounterTest is Test {
-    Counter public counter;
+
+contract RouterTest is Test, Storage {
+
+    IPAllActionV3 pendleRouter;
+    IPMarket sUSDeMarket;
+    
 
     function setUp() public {
-        counter = new Counter();
-        counter.setNumber(0);
+        vm.createSelectFork(vm.rpcUrl('ethereum'), 20665666);
+
+        pendleRouter = IPAllActionV3(router);
+        sUSDeMarket = IPMarket(pendleMarket);
     }
 
-    function test_Increment() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
-    }
+    
+    function test_router() public {
+        (IStandardizedYield SY, IPPrincipalToken PT,) = sUSDeMarket.readTokens();
 
-    function testFuzz_SetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+        console.log('SY: ', address(SY));
+        console.log('PT: ', address(PT));
     }
 }
