@@ -2,7 +2,6 @@
 pragma solidity >=0.8.23 <0.9.0;
 
 
-// import {StateVars} from "../../contracts/StateVars.sol";
 import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandardizedYield.sol";
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
@@ -12,17 +11,6 @@ import {console} from "../../lib/forge-std/src/Test.sol";
 
 
 contract RouterTest is Setup {    
-
-    // function setUp() public {
-    //     vm.createSelectFork(vm.rpcUrl('ethereum'), blockOwnerPT); //blockOwnerPT + 100
-
-    //     deal(address(sUSDe), address(this), 1_000 * 1e18);
-    //     sUSDe.approve(address(pendleRouter), type(uint).max);
-    //     YT.approve(address(pendleRouter), type(uint).max);
-
-    //     _setLabels();
-    // }
-
     
     function test_router() public {
         (IStandardizedYield SY, IPPrincipalToken PT,) = sUSDeMarket.readTokens();

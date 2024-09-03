@@ -7,6 +7,11 @@ import {StructGen} from "./StructGen.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 
+import {DiamondCutFacet} from "../contracts/facets/DiamondCutFacet.sol";
+import {DiamondLoupeFacet} from "../contracts/facets/DiamondLoupeFacet.sol";
+import {OwnershipFacet} from "../contracts/facets/OwnershipFacet.sol";
+import {Diamond} from "./Diamond.sol";
+
 
 contract StateVars is StructGen {
 
@@ -15,11 +20,19 @@ contract StateVars is StructGen {
 
     uint currentBlock = 20665666;
 
+    //PENDLE
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);
     IPMarket public constant sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
 
+    //ERC20s
     IERC20 public constant sUSDe = IERC20(0x9D39A5DE30e57443BfF2A8307A4256c8797A3497);
     IERC20 public constant sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
     IERC20 public constant YT = IERC20(0xdc02b77a3986da62C7A78FED73949C9767850809);
+
+    //DIAMOND
+    DiamondCutFacet cut;
+    DiamondLoupeFacet loupe;
+    OwnershipFacet owner;
+    Diamond OZ;
     
 }
