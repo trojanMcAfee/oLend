@@ -21,5 +21,6 @@ contract StateVars is StructGen {
     IERC20 public constant sUSDe = IERC20(0x9D39A5DE30e57443BfF2A8307A4256c8797A3497);
     IERC20 public constant sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
     IERC20 public constant YT = IERC20(0xdc02b77a3986da62C7A78FED73949C9767850809);
-
+    // "@nomiclabs/hardhat-ethers": "^2.0.2",
+    // "@nomiclabs/hardhat-waffle": "^2.0.1",
 }
