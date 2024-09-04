@@ -5,8 +5,7 @@ pragma solidity >=0.8.23 <0.9.0;
 import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandardizedYield.sol";
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
-// import { AaveV3Ethereum } from '@aave/address-book/data/markets';
-// import {AaveV3Ethereum} from "@bgd-labs/aave-address-book/AaveV2Ethereum.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -61,8 +60,34 @@ contract RouterTest is Setup {
         uint ethToSend = owner.balance;
         require(ethToSend == 100 * 1 ether, 'owner not enough balance');
 
+        IERC20 aWETH = IERC20(aWETHaddr);
+        uint aWETH_bal = aWETH.balanceOf(address(OZ));
+        console.log('aWETH_bal pre lend: ', aWETH_bal);
+
         vm.prank(owner);
-        OZ.mintOzUSD{value: ethToSend}();
+        OZ.lend{value: ethToSend}(true);
+
+        aWETH_bal = aWETH.balanceOf(address(OZ));
+        console.log('aWETH_bal post lend: ', aWETH_bal);
+        //------
+
+        (
+            uint256 totalCollateralBase,
+            uint256 totalDebtBase,
+            uint256 availableBorrowsBase,
+            uint256 currentLiquidationThreshold,
+            uint256 ltv,
+            uint256 healthFactor
+        ) = aavePool.getUserAccountData(address(OZ));
+
+        console.log('');
+        console.log('totalCollateralBase: ', totalCollateralBase);
+        console.log('totalDebtBase: ', totalDebtBase);
+        console.log('availableBorrowsBase: ', availableBorrowsBase);
+        console.log('currentLiquidationThreshold: ', currentLiquidationThreshold);
+        console.log('ltv: ', ltv);
+        console.log('healthFactor: ', healthFactor);
+
 
     }
 

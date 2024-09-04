@@ -11,5 +11,6 @@ interface ozIDiamond {
         bytes calldata _calldata
     ) external;
 
-    function mintOzUSD() external payable returns(uint);
+    function lend(bool isETH_) external payable;
+    function borrow(uint amount_) external returns(uint);
 }

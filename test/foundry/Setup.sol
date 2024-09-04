@@ -63,7 +63,7 @@ contract Setup is StateVars {
 
         //Deploy initial diamond cut
         AaveConfig memory aaveConfig = AaveConfig(aaveGW, aavePoolProvider);
-        ERC20s memory tokens = ERC20s(aWETH);
+        ERC20s memory tokens = ERC20s(aWETHaddr);
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
@@ -85,7 +85,7 @@ contract Setup is StateVars {
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) {
-            length = 1;
+            length = 2;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -100,7 +100,8 @@ contract Setup is StateVars {
             selectors[0] = ownership.transferOwnership.selector;
             selectors[1] = ownership.owner.selector;
         } else if (id_ == 2) {
-            selectors[0] = minter.mintOzUSD.selector;
+            selectors[0] = minter.lend.selector;
+            selectors[1] = minter.borrow.selector;
         }
        
 
