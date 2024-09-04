@@ -2,6 +2,7 @@
 pragma solidity 0.8.26;
 
 
+import {Test} from "../lib/forge-std/src/Test.sol";
 import {IERC20} from "../lib/forge-std/src/interfaces/IERC20.sol";
 import {StructGen} from "./StructGen.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
@@ -10,15 +11,22 @@ import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.
 import {DiamondCutFacet} from "../contracts/facets/DiamondCutFacet.sol";
 import {DiamondLoupeFacet} from "../contracts/facets/DiamondLoupeFacet.sol";
 import {OwnershipFacet} from "../contracts/facets/OwnershipFacet.sol";
+import {ozMinter} from "../contracts/facets/ozMinter.sol";
 import {Diamond} from "./Diamond.sol";
+import {DiamondInit} from "./upgradeInitializers/DiamondInit.sol";
+
+import {ozIDiamond} from "../contracts/interfaces/ozIDiamond.sol";
+
+import {console} from "../lib/forge-std/src/Test.sol";
 
 
-contract StateVars is StructGen {
+contract StateVars is StructGen, Test {
 
     address public constant ownerPT = 0x62178e35ccef8E00e33AFC95F12a590b40E51E04;
     uint blockOwnerPT = 20468410;
 
     uint currentBlock = 20665666;
+    address owner = makeAddr('owner');
 
     //PENDLE
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);
@@ -32,7 +40,10 @@ contract StateVars is StructGen {
     //DIAMOND
     DiamondCutFacet cut;
     DiamondLoupeFacet loupe;
-    OwnershipFacet owner;
-    Diamond OZ;
+    OwnershipFacet ownership;
+    Diamond ozDiamond;
+    ozIDiamond OZ;
+    DiamondInit initDiamond;
+    ozMinter minter;
     
 }

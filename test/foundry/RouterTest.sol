@@ -54,12 +54,16 @@ contract RouterTest is Setup {
         console.log('YT bal - post swap: ', YT.balanceOf(address(this)));
     }
 
-
     function test_ownerPT() public view {
         uint ptBalance = sUSDe_PT_26SEP.balanceOf(ownerPT);
         console.log('ptBalance - not 0: ', ptBalance);
         
         // console.log('isExpired: ', PT(address(sUSDe_PT_26SEP)).isExpired());
+    }
+
+    function test_diamond() public view {
+        uint num = OZ.sayHello();
+        console.log('num: ', num);
     }
     
 }
