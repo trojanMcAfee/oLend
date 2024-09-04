@@ -8,6 +8,8 @@ import {StructGen} from "./StructGen.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 
+import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
+
 import {DiamondCutFacet} from "../contracts/facets/DiamondCutFacet.sol";
 import {DiamondLoupeFacet} from "../contracts/facets/DiamondLoupeFacet.sol";
 import {OwnershipFacet} from "../contracts/facets/OwnershipFacet.sol";
@@ -31,6 +33,10 @@ contract StateVars is StructGen, Test {
     //PENDLE
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);
     IPMarket public constant sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
+
+    //AAVE
+    address public constant aaveGW = 0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9;
+    address public constant aavePoolProvider = 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e;
 
     //ERC20s
     IERC20 public constant sUSDe = IERC20(0x9D39A5DE30e57443BfF2A8307A4256c8797A3497);

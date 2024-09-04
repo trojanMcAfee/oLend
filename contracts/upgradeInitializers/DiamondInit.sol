@@ -14,21 +14,27 @@ import { IDiamondCut } from "../interfaces/IDiamondCut.sol";
 import { IERC173 } from "../interfaces/IERC173.sol";
 import { IERC165 } from "../interfaces/IERC165.sol";
 
-// It is expected that this contract is customized if you want to deploy your diamond
-// with data from a deployment script. Use the init function to initialize state variables
-// of your diamond. Add parameters to the init function if you need to.
+import {AppStorage} from "../AppStorage.sol";
 
 contract DiamondInit {    
 
+    AppStorage private s;
+
     // You can add parameters to this function in order to pass in 
     // data to set your own state variables
-    function init() external {
+    function init(AaveConfig memory aave_) external {
         // adding ERC165 data
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;
         ds.supportedInterfaces[type(IDiamondCut).interfaceId] = true;
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
+
+
+        s.aaveGW = aave_.aaveGW;
+        s.aavePoolProvider = aave_.aavePoolProvider;
+
+
 
         // add your own state variables 
         // EIP-2535 specifies that the `diamondCut` function takes two optional 

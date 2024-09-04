@@ -24,6 +24,8 @@ contract Setup is StateVars {
         sUSDe.approve(address(pendleRouter), type(uint).max);
         YT.approve(address(pendleRouter), type(uint).max);
 
+        payable(owner).transfer(100 * 1 ether);
+
         _runDiamondSetup();
 
         _setLabels();
@@ -58,12 +60,11 @@ contract Setup is StateVars {
             cuts[i] = _createCut(facets[i], i);     
         }
 
-        // IDiamondCut.FacetCut[] memory cuts = new IDiamondCut.FacetCut[](3);
-        // cuts[0] = _createCut(address(loupe), 0);
-        // cuts[1] = _createCut(address(ownership), 1);
-        // cuts[2] = _createCut(address(minter), 2);
-
         //Deploy initial diamond cut
+        1.- do aave struct initiazliation
+        2- put the aave struct in AppStorage
+        3- continue with ozMinter //************** */
+
         bytes memory initData = abi.encodeWithSelector(initDiamond.init.selector);
         vm.prank(owner);
         OZ.diamondCut(cuts, address(initDiamond), initData);

@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aave/core-v3": "^1.19.3",
+    "@aave/periphery-v3": "^2.5.2",
     "@pendle/core-v2": "^5.0.4"
   },
   "devDependencies": {

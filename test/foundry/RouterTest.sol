@@ -64,6 +64,7 @@ contract RouterTest is Setup {
     function test_diamond() public view {
         uint num = OZ.sayHello();
         console.log('num: ', num);
+
     }
     
 }
