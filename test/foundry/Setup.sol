@@ -45,10 +45,23 @@ contract Setup is StateVars {
         initDiamond = new DiamondInit();
 
         //Create initial FacetCuts
-        IDiamondCut.FacetCut[] memory cuts = new IDiamondCut.FacetCut[](3);
-        cuts[0] = _createCut(address(loupe), 0);
-        cuts[1] = _createCut(address(ownership), 1);
-        cuts[2] = _createCut(address(minter), 2);
+        address[3] memory facets = [
+            address(loupe),
+            address(ownership),
+            address(minter)
+        ];
+
+        uint length = facets.length;
+        IDiamondCut.FacetCut[] memory cuts = new IDiamondCut.FacetCut[](length);
+
+        for (uint i=0; i < length; i++) {
+            cuts[i] = _createCut(facets[i], i);     
+        }
+
+        // IDiamondCut.FacetCut[] memory cuts = new IDiamondCut.FacetCut[](3);
+        // cuts[0] = _createCut(address(loupe), 0);
+        // cuts[1] = _createCut(address(ownership), 1);
+        // cuts[2] = _createCut(address(minter), 2);
 
         //Deploy initial diamond cut
         bytes memory initData = abi.encodeWithSelector(initDiamond.init.selector);
