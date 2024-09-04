@@ -9,6 +9,7 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
+import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 import {DiamondCutFacet} from "../contracts/facets/DiamondCutFacet.sol";
 import {DiamondLoupeFacet} from "../contracts/facets/DiamondLoupeFacet.sol";
@@ -37,11 +38,13 @@ contract StateVars is StructGen, Test {
     //AAVE
     address public constant aaveGW = 0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9;
     address public constant aavePoolProvider = 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e;
+    IPool public constant aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
 
     //ERC20s
     IERC20 public constant sUSDe = IERC20(0x9D39A5DE30e57443BfF2A8307A4256c8797A3497);
     IERC20 public constant sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
     IERC20 public constant YT = IERC20(0xdc02b77a3986da62C7A78FED73949C9767850809);
+    address public constant aWETH = 0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8;
 
     //DIAMOND
     DiamondCutFacet cut;

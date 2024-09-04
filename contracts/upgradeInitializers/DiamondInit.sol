@@ -16,7 +16,8 @@ import { IERC165 } from "../interfaces/IERC165.sol";
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
-import {AppStorage} from "../AppStorage.sol";
+import {AppStorage, AaveConfig, ERC20s} from "../AppStorage.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract DiamondInit {    
 
@@ -24,7 +25,7 @@ contract DiamondInit {
 
     // You can add parameters to this function in order to pass in 
     // data to set your own state variables
-    function init(AaveConfig memory aave_) external {
+    function init(AaveConfig memory aave_, ERC20s memory tokens_) external {
         // adding ERC165 data
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;
@@ -34,6 +35,8 @@ contract DiamondInit {
 
         s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
+
+        s.aWETH = IERC20(tokens_.aWETH);
 
 
 

@@ -13,7 +13,7 @@ import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
 import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
-import {AaveConfig} from "../../contracts/AppStorage.sol";
+import {AaveConfig, ERC20s} from "../../contracts/AppStorage.sol";
 
 
 contract Setup is StateVars {
@@ -62,13 +62,14 @@ contract Setup is StateVars {
         }
 
         //Deploy initial diamond cut
-        1.- do aave struct initiazliation
-        2- put the aave struct in AppStorage
-        3- continue with ozMinter //************** */
-
         AaveConfig memory aaveConfig = AaveConfig(aaveGW, aavePoolProvider);
-;
-        bytes memory initData = abi.encodeWithSelector(initDiamond.init.selector, aaveConfig);
+        ERC20s memory tokens = ERC20s(aWETH);
+
+        bytes memory initData = abi.encodeWithSelector(
+            initDiamond.init.selector, 
+            aaveConfig,
+            tokens
+        );
         vm.prank(owner);
         OZ.diamondCut(cuts, address(initDiamond), initData);
     }
@@ -99,7 +100,7 @@ contract Setup is StateVars {
             selectors[0] = ownership.transferOwnership.selector;
             selectors[1] = ownership.owner.selector;
         } else if (id_ == 2) {
-            selectors[0] = minter.sayHello.selector;
+            selectors[0] = minter.mintOzUSD.selector;
         }
        
 

@@ -6,7 +6,7 @@ import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandard
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
 // import { AaveV3Ethereum } from '@aave/address-book/data/markets';
-import {AaveV3Ethereum} from "@bgd-labs/aave-address-book/AaveV2Ethereum.sol";
+// import {AaveV3Ethereum} from "@bgd-labs/aave-address-book/AaveV2Ethereum.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -56,24 +56,16 @@ contract RouterTest is Setup {
         console.log('YT bal - post swap: ', YT.balanceOf(address(this)));
     }
 
-    function test_ownerPT() public view {
-        uint ptBalance = sUSDe_PT_26SEP.balanceOf(ownerPT);
-        console.log('ptBalance - not 0: ', ptBalance);
-        
-        // console.log('isExpired: ', PT(address(sUSDe_PT_26SEP)).isExpired());
-    }
 
-    function test_diamond() public view {
+    function test_diamond() public {
         uint ethToSend = owner.balance;
         require(ethToSend == 100 * 1 ether, 'owner not enough balance');
 
-        uint num = OZ.{value: ethToSend}sayHello();
-        console.log('num: ', num);
+        vm.prank(owner);
+        OZ.mintOzUSD{value: ethToSend}();
+
     }
 
-    function test_x() public view {
-        address dai = AaveV3Ethereum.tokens.aTokens.DAI;
-        console.log('dai: ', dai);
-    }
+    
     
 }

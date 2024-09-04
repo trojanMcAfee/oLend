@@ -11,5 +11,5 @@ interface ozIDiamond {
         bytes calldata _calldata
     ) external;
 
-    function sayHello() external payable returns(uint);
+    function mintOzUSD() external payable returns(uint);
 }
