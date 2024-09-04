@@ -14,6 +14,8 @@ import { IDiamondCut } from "../interfaces/IDiamondCut.sol";
 import { IERC173 } from "../interfaces/IERC173.sol";
 import { IERC165 } from "../interfaces/IERC165.sol";
 
+import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
+import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {AppStorage} from "../AppStorage.sol";
 
 contract DiamondInit {    
@@ -30,9 +32,8 @@ contract DiamondInit {
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
 
-
-        s.aaveGW = aave_.aaveGW;
-        s.aavePoolProvider = aave_.aavePoolProvider;
+        s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
+        s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
 
 
 

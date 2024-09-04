@@ -13,6 +13,7 @@ import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
 import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
+import {AaveConfig} from "../../contracts/AppStorage.sol";
 
 
 contract Setup is StateVars {
@@ -65,7 +66,9 @@ contract Setup is StateVars {
         2- put the aave struct in AppStorage
         3- continue with ozMinter //************** */
 
-        bytes memory initData = abi.encodeWithSelector(initDiamond.init.selector);
+        AaveConfig memory aaveConfig = AaveConfig(aaveGW, aavePoolProvider);
+;
+        bytes memory initData = abi.encodeWithSelector(initDiamond.init.selector, aaveConfig);
         vm.prank(owner);
         OZ.diamondCut(cuts, address(initDiamond), initData);
     }

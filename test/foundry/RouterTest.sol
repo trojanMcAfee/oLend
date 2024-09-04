@@ -5,6 +5,8 @@ pragma solidity >=0.8.23 <0.9.0;
 import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandardizedYield.sol";
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
+// import { AaveV3Ethereum } from '@aave/address-book/data/markets';
+import {AaveV3Ethereum} from "@bgd-labs/aave-address-book/AaveV2Ethereum.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -62,9 +64,16 @@ contract RouterTest is Setup {
     }
 
     function test_diamond() public view {
-        uint num = OZ.sayHello();
-        console.log('num: ', num);
+        uint ethToSend = owner.balance;
+        require(ethToSend == 100 * 1 ether, 'owner not enough balance');
 
+        uint num = OZ.{value: ethToSend}sayHello();
+        console.log('num: ', num);
+    }
+
+    function test_x() public view {
+        address dai = AaveV3Ethereum.tokens.aTokens.DAI;
+        console.log('dai: ', dai);
     }
     
 }

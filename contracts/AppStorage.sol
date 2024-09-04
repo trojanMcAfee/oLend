@@ -12,3 +12,8 @@ struct AppStorage {
 
 
 }
+
+struct AaveConfig {
+    address aaveGW;
+    address aavePoolProvider;
+}
