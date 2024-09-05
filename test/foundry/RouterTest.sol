@@ -39,21 +39,39 @@ contract RouterTest is Setup {
         //Mint PT and YT
         uint sUSDeBalance = sUSDe.balanceOf(address(this));
         require(sUSDeBalance > 0, 'sUSDeBalance less than 0');
+        console.log('sUSDeBalance pre everything: ', sUSDeBalance);
 
         (uint256 netPyOut,) =
             pendleRouter.mintPyFromToken(address(this), address(YT), 0, createTokenInputStruct(address(sUSDe), sUSDeBalance));
 
         uint exactYtIn = YT.balanceOf(address(this));
+        console.log('');
         console.log('netPyOut - post mint: ', netPyOut);
         console.log('YT - post mint: ', exactYtIn);
+        
+        uint balancePT = sUSDe_PT_26SEP.balanceOf(address(this));
+        console.log('sUSDe_PT_26SEP bal: ', balancePT);
 
         console.log('');
 
         //Swap YT for PT
-        pendleRouter.swapExactYtForPt(address(this), address(sUSDeMarket), exactYtIn, 0, defaultApprox);
-        console.log('PT bal - post swap: ', sUSDe_PT_26SEP.balanceOf(address(this)));
-        console.log('YT bal - post swap: ', YT.balanceOf(address(this)));
+        // pendleRouter.swapExactYtForPt(address(this), address(sUSDeMarket), exactYtIn, 0, defaultApprox);
+        // console.log('PT bal - post swap: ', sUSDe_PT_26SEP.balanceOf(address(this)));
+        // console.log('YT bal - post swap: ', YT.balanceOf(address(this)));
+
+        //Swap PT for token
+        console.log('sUSDe bal - pre swap: ', sUSDe.balanceOf(address(this)));
+        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
+
+        (uint256 netTokenOut,,) = pendleRouter.swapExactPtForToken(
+            address(this), address(sUSDeMarket), balancePT, createTokenOutputStruct(address(sUSDe), 0), emptyLimit
+        );
+
+        console.log('netTokenOut: ', netTokenOut);   
+        console.log('sUSDe bal - post swap: ', sUSDe.balanceOf(address(this)));
     }
+
+
 
 
     function test_diamond() public {

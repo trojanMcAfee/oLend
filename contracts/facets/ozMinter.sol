@@ -32,7 +32,7 @@ contract ozMinter is StructGen {
 
         IPool(aavePool).borrow(address(s.USDC), amount_, s.VARIABLE_RATE, 0, address(this));
 
-        s.USDC.safeApprove(address(s.pendleRouter), amount_); //<----- here
+        // s.USDC.safeApprove(address(s.pendleRouter), amount_); //<----- here
 
         uint minPTout = 0;
         (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
