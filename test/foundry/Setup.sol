@@ -13,7 +13,9 @@ import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
 import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
-import {AaveConfig, ERC20s} from "../../contracts/AppStorage.sol";
+import {AaveConfig, ERC20s, PendleConfig} from "../../contracts/AppStorage.sol";
+
+import "forge-std/console.sol";
 
 
 contract Setup is StateVars {
@@ -62,13 +64,15 @@ contract Setup is StateVars {
         }
 
         //Deploy initial diamond cut
-        AaveConfig memory aaveConfig = AaveConfig(aaveGW, aavePoolProvider);
-        ERC20s memory tokens = ERC20s(aWETHaddr, USDCaddr);
+        AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
+        ERC20s memory tokens = ERC20s(aWETHaddr, USDCaddr, address(sUSDe));
+        PendleConfig memory pendle = PendleConfig(address(pendleRouter), address(sUSDeMarket));
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
-            aaveConfig,
-            tokens
+            aave,
+            tokens,
+            pendle
         );
         vm.prank(owner);
         OZ.diamondCut(cuts, address(initDiamond), initData);
@@ -120,6 +124,11 @@ contract Setup is StateVars {
         vm.label(ownerPT, 'ownerPT');
         vm.label(address(sUSDe), 'sUSDe');
         vm.label(address(YT), 'sUSDe_YT_26SEP');
+        vm.label(aWETHaddr, 'aWETH');
+        vm.label(address(aavePool), 'aavePool');
+        vm.label(USDCaddr, 'USDCproxy');
+        vm.label(0x43506849D7C04F9138D1A2050bbF3A0c054402dd, 'USDCimpl');
+        vm.label(0xbFA3aAD535e1b996396698f89FFeC7ada0df17E8, 'ActionSwapPTV3_pendle');
     }
 
 

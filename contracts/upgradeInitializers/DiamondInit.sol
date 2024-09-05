@@ -16,16 +16,24 @@ import { IERC165 } from "../interfaces/IERC165.sol";
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
-import {AppStorage, AaveConfig, ERC20s} from "../AppStorage.sol";
+import {AppStorage, AaveConfig, ERC20s, PendleConfig} from "../AppStorage.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+
+import {console} from "../../lib/forge-std/src/Test.sol";
+
 
 contract DiamondInit {    
 
     AppStorage private s;
 
-    // You can add parameters to this function in order to pass in 
-    // data to set your own state variables
-    function init(AaveConfig memory aave_, ERC20s memory tokens_) external {
+    
+    function init(
+        AaveConfig memory aave_, 
+        ERC20s memory tokens_,
+        PendleConfig memory pendle_
+    ) external {
         // adding ERC165 data
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;
@@ -33,12 +41,22 @@ contract DiamondInit {
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
 
+        //Aave
         s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
+        console.log('aavePoolProvider in init: ', aave_.aavePoolProvider);
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
+        console.log('s.aavePoolProvider: ', address(s.aavePoolProvider));
         s.VARIABLE_RATE = 2;
 
+        //Pendle
+        s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);
+        s.sUSDeMarket = IPMarket(pendle_.sUSDeMarket);
+
+        //ERC20s
         s.aWETH = IERC20(tokens_.aWETH);
         s.USDC = IERC20(tokens_.USDC);
+        s.sUSDe = IERC20(tokens_.sUSDe);
+
 
 
 

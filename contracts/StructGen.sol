@@ -4,7 +4,11 @@ pragma solidity >=0.8.23 <0.9.0;
 import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 
+import {AppStorage} from "./AppStorage.sol";
+
 abstract contract StructGen {
+    AppStorage internal s;
+
     // EmptySwap means no swap aggregator is involved
     SwapData public emptySwap;
 
