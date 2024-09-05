@@ -35,8 +35,10 @@ contract DiamondInit {
 
         s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
+        s.VARIABLE_RATE = 2;
 
         s.aWETH = IERC20(tokens_.aWETH);
+        s.USDC = IERC20(tokens_.USDC);
 
 
 

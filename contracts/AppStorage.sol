@@ -10,9 +10,11 @@ struct AppStorage {
     //AAVE 
     IWrappedTokenGatewayV3 aaveGW;
     IPoolAddressesProvider aavePoolProvider;
+    uint VARIABLE_RATE;
 
     //ERC20s
     IERC20 aWETH;
+    IERC20 USDC;
 
 
 }
@@ -24,4 +26,5 @@ struct AaveConfig {
 
 struct ERC20s {
     address aWETH;
+    address USDC;
 }

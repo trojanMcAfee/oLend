@@ -12,5 +12,5 @@ interface ozIDiamond {
     ) external;
 
     function lend(bool isETH_) external payable;
-    function borrow(uint amount_) external returns(uint);
+    function borrow(uint amount_) external;
 }

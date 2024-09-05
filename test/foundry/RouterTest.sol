@@ -65,7 +65,7 @@ contract RouterTest is Setup {
         console.log('aWETH_bal pre lend: ', aWETH_bal);
 
         vm.prank(owner);
-        OZ.lend{value: ethToSend}(true);
+        OZ.lend{value: 1 ether}(true);
 
         aWETH_bal = aWETH.balanceOf(address(OZ));
         console.log('aWETH_bal post lend: ', aWETH_bal);
@@ -87,6 +87,14 @@ contract RouterTest is Setup {
         console.log('currentLiquidationThreshold: ', currentLiquidationThreshold);
         console.log('ltv: ', ltv);
         console.log('healthFactor: ', healthFactor);
+
+        console.log('');
+        console.log('aUSDC bal - pre borrow - 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
+
+        uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
+        OZ.borrow(toBorrow);
+
+        console.log('aUSDC bal - post borrow - not 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
 
 
     }

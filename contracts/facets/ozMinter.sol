@@ -21,10 +21,10 @@ contract ozMinter {
         }
     }
 
-    function borrow(uint amount_) external returns(uint) {
+    function borrow(uint amount_) external {
         address aavePool = s.aavePoolProvider.getPool();
 
-        // IPool(aavePool).borrow()
+        IPool(aavePool).borrow(address(s.USDC), amount_, s.VARIABLE_RATE, 0, address(this));
     }
 
 
