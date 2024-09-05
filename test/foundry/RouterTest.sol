@@ -6,12 +6,16 @@ import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandard
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {stdStorage, StdStorage} from "forge-std/Test.sol";              
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
 
 
-contract RouterTest is Setup {    
+contract RouterTest is Setup { 
+
+    using stdStorage for StdStorage;
+   
     
     function test_router() public {
         (IStandardizedYield SY, IPPrincipalToken PT,) = sUSDeMarket.readTokens();
@@ -115,6 +119,17 @@ contract RouterTest is Setup {
         console.log('aUSDC bal - post borrow - not 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
 
 
+    }
+
+    function test_storage() public {
+        bytes32 CORE_STORAGE_LOCATION = 0xf168c5b0cb4aca9a68f931815c18a144c61ad01d6dd7ca15bd6741672a0ab800;
+        address target = address(pendleRouter);
+        bytes4 signature = 
+
+        stdstore // Here ***** but read the deth.net tab
+        //if this investigation lead to nowhere within the protocol to do an external swap, 
+        //do it with uniswap.
+        //check in etherscan a PT mint that used USDC or another token to mint PT/YT *****
     }
 
     

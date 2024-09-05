@@ -31,11 +31,11 @@ contract StateVars is StructGen, Test {
     uint currentBlock = 20665666;
     address owner = makeAddr('owner');
 
-    //PENDLE
+    //Pendle
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);
     IPMarket public constant sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
 
-    //AAVE
+    //Aave
     address public constant aaveGW = 0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9;
     address public constant aavePoolProvider = 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e;
     IPool public constant aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2); 

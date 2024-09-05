@@ -15,7 +15,7 @@ import "forge-std/console.sol";
 
 contract ozMinter is StructGen {
 
-    using SafeERC20 for *;
+    using SafeERC20 for IERC20;
 
     function lend(bool isETH_) external payable {
         console.log('aavePoolProvider in lend: ', address(s.aavePoolProvider));
@@ -32,7 +32,9 @@ contract ozMinter is StructGen {
 
         IPool(aavePool).borrow(address(s.USDC), amount_, s.VARIABLE_RATE, 0, address(this));
 
-        // s.USDC.safeApprove(address(s.pendleRouter), amount_); //<----- here
+        // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why
+        s.USDC.approve(address(s.pendleRouter), amount_);
+
 
         uint minPTout = 0;
         (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(

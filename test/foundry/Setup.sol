@@ -129,6 +129,7 @@ contract Setup is StateVars {
         vm.label(USDCaddr, 'USDCproxy');
         vm.label(0x43506849D7C04F9138D1A2050bbF3A0c054402dd, 'USDCimpl');
         vm.label(0xbFA3aAD535e1b996396698f89FFeC7ada0df17E8, 'ActionSwapPTV3_pendle');
+        vm.label(0x4139cDC6345aFFbaC0692b43bed4D059Df3e6d65, 'sUSDe_SY');
     }
 
 
