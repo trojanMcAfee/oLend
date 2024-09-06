@@ -23,7 +23,7 @@ struct AppStorage {
     IERC20 aWETH;
     IERC20 USDC;
     IERC20 sUSDe;
-
+    IERC20 USDT;
 
 }
 
@@ -36,6 +36,7 @@ struct ERC20s {
     address aWETH;
     address USDC;
     address sUSDe; //not used so far
+    address USDT;
 }
 
 struct PendleConfig {

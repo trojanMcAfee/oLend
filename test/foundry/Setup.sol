@@ -65,7 +65,7 @@ contract Setup is StateVars {
 
         //Deploy initial diamond cut
         AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
-        ERC20s memory tokens = ERC20s(aWETHaddr, USDCaddr, address(sUSDe));
+        ERC20s memory tokens = ERC20s(aWETHaddr, USDCaddr, address(sUSDe), USDTaddr);
         PendleConfig memory pendle = PendleConfig(address(pendleRouter), address(sUSDeMarket));
 
         bytes memory initData = abi.encodeWithSelector(

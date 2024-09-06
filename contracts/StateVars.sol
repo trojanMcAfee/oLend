@@ -47,6 +47,7 @@ contract StateVars is StructGen, Test {
     address public constant aWETHaddr = 0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8;
     address public constant USDCaddr = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     address public constant aUSDCaddr = 0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c;
+    address public constant USDTaddr = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
 
     //DIAMOND
     DiamondCutFacet cut;

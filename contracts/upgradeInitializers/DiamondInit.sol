@@ -56,6 +56,7 @@ contract DiamondInit {
         s.aWETH = IERC20(tokens_.aWETH);
         s.USDC = IERC20(tokens_.USDC);
         s.sUSDe = IERC20(tokens_.sUSDe);
+        s.USDT = IERC20(tokens_.USDT);
 
 
 
