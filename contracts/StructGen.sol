@@ -30,21 +30,6 @@ abstract contract StructGen {
         });
     }
 
-    //for kyber swaps between ERC20s
-    function createTokenInputStruct(
-        address tokenIn, 
-        uint256 netTokenIn, 
-        address pendleSwap_
-    ) internal view returns (TokenInput memory) {
-        return TokenInput({
-            tokenIn: tokenIn,
-            netTokenIn: netTokenIn,
-            tokenMintSy: tokenIn,
-            pendleSwap: pendleSwap_,
-            swapData: emptySwap
-        });
-    }
-
     /// @notice create a simple TokenOutput struct without using any aggregators. For more info please refer to
     /// IPAllActionTypeV3.sol
     function createTokenOutputStruct(

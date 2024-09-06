@@ -45,14 +45,10 @@ contract ozMinter is StructGen {
             minTokenOut
         );
 
-        console.log('sUSDeOut - not 0: ', sUSDeOut);
-        console.log('sUSDe bal: ', s.sUSDe.balanceOf(address(this)));
+        console.log('sUSDeOut in borrow - after swapUni: ', sUSDeOut);
 
-        revert('here');
-        
-
-        // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why
-        s.USDC.approve(address(s.pendleRouter), amount_);
+        // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why - 2nd instance of issue 
+        s.sUSDe.approve(address(s.pendleRouter), sUSDeOut);
 
 
         uint minPTout = 0;
@@ -61,11 +57,11 @@ contract ozMinter is StructGen {
             address(s.sUSDeMarket), 
             minPTout, 
             defaultApprox, 
-            createTokenInputStruct(address(s.USDC), s.USDC.balanceOf(address(this))), 
+            createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
             emptyLimit
         );
 
-        console.log('netPtOut: ', netPtOut);
+        console.log('netPtOut - sUSDe: ', netPtOut);
     }
 
 
