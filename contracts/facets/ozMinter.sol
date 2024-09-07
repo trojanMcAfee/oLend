@@ -10,7 +10,11 @@ import {StructGen} from "../StructGen.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 // import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {IPActionSwapPTV3} from "@pendle/core-v2/contracts/interfaces/IPActionSwapPTV3.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+
+import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 
 import "forge-std/console.sol";
 
@@ -46,18 +50,49 @@ contract ozMinter is StructGen {
         );
 
         console.log('sUSDeOut in borrow - after swapUni: ', sUSDeOut);
+        console.log('sUSDe bal: ', s.sUSDe.balanceOf(address(this)));
 
         // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why - 2nd instance of issue 
         s.sUSDe.approve(address(s.pendleRouter), sUSDeOut);
 
-
         uint minPTout = 0;
+        // console.log('stamp: ', block.timestamp);
+
+        // bytes memory data = abi.encodeWithSelector(
+        //     'swapExactTokenForPt(address,address,uint256,(uint256,uint256,uint256,uint256,uint256),(address,uint256,address,address))', //IPActionSwapPTV3.swapExactTokenForPt.selector
+        //     address(this), 
+        //     address(s.sUSDeMarket), 
+        //     minPTout, 
+        //     defaultApprox, 
+        //     createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
+        //     emptyLimit
+        // );
+
+        // (bool s,) = address(s.pendleRouter).delegatecall(data);
+        // require(s, "fff");
+
+
         (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
             address(this), 
             address(s.sUSDeMarket), 
             minPTout, 
             defaultApprox, 
             createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
+            emptyLimit
+        );
+
+        // console.log('netPtOut - sUSDe: ');
+        console.log('netPtOut - sUSDe: ', netPtOut);
+    }
+
+    function do_swap() public {
+        // LimitOrderData memory emptyLimit2;
+        (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
+            address(this), 
+            address(s.sUSDeMarket), 
+            0, 
+            ApproxParams(0, type(uint256).max, 0, 256, 1e14), 
+            createTokenInputStruct(address(s.sUSDe), 1000 * 1e18), 
             emptyLimit
         );
 

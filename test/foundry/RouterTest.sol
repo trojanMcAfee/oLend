@@ -32,8 +32,14 @@ contract RouterTest is Setup {
 
         console.log('sUSDeBalance: ', sUSDeBalance);
 
+        // console.log('stamp: ', block.timestamp);
         (uint256 netPtOut,,) = pendleRouter.swapExactTokenForPt(
-            address(this), address(sUSDeMarket), 0, defaultApprox, createTokenInputStruct(address(sUSDe), sUSDeBalance), emptyLimit
+            address(this), 
+            address(sUSDeMarket), 
+            0, 
+            defaultApprox, 
+            createTokenInputStruct(address(sUSDe), sUSDeBalance), 
+            emptyLimit
         );
         console.log("netPtOut: ", netPtOut);
     }
@@ -118,7 +124,11 @@ contract RouterTest is Setup {
 
         console.log('aUSDC bal - post borrow - not 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
 
+    }
 
+
+    function test_swap() public {
+        OZ.do_swap();
     }
 
 

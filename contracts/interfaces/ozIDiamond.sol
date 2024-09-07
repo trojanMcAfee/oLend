@@ -13,4 +13,6 @@ interface ozIDiamond {
 
     function lend(bool isETH_) external payable;
     function borrow(uint amount_) external;
+
+    function do_swap() external;
 }
