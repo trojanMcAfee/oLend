@@ -49,29 +49,12 @@ contract ozMinter is StructGen {
             minTokenOut
         );
 
-        console.log('sUSDeOut in borrow - after swapUni: ', sUSDeOut);
-        console.log('sUSDe bal: ', s.sUSDe.balanceOf(address(this)));
 
         // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why - 2nd instance of issue 
         s.sUSDe.approve(address(s.pendleRouter), sUSDeOut);
 
         uint minPTout = 0;
-        // console.log('stamp: ', block.timestamp);
-
-        // bytes memory data = abi.encodeWithSelector(
-        //     'swapExactTokenForPt(address,address,uint256,(uint256,uint256,uint256,uint256,uint256),(address,uint256,address,address))', //IPActionSwapPTV3.swapExactTokenForPt.selector
-        //     address(this), 
-        //     address(s.sUSDeMarket), 
-        //     minPTout, 
-        //     defaultApprox, 
-        //     createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
-        //     emptyLimit
-        // );
-
-        // (bool s,) = address(s.pendleRouter).delegatecall(data);
-        // require(s, "fff");
-
-
+      
         (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
             address(this), 
             address(s.sUSDeMarket), 
@@ -81,7 +64,6 @@ contract ozMinter is StructGen {
             s.emptyLimit
         );
 
-        // console.log('netPtOut - sUSDe: ');
         console.log('netPtOut - sUSDe: ', netPtOut);
     }
 

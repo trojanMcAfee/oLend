@@ -117,19 +117,18 @@ contract RouterTest is Setup {
         // console.log('healthFactor: ', healthFactor);
 
         console.log('');
-        console.log('aUSDC bal - pre borrow - 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
+        // console.log('aUSDC bal - pre borrow - 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
 
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
+        console.log('toBorrow: ', toBorrow);
         OZ.borrow(toBorrow);
 
-        console.log('aUSDC bal - post borrow - not 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
+        // console.log('aUSDC bal - post borrow - not 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
 
     }
 
 
-    function test_swap() public {
-        OZ.do_swap();
-    }
+    
 
 
 
