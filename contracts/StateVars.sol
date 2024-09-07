@@ -18,8 +18,9 @@ import {OwnershipFacet} from "../contracts/facets/OwnershipFacet.sol";
 import {ozMinter} from "../contracts/facets/ozMinter.sol";
 import {Diamond} from "./Diamond.sol";
 import {DiamondInit} from "./upgradeInitializers/DiamondInit.sol";
-
 import {ozIDiamond} from "../contracts/interfaces/ozIDiamond.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import {ozUSD} from "./ozUSD.sol";
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -50,7 +51,7 @@ contract StateVars is StructGenTest, Test {
     address public constant aUSDCaddr = 0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c;
     address public constant USDTaddr = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
 
-    //DIAMOND
+    //Diamond
     DiamondCutFacet cut;
     DiamondLoupeFacet loupe;
     OwnershipFacet ownership;
@@ -58,5 +59,9 @@ contract StateVars is StructGenTest, Test {
     ozIDiamond OZ;
     DiamondInit initDiamond;
     ozMinter minter;
+
+    //Other contracts
+    ERC1967Proxy ozUSDproxy;
+    ozUSD ozUsd;
     
 }

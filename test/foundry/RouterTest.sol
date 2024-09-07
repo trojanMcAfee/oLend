@@ -127,6 +127,10 @@ contract RouterTest is Setup {
 
     }
 
+    function test_x() public {
+        console.log('dec: ', IERC20(address(ozUSDproxy)).totalSupply());
+    }
+
 
     
 

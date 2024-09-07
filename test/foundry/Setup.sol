@@ -14,6 +14,8 @@ import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
 import {AaveConfig, ERC20s, PendleConfig} from "../../contracts/AppStorage.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import {ozUSD} from "../../contracts/ozUSD.sol";
 
 import "forge-std/console.sol";
 
@@ -31,10 +33,6 @@ contract Setup is StateVars {
 
         _runDiamondSetup();
 
-        deal(address(sUSDe), address(OZ), 1_000 * 1e18);
-        vm.prank(address(OZ));
-        sUSDe.approve(address(pendleRouter), type(uint).max);
-
         _setLabels();
     }
 
@@ -48,10 +46,14 @@ contract Setup is StateVars {
         loupe = new DiamondLoupeFacet();
         ownership = new OwnershipFacet();
         minter = new ozMinter();
-
         ozDiamond = new Diamond(owner, address(cut));
         OZ = ozIDiamond(address(ozDiamond));
         initDiamond = new DiamondInit();
+
+        //Deploys ozUSD
+        ozUsd = new ozUSD();
+        bytes memory data = abi.encodeWithSelector(ozUsd.initialize.selector, 'Ozel Dollar', 'ozUSD');
+        ozUSDproxy = new ERC1967Proxy(address(ozUsd), data);
 
         //Create initial FacetCuts
         address[3] memory facets = [
