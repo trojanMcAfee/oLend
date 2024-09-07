@@ -120,11 +120,15 @@ contract RouterTest is Setup {
         console.log('');
 
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
-        console.log('toBorrow: ', toBorrow);
+        console.log('toBorrow - ozUSD: ', toBorrow);
         OZ.borrow(toBorrow, owner);
 
         uint ozUSDbal = ozUsd.balanceOf(owner);
-        console.log('ozUSDbal: ', ozUSDbal);
+        console.log('ozUSDbal - post borrow: ', ozUSDbal);
+        console.log('');
+
+        uint exactPtIn = 1000 * 1e18;
+        OZ.redeem(exactPtIn, owner);
     }
 
     function test_x() public {

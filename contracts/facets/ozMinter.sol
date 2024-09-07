@@ -26,7 +26,6 @@ contract ozMinter is StructGen {
     using SafeERC20 for IERC20;
 
     function lend(bool isETH_) external payable {
-        console.log('aavePoolProvider in lend: ', address(s.aavePoolProvider));
         address aavePool = s.aavePoolProvider.getPool();
         
         if (isETH_) {
@@ -71,18 +70,19 @@ contract ozMinter is StructGen {
         s.ozUSD.mint(receiver_, sUSDeOut);
     }
 
-    function do_swap() public {
-        // // LimitOrderData memory emptyLimit2;
-        // (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
-        //     address(this), 
-        //     address(s.sUSDeMarket), 
-        //     0, 
-        //     ApproxParams(0, type(uint256).max, 0, 256, 1e14), 
-        //     createTokenInputStruct(address(s.sUSDe), 1000 * 1e18), 
-        //     emptyLimit
-        // );
 
-        // console.log('netPtOut - sUSDe: ', netPtOut);
+    function redeem(uint amount_, address receiver_) external {
+        uint minTokenOut = 0;
+
+        (uint256 netTokenOut,,) = s.pendleRouter.swapExactPtForToken(
+            address(this), 
+            address(s.sUSDeMarket), 
+            amount_, 
+            createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
+            s.emptyLimit
+        );
+
+        console.log('netTokenOut sUSDe: ', netTokenOut);
     }
 
 

@@ -114,7 +114,7 @@ contract Setup is StateVars {
         } else if (id_ == 2) {
             selectors[0] = minter.lend.selector;
             selectors[1] = minter.borrow.selector;
-            selectors[2] = minter.do_swap.selector;
+            selectors[2] = minter.redeem.selector;
         }
        
 
