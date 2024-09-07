@@ -4,19 +4,17 @@ pragma solidity >=0.8.23 <0.9.0;
 import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 
-import {AppStorage} from "./AppStorage.sol";
 
-abstract contract StructGen {
-    AppStorage internal s;
+abstract contract StructGenTest {
 
-    // EmptySwap means no swap aggregator is involved
-    // SwapData public emptySwap; <--- there are now in AppStorage.sol
+    //EmptySwap means no swap aggregator is involved
+    SwapData public emptySwap; 
 
-    // // EmptyLimit means no limit order is involved
-    // LimitOrderData public emptyLimit;
+    // EmptyLimit means no limit order is involved
+    LimitOrderData public emptyLimit;
 
-    // // DefaultApprox means no off-chain preparation is involved, more gas consuming (~ 180k gas)
-    // ApproxParams public defaultApprox = ApproxParams(0, type(uint256).max, 0, 256, 1e14);
+    // DefaultApprox means no off-chain preparation is involved, more gas consuming (~ 180k gas)
+    ApproxParams public defaultApprox = ApproxParams(0, type(uint256).max, 0, 256, 1e14);
 
     /// @notice create a simple TokenInput struct without using any aggregators. For more info please refer to
     /// IPAllActionTypeV3.sol
@@ -26,7 +24,7 @@ abstract contract StructGen {
             netTokenIn: netTokenIn,
             tokenMintSy: tokenIn,
             pendleSwap: address(0),
-            swapData: s.emptySwap
+            swapData: emptySwap
         });
     }
 
@@ -45,7 +43,7 @@ abstract contract StructGen {
             minTokenOut: minTokenOut,
             tokenRedeemSy: tokenOut,
             pendleSwap: address(0),
-            swapData: s.emptySwap
+            swapData: emptySwap
         });
     }
 }

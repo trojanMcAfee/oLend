@@ -76,9 +76,9 @@ contract ozMinter is StructGen {
             address(this), 
             address(s.sUSDeMarket), 
             minPTout, 
-            defaultApprox, 
+            s.defaultApprox, 
             createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
-            emptyLimit
+            s.emptyLimit
         );
 
         // console.log('netPtOut - sUSDe: ');
@@ -86,17 +86,17 @@ contract ozMinter is StructGen {
     }
 
     function do_swap() public {
-        // LimitOrderData memory emptyLimit2;
-        (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
-            address(this), 
-            address(s.sUSDeMarket), 
-            0, 
-            ApproxParams(0, type(uint256).max, 0, 256, 1e14), 
-            createTokenInputStruct(address(s.sUSDe), 1000 * 1e18), 
-            emptyLimit
-        );
+        // // LimitOrderData memory emptyLimit2;
+        // (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
+        //     address(this), 
+        //     address(s.sUSDeMarket), 
+        //     0, 
+        //     ApproxParams(0, type(uint256).max, 0, 256, 1e14), 
+        //     createTokenInputStruct(address(s.sUSDe), 1000 * 1e18), 
+        //     emptyLimit
+        // );
 
-        console.log('netPtOut - sUSDe: ', netPtOut);
+        // console.log('netPtOut - sUSDe: ', netPtOut);
     }
 
 
