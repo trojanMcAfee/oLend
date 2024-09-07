@@ -16,6 +16,7 @@ import {Diamond} from "../../contracts/Diamond.sol";
 import {AaveConfig, ERC20s, PendleConfig} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSD} from "../../contracts/ozUSD.sol";
+import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 
 import "forge-std/console.sol";
 
@@ -51,9 +52,10 @@ contract Setup is StateVars {
         initDiamond = new DiamondInit();
 
         //Deploys ozUSD
-        ozUsd = new ozUSD();
-        bytes memory data = abi.encodeWithSelector(ozUsd.initialize.selector, 'Ozel Dollar', 'ozUSD');
-        ozUSDproxy = new ERC1967Proxy(address(ozUsd), data);
+        ozUSDimpl = new ozUSD();
+        bytes memory data = abi.encodeWithSelector(ozUSDimpl.initialize.selector, 'Ozel Dollar', 'ozUSD');
+        ozUSDproxy = new ERC1967Proxy(address(ozUSDimpl), data);
+        ozUsd = IERC20(address(ozUSDproxy));
 
         //Create initial FacetCuts
         address[3] memory facets = [
@@ -71,7 +73,7 @@ contract Setup is StateVars {
 
         //Deploy initial diamond cut
         AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
-        ERC20s memory tokens = ERC20s(aWETHaddr, USDCaddr, address(sUSDe), USDTaddr);
+        ERC20s memory tokens = ERC20s(aWETHaddr, USDCaddr, address(sUSDe), USDTaddr, address(ozUSDproxy));
         PendleConfig memory pendle = PendleConfig(address(pendleRouter), address(sUSDeMarket));
 
         bytes memory initData = abi.encodeWithSelector(

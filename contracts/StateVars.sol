@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 
 import {Test} from "../lib/forge-std/src/Test.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "./interfaces/IERC20.sol";
 // import {StructGen} from "./StructGen.sol";
 import {StructGenTest} from "../test/foundry/StructGenTest.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
@@ -60,8 +60,9 @@ contract StateVars is StructGenTest, Test {
     DiamondInit initDiamond;
     ozMinter minter;
 
-    //Other contracts
+    //ozUSD
     ERC1967Proxy ozUSDproxy;
-    ozUSD ozUsd;
+    ozUSD ozUSDimpl;
+    IERC20 ozUsd; 
     
 }

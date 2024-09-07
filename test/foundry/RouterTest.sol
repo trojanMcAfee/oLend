@@ -5,7 +5,8 @@ pragma solidity >=0.8.23 <0.9.0;
 import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandardizedYield.sol";
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {stdStorage, StdStorage} from "forge-std/Test.sol";              
 
 import {console} from "../../lib/forge-std/src/Test.sol";
@@ -117,18 +118,17 @@ contract RouterTest is Setup {
         // console.log('healthFactor: ', healthFactor);
 
         console.log('');
-        // console.log('aUSDC bal - pre borrow - 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
 
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
         console.log('toBorrow: ', toBorrow);
-        OZ.borrow(toBorrow);
+        OZ.borrow(toBorrow, owner);
 
-        // console.log('aUSDC bal - post borrow - not 0: ', IERC20(USDCaddr).balanceOf(address(OZ)));
-
+        uint ozUSDbal = ozUsd.balanceOf(owner);
+        console.log('ozUSDbal: ', ozUSDbal);
     }
 
     function test_x() public {
-        console.log('dec: ', IERC20(address(ozUSDproxy)).totalSupply());
+        console.log('dec: ', IERC20(address(ozUSDproxy)).decimals());
     }
 
 

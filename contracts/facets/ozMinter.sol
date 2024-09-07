@@ -8,14 +8,15 @@ import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 // import {LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {StructGen} from "../StructGen.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "../interfaces/IERC20.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 // import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 import {IPActionSwapPTV3} from "@pendle/core-v2/contracts/interfaces/IPActionSwapPTV3.sol";
-import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
-import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+// import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+// import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 
 import "forge-std/console.sol";
 
@@ -34,7 +35,7 @@ contract ozMinter is StructGen {
         }
     }
 
-    function borrow(uint amount_) external {
+    function borrow(uint amount_, address receiver_) external {
         address aavePool = s.aavePoolProvider.getPool();
 
         IPool(aavePool).borrow(address(s.USDC), amount_, s.VARIABLE_RATE, 0, address(this));
@@ -66,6 +67,8 @@ contract ozMinter is StructGen {
         );
 
         console.log('netPtOut - sUSDe: ', netPtOut);
+
+        s.ozUSD.mint(receiver_, sUSDeOut);
     }
 
     function do_swap() public {

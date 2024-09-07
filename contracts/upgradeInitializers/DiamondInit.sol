@@ -17,10 +17,11 @@ import { IERC165 } from "../interfaces/IERC165.sol";
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {AppStorage, AaveConfig, ERC20s, PendleConfig} from "../AppStorage.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "../interfaces/IERC20.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
-import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -44,9 +45,7 @@ contract DiamondInit {
 
         //Aave
         s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
-        console.log('aavePoolProvider in init: ', aave_.aavePoolProvider);
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
-        console.log('s.aavePoolProvider: ', address(s.aavePoolProvider));
         s.VARIABLE_RATE = 2;
 
         //Pendle
@@ -59,6 +58,7 @@ contract DiamondInit {
         s.USDC = IERC20(tokens_.USDC);
         s.sUSDe = IERC20(tokens_.sUSDe);
         s.USDT = IERC20(tokens_.USDT);
+        s.ozUSD = IERC20(tokens_.ozUSD);
 
 
 
