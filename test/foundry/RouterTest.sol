@@ -127,13 +127,33 @@ contract RouterTest is Setup {
         console.log('ozUSDbal - post borrow: ', ozUSDbal);
         console.log('');
 
-        vm.startPrank(address(OZ));
-        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
-        uint ozUsdToRedeem = 1000 * 1e18;
-        OZ.redeem(ozUsdToRedeem, owner);
-        vm.stopPrank();
-
+        //---------------
+        // vm.startPrank(address(OZ));
+        // sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
+        // // uint ozUsdToRedeem = 1000 * 1e18; //PT
+        // uint ozUsdToRedeem = sUSDe_PT_26SEP.balanceOf(address(OZ));
+        // OZ.redeem(ozUsdToRedeem, owner);
+        // vm.stopPrank();
         //-----------
+
+        uint balancePT = sUSDe_PT_26SEP.balanceOf(address(OZ));
+        uint discount = (500 * balancePT) / 10_000;
+        uint discountedPT = balancePT - discount;
+
+        console.log('discountedPT: ', discountedPT);
+        console.log('PT bal oz - in test - pre rebuy: ', balancePT);
+        console.log('PT bal - second owner - pre rebuy: ', sUSDe_PT_26SEP.balanceOf(second_owner));
+        console.log('USDC bal - second owner - pre buy: ', IERC20(USDCaddr).balanceOf(second_owner));
+        console.log('discountedPT / 1e12: ', discountedPT / 1e12);
+        console.log('');
+
+        vm.startPrank(second_owner);
+        IERC20(USDCaddr).approve(address(OZ), discountedPT);
+        OZ.rebuyPT(discountedPT / 1e12);
+
+        console.log('PT bal - second owner - post rebuy: ', sUSDe_PT_26SEP.balanceOf(second_owner));
+        console.log('PT bal oz - in test - post rebuy: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
+        console.log('USDC bal - second owner - post buy: ', IERC20(USDCaddr).balanceOf(second_owner));
     }
 
 

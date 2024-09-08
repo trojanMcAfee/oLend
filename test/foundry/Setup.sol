@@ -29,6 +29,7 @@ contract Setup is StateVars {
         deal(address(sUSDe), address(this), 1_000 * 1e18);
         sUSDe.approve(address(pendleRouter), type(uint).max);
         YT.approve(address(pendleRouter), type(uint).max);
+        deal(USDCaddr, second_owner, 10_000 * 1e6);
 
         payable(owner).transfer(100 * 1 ether);
 

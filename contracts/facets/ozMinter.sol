@@ -61,6 +61,7 @@ contract ozMinter is StructGen {
             s.USDC.balanceOf(address(this)), 
             minTokenOut
         );
+        console.log('sUSDeOut: ', sUSDeOut);
 
 
         // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why - 2nd instance of issue 
@@ -80,6 +81,17 @@ contract ozMinter is StructGen {
         console.log('netPtOut - sUSDe: ', netPtOut);
 
         s.ozUSD.mint(receiver_, sUSDeOut);
+    }
+
+
+     function rebuyPT(uint amountInUSDC_) external {
+        IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
+
+       s.USDC.transferFrom(msg.sender, address(this), amountInUSDC_);
+
+       uint balancePT = sUSDe_PT_26SEP.balanceOf(address(this));
+       sUSDe_PT_26SEP.transfer(msg.sender, balancePT);
+
     }
 
 
@@ -129,13 +141,6 @@ contract ozMinter is StructGen {
         console.log('sUSDe oz - post swap: ', s.sUSDe.balanceOf(address(this)));
     }
 
-
-    function rebuyPT() external {
-        address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
-        
-
-
-    }
 
 
     //************* */
