@@ -140,6 +140,7 @@ contract Setup is StateVars {
         vm.label(0xbFA3aAD535e1b996396698f89FFeC7ada0df17E8, 'ActionSwapPTV3_pendle');
         vm.label(0x4139cDC6345aFFbaC0692b43bed4D059Df3e6d65, 'sUSDe_SY');
         vm.label(0x1A6fCc85557BC4fB7B534ed835a03EF056552D52, 'marketFactory_pendle');
+        vm.label(address(sUSDe_PT_26SEP), 'sUSDe_PT_26SEP');
     }
 
 

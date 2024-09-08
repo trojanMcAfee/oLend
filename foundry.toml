@@ -5,6 +5,7 @@ libs = ["node_modules", "lib"]
 test = "test/foundry"
 cache_path = "forge-cache"
 evm_version = "shanghai"
+# solc = "0.8.25"
 
 
 [rpc_endpoints]

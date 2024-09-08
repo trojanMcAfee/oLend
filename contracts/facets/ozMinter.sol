@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.26;
+pragma solidity ^0.8.0;
 
 
 // import {AppStorage} from "../AppStorage.sol";
@@ -9,21 +9,33 @@ import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {StructGen} from "../StructGen.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC20} from "../interfaces/IERC20.sol";
+// import {IERC20} from "../interfaces/IERC20.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 // import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 import {IPActionSwapPTV3} from "@pendle/core-v2/contracts/interfaces/IPActionSwapPTV3.sol";
-// import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
-// import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {TokenOutput, LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {IERC20, IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 import "forge-std/console.sol";
+
+interface MyPendleRouter {
+    function swapExactPtForToken(
+        address receiver,
+        address market,
+        uint256 exactPtIn,
+        TokenOutput calldata output,
+        LimitOrderData calldata limit
+    ) external returns (uint256 netTokenOut, uint256 netSyFee, uint256 netSyInterm);
+}
 
 
 contract ozMinter is StructGen {
 
     using SafeERC20 for IERC20;
+    using Address for address;
 
     function lend(bool isETH_) external payable {
         address aavePool = s.aavePoolProvider.getPool();
@@ -73,6 +85,32 @@ contract ozMinter is StructGen {
 
     function redeem(uint amount_, address receiver_) external {
         uint minTokenOut = 0;
+        address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
+
+        console.log('sender: ', msg.sender);
+        console.log('PT bal OZ: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
+
+        // bytes memory data = abi.encodeWithSelector(
+        //     s.sUSDe.approve.selector, address(s.pendleRouter), type(uint).max
+        // );
+
+        // (bool s,) = sUSDe_PT_26SEP.delegatecall(data);
+        // require(s, 'fff');
+        // sUSDe_PT_26SEP.functionDelegateCall(data);
+
+        // bytes memory data = abi.encodeWithSelector(
+        //     MyPendleRouter.swapExactPtForToken.selector,
+        //     address(this), 
+        //     address(s.sUSDeMarket), 
+        //     amount_, 
+        //     createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
+        //     s.emptyLimit
+        // );
+
+        // (s,) = address(s.pendleRouter).delegatecall(data);
+        // require(s, 'ggg');
+
+        // address(s.pendleRouter).functionDelegateCall(data);
 
         (uint256 netTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
@@ -82,7 +120,9 @@ contract ozMinter is StructGen {
             s.emptyLimit
         );
 
-        console.log('netTokenOut sUSDe: ', netTokenOut);
+        // console.log('netTokenOut sUSDe: ', 1);
+        console.log(string('netTokenOut sUSDe: '), uint(1));
+        // console.log('netTokenOut sUSDe: ', netTokenOut);
     }
 
 

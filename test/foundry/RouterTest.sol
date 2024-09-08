@@ -127,6 +127,8 @@ contract RouterTest is Setup {
         console.log('ozUSDbal - post borrow: ', ozUSDbal);
         console.log('');
 
+        vm.startPrank(address(OZ));
+        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
         uint exactPtIn = 1000 * 1e18;
         OZ.redeem(exactPtIn, owner);
     }
