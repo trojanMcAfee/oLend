@@ -32,6 +32,7 @@ contract StateVars is StructGenTest, Test {
 
     uint currentBlock = 20665666;
     address owner = makeAddr('owner');
+    address second_owner = makeAddr('second_owner');
 
     //Pendle
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);

@@ -88,7 +88,9 @@ contract ozMinter is StructGen {
         address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
 
         console.log('sender: ', msg.sender);
-        console.log('PT bal OZ: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
+        console.log('PT bal oz - pre swap: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
+        console.log('sUSDe oz - pre swap: ', s.sUSDe.balanceOf(address(this)));
+        console.log('');
 
         // bytes memory data = abi.encodeWithSelector(
         //     s.sUSDe.approve.selector, address(s.pendleRouter), type(uint).max
@@ -121,8 +123,18 @@ contract ozMinter is StructGen {
         );
 
         // console.log('netTokenOut sUSDe: ', 1);
-        console.log(string('netTokenOut sUSDe: '), uint(1));
-        // console.log('netTokenOut sUSDe: ', netTokenOut);
+        // console.log(string('netTokenOut sUSDe: '), uint(1));
+        console.log('netTokenOut sUSDe: ', netTokenOut);
+        console.log('PT bal oz - post swap: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
+        console.log('sUSDe oz - post swap: ', s.sUSDe.balanceOf(address(this)));
+    }
+
+
+    function rebuyPT() external {
+        address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
+        
+
+
     }
 
 

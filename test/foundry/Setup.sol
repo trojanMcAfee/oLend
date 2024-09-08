@@ -97,7 +97,7 @@ contract Setup is StateVars {
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { //2 - ozMinter
-            length = 3;
+            length = 4;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -115,6 +115,7 @@ contract Setup is StateVars {
             selectors[0] = minter.lend.selector;
             selectors[1] = minter.borrow.selector;
             selectors[2] = minter.redeem.selector;
+            selectors[3] = minter.rebuyPT.selector;
         }
        
 

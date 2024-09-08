@@ -129,9 +129,15 @@ contract RouterTest is Setup {
 
         vm.startPrank(address(OZ));
         sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
-        uint exactPtIn = 1000 * 1e18;
-        OZ.redeem(exactPtIn, owner);
+        uint ozUsdToRedeem = 1000 * 1e18;
+        OZ.redeem(ozUsdToRedeem, owner);
+        vm.stopPrank();
+
+        //-----------
     }
+
+
+
 
     function test_x() public {
         console.log('dec: ', IERC20(address(ozUSDproxy)).decimals());
