@@ -144,6 +144,7 @@ contract RouterTest is Setup {
         console.log('PT bal oz - in test - pre rebuy: ', balancePT);
         console.log('PT bal - second owner - pre rebuy: ', sUSDe_PT_26SEP.balanceOf(second_owner));
         console.log('USDC bal - second owner - pre buy: ', IERC20(USDCaddr).balanceOf(second_owner));
+        console.log('USDC bal - oz - pre buy: ', IERC20(USDCaddr).balanceOf(address(OZ)));
         console.log('discountedPT / 1e12: ', discountedPT / 1e12);
         console.log('');
 
@@ -153,7 +154,8 @@ contract RouterTest is Setup {
 
         console.log('PT bal - second owner - post rebuy: ', sUSDe_PT_26SEP.balanceOf(second_owner));
         console.log('PT bal oz - in test - post rebuy: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
-        console.log('USDC bal - second owner - post buy: ', IERC20(USDCaddr).balanceOf(second_owner));
+        console.log('USDC bal - second owner - post rebuy: ', IERC20(USDCaddr).balanceOf(second_owner));
+        console.log('USDC bal - oz - post rebuy: ', IERC20(USDCaddr).balanceOf(address(OZ)));
     }
 
 

@@ -28,6 +28,7 @@ struct AppStorage {
     IERC20 sUSDe;
     IERC20 USDT;
     IERC20 ozUSD; //proxy
+    IERC20 pendlePT;
 
 }
 
@@ -42,6 +43,7 @@ struct ERC20s {
     address sUSDe; //not used so far
     address USDT;
     address ozUSD;
+    address pendlePT; //sUSDe_PT
 }
 
 struct PendleConfig {

@@ -77,8 +77,11 @@ contract ozMinter is StructGen {
             createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
             s.emptyLimit
         );
-
         console.log('netPtOut - sUSDe: ', netPtOut);
+
+        uint discountedPT = _calculateDiscountPT();
+        //^^ now that i have the discounted PT, get the USDC from rebuyPT() below,
+        //mint ozUSD and send it to the user while locking the USDC as backup
 
         s.ozUSD.mint(receiver_, sUSDeOut);
     }
@@ -167,6 +170,15 @@ contract ozMinter is StructGen {
             });
 
         return swapRouterUni.exactInput(params);
+    }
+
+
+    function _calculateDiscountPT() private returns(uint) {
+        uint balancePT = s.pendlePT.balanceOf(address(this));
+        uint percentage = 500; //5%
+        uint discount = (percentage * balancePT) / 10_000;
+        uint discountedPT = balancePT - discount;
+        return discountedPT;
     }
 
 }
