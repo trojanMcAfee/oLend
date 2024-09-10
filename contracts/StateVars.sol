@@ -44,6 +44,7 @@ contract StateVars is StructGenTest, Test {
     IPool public constant aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2); 
 
     //ERC20s
+    IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);
     IERC20 public constant sUSDe = IERC20(0x9D39A5DE30e57443BfF2A8307A4256c8797A3497);
     IERC20 public constant sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
     IERC20 public constant YT = IERC20(0xdc02b77a3986da62C7A78FED73949C9767850809);

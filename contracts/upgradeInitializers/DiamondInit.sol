@@ -53,6 +53,14 @@ contract DiamondInit {
         s.sUSDeMarket = IPMarket(pendle_.sUSDeMarket);
         s.defaultApprox = ApproxParams(0, type(uint256).max, 0, 256, 1e14);
 
+        // struct ApproxParams {
+        //     uint256 guessMin;
+        //     uint256 guessMax;
+        //     uint256 guessOffchain;
+        //     uint256 maxIteration;
+        //     uint256 eps;
+        // }
+
         //ERC20s
         s.aWETH = IERC20(tokens_.aWETH);
         s.USDC = IERC20(tokens_.USDC);
