@@ -11,9 +11,6 @@ import {stdStorage, StdStorage} from "forge-std/Test.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
-interface MyYT {
-    function pyIndexCurrent() external returns (uint256 currentIndex);
-}
 
 contract RouterTest is Setup { 
 
@@ -74,9 +71,6 @@ contract RouterTest is Setup {
 
         uint apy = ((balancePT - sUSDeBalance) * (100 * 1e18)) / sUSDeBalance;
         console.log('APY: ', apy);
-
-        MyYT sUSDe_YT_26SEP = MyYT(0xdc02b77a3986da62C7A78FED73949C9767850809);
-        console.log('pyIndexCurrent: ', sUSDe_YT_26SEP.pyIndexCurrent());
 
 
         // console.log('');
@@ -181,7 +175,7 @@ contract RouterTest is Setup {
         IERC20 sUSDe_market = IERC20(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
         
         // bytes32 transaction = 0x467c0c15148778d0b99a1d9f3bd7406fd0c58d8a6e3284a57a50e55ae0160165;
-        vm.rollFork(19909022 + 1);
+        // vm.rollFork(19909022 + 752); //752 fails - 753 succeeds 
         deal(address(sUSDe), address(this), 1_000 * 1e18);
         sUSDe.approve(address(pendleRouter), type(uint).max);
         YT.approve(address(pendleRouter), type(uint).max);
