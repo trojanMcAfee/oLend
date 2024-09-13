@@ -7,14 +7,18 @@ import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipal
 import {Setup} from "./Setup.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
-import {stdStorage, StdStorage} from "forge-std/Test.sol";              
+import {stdStorage, StdStorage} from "forge-std/Test.sol";  
+import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";   
+import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";         
 
 import {console} from "../../lib/forge-std/src/Test.sol";
+
 
 
 contract RouterTest is Setup { 
 
     using stdStorage for StdStorage;
+    using PendlePYOracleLib for *;
    
     
     function test_router() public {
@@ -163,10 +167,18 @@ contract RouterTest is Setup {
         console.log('USDC bal - oz - post rebuy: ', IERC20(USDCaddr).balanceOf(address(OZ)));
     }
 
-    
-    // function test_replay() public {
-    //     bytes32 transaction = 
-    // }
+
+    function test_twap() public view {
+        address routerStatic = 0x263833d47eA3fA4a30f269323aba6a107f9eB14C;
+        address pendleOracle = 0x9a9Fa8338dd5E5B2188006f1Cd2Ef26d921650C2;
+        uint32 duration = 15;
+        
+        // uint ptToAssetRate = MyWap(pendleOracle).getPtToAssetRate(sUSDeMarket, duration);
+        uint ptToAssetRate = sUSDeMarket.getPtToSyRate(duration);
+        console.log('ptToAssetRate: ', ptToAssetRate);
+
+
+    }
 
 
     function test_liquidity() public {
