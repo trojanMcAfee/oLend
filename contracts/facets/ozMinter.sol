@@ -18,6 +18,7 @@ import {IPActionSwapPTV3} from "@pendle/core-v2/contracts/interfaces/IPActionSwa
 import {TokenOutput, LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {IERC20, IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 
 import "forge-std/console.sol";
 
@@ -36,6 +37,8 @@ contract ozMinter is StructGen {
         }
     }
 
+
+
     function borrow(uint amount_, address receiver_) external {
         address aavePool = s.aavePoolProvider.getPool();
 
@@ -51,7 +54,7 @@ contract ozMinter is StructGen {
             s.USDC.balanceOf(address(this)), 
             minTokenOut
         );
-        console.log('sUSDeOut: ', sUSDeOut);
+        // console.log('sUSDeOut: ', sUSDeOut);
 
 
         // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why - 2nd instance of issue 
@@ -67,54 +70,44 @@ contract ozMinter is StructGen {
             createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
             s.emptyLimit
         );
-        console.log('netPtOut - sUSDe: ', netPtOut);
+        // console.log('netPtOut - sUSDe: ', netPtOut);
 
         uint discountedPT = _calculateDiscountPT();
-        //^^ now that i have the discounted PT, get the USDC from rebuyPT() below,
-        //mint ozUSD and send it to the user while locking the USDC as backup
+        // console.log('discountedPT: ', discountedPT);
 
-        s.ozUSD.mint(receiver_, sUSDeOut);
+        s.openOrders.push(discountedPT);
+
+        // s.ozUSD.mint(receiver_, sUSDeOut);
+    }
+    
+    function finishBorrow(address receiver_) external {
+        uint balanceUSDC = s.USDC.balanceOf(address(this));
+        // console.log('balanceUSDC - in finishBorrow - not 0: ', balanceUSDC);
+        s.ozUSD.mint(receiver_, balanceUSDC);
     }
 
 
      function rebuyPT(uint amountInUSDC_) external {
-       s.USDC.transferFrom(msg.sender, address(this), amountInUSDC_);
+        require(s.openOrders.length > 0, 'rebuyPT: error');
+        
+        s.USDC.transferFrom(msg.sender, address(this), amountInUSDC_);
 
-       uint balancePT = s.pendlePT.balanceOf(address(this));
-       s.pendlePT.transfer(msg.sender, balancePT);
+        uint balancePT = s.pendlePT.balanceOf(address(this));
+        s.pendlePT.transfer(msg.sender, balancePT);
     }
 
 
-    function redeem(uint amount_, address receiver_) external {
+    //This redeems PT for token, which seems not needed in this system, since the redemptions would be
+    //from ozUSD to token (prob done in the ERC20 contract)
+    function redeem(uint amount_, address receiver_) external { 
         uint minTokenOut = 0;
         address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
 
         console.log('sender: ', msg.sender);
-        console.log('PT bal oz - pre swap: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
+        console.log('PT bal oz - pre swap: ', s.pendlePT.balanceOf(address(this)));
         console.log('sUSDe oz - pre swap: ', s.sUSDe.balanceOf(address(this)));
         console.log('');
 
-        // bytes memory data = abi.encodeWithSelector(
-        //     s.sUSDe.approve.selector, address(s.pendleRouter), type(uint).max
-        // );
-
-        // (bool s,) = sUSDe_PT_26SEP.delegatecall(data);
-        // require(s, 'fff');
-        // sUSDe_PT_26SEP.functionDelegateCall(data);
-
-        // bytes memory data = abi.encodeWithSelector(
-        //     MyPendleRouter.swapExactPtForToken.selector,
-        //     address(this), 
-        //     address(s.sUSDeMarket), 
-        //     amount_, 
-        //     createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
-        //     s.emptyLimit
-        // );
-
-        // (s,) = address(s.pendleRouter).delegatecall(data);
-        // require(s, 'ggg');
-
-        // address(s.pendleRouter).functionDelegateCall(data);
 
         (uint256 netTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
@@ -161,11 +154,9 @@ contract ozMinter is StructGen {
 
 
     function _calculateDiscountPT() private returns(uint) {
-        uint balancePT = s.pendlePT.balanceOf(address(this));
-        uint percentage = 500; //5%
-        uint discount = (percentage * balancePT) / 10_000;
-        uint discountedPT = balancePT - discount;
-        return discountedPT;
+        bytes memory data = abi.encodeWithSelector(ozIDiamond.quotePT.selector);
+        data = s.OZ.functionDelegateCall(data);
+        return abi.decode(data, (uint));
     }
 
 }

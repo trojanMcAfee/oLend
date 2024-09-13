@@ -32,6 +32,14 @@ struct AppStorage {
     IERC20 ozUSD; //proxy
     IERC20 pendlePT; //sUSDe_PT_26SEP
 
+    //System config
+    address OZ;
+    uint[] openOrders;
+
+}
+
+struct SysConfig {
+    address OZ; 
 }
 
 struct AaveConfig {

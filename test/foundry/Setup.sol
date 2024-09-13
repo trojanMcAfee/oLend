@@ -13,7 +13,7 @@ import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
 import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
-import {AaveConfig, ERC20s, PendleConfig} from "../../contracts/AppStorage.sol";
+import {AaveConfig, ERC20s, PendleConfig, SysConfig} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSD} from "../../contracts/ozUSD.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
@@ -92,11 +92,14 @@ contract Setup is StateVars {
             ptDiscount
         );
 
+        SysConfig memory sys = SysConfig(address(OZ));
+
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
             aave,
             tokens,
-            pendle
+            pendle,
+            sys
         );
         vm.prank(owner);
         OZ.diamondCut(cuts, address(initDiamond), initData);
@@ -113,7 +116,7 @@ contract Setup is StateVars {
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
-            length = 4;
+            length = 5;
         } else if (id_ == 3) { // ozOracle
             length = 1;
         }
@@ -134,6 +137,7 @@ contract Setup is StateVars {
             selectors[1] = minter.borrow.selector;
             selectors[2] = minter.redeem.selector;
             selectors[3] = minter.rebuyPT.selector;
+            selectors[4] = minter.finishBorrow.selector;
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
         }
