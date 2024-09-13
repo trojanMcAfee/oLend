@@ -18,14 +18,11 @@ contract ozOracle {
 
     function quotePT() external view returns(uint) {
         uint balancePT = s.pendlePT.balanceOf(address(this));
+        uint discount = s.ptDiscount.mulDivDown(balancePT, 10_000);
+        uint discountedPT = balancePT - discount;
+
         uint ptToAssetRate = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
-
-        console.log('ptToAssetRate: ', ptToAssetRate);
-
-        uint quoteInStable = balancePT.mulDivDown(ptToAssetRate, 1 ether);
-
-        // 1 pt ---- ptToAssetRate (USDe)
-        // balancePT ---- x 
+        uint quoteInStable = discountedPT.mulDivDown(ptToAssetRate, 1 ether);
 
         return quoteInStable;
     }
