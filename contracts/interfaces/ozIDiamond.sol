@@ -15,4 +15,5 @@ interface ozIDiamond {
     function borrow(uint amount_, address receiver_) external;
     function redeem(uint amount_, address receiver_) external;
     function rebuyPT(uint amountInUSDC_) external;
+    function quotePT() external view returns(uint);
 }

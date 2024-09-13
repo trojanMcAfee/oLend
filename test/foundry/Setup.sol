@@ -17,6 +17,7 @@ import {AaveConfig, ERC20s, PendleConfig} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSD} from "../../contracts/ozUSD.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
+import {ozOracle} from "../../contracts/facets/ozOracle.sol";
 
 import "forge-std/console.sol";
 
@@ -51,6 +52,7 @@ contract Setup is StateVars {
         ozDiamond = new Diamond(owner, address(cut));
         OZ = ozIDiamond(address(ozDiamond));
         initDiamond = new DiamondInit();
+        oracle = new ozOracle();
 
         //Deploys ozUSD
         ozUSDimpl = new ozUSD();
@@ -59,10 +61,11 @@ contract Setup is StateVars {
         ozUsd = IERC20(address(ozUSDproxy));
 
         //Create initial FacetCuts
-        address[3] memory facets = [
+        address[4] memory facets = [
             address(loupe),
             address(ownership),
-            address(minter)
+            address(minter),
+            address(oracle)
         ];
 
         uint length = facets.length;
@@ -104,8 +107,10 @@ contract Setup is StateVars {
             length = 5;
         } else if (id_ == 1) {
             length = 2;
-        } else if (id_ == 2) { //2 - ozMinter
+        } else if (id_ == 2) { // ozMinter
             length = 4;
+        } else if (id_ == 3) { // ozOracle
+            length = 1;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -124,6 +129,8 @@ contract Setup is StateVars {
             selectors[1] = minter.borrow.selector;
             selectors[2] = minter.redeem.selector;
             selectors[3] = minter.rebuyPT.selector;
+        } else if (id_ == 3) {
+            selectors[0] = oracle.quotePT.selector;
         }
        
 

@@ -88,12 +88,12 @@ contract ozMinter is StructGen {
 
 
      function rebuyPT(uint amountInUSDC_) external {
-        IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
+        // IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
 
        s.USDC.transferFrom(msg.sender, address(this), amountInUSDC_);
 
-       uint balancePT = sUSDe_PT_26SEP.balanceOf(address(this));
-       sUSDe_PT_26SEP.transfer(msg.sender, balancePT);
+       uint balancePT = s.pendlePT.balanceOf(address(this));
+       s.pendlePT.transfer(msg.sender, balancePT);
 
     }
 

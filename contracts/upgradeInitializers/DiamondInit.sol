@@ -52,6 +52,7 @@ contract DiamondInit {
         s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);
         s.sUSDeMarket = IPMarket(pendle_.sUSDeMarket);
         s.defaultApprox = ApproxParams(0, type(uint256).max, 0, 256, 1e14);
+        s.twapDuration = 15;
 
         // struct ApproxParams {
         //     uint256 guessMin;

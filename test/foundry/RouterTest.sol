@@ -144,6 +144,10 @@ contract RouterTest is Setup {
         // OZ.redeem(ozUsdToRedeem, owner);
         // vm.stopPrank();
         //-----------
+        console.log('--- ozOracle ---');
+        OZ.quotePT();
+        
+        console.log('--- end ---');
 
         uint balancePT = sUSDe_PT_26SEP.balanceOf(address(OZ));
         uint discount = (500 * balancePT) / 10_000;
@@ -174,9 +178,10 @@ contract RouterTest is Setup {
         uint32 duration = 15;
         
         // uint ptToAssetRate = MyWap(pendleOracle).getPtToAssetRate(sUSDeMarket, duration);
-        uint ptToAssetRate = sUSDeMarket.getPtToSyRate(duration);
+        uint ptToSyRate = sUSDeMarket.getPtToSyRate(duration);
+        uint ptToAssetRate = sUSDeMarket.getPtToAssetRate(duration);
+        console.log('ptToSyRate: ', ptToSyRate);
         console.log('ptToAssetRate: ', ptToAssetRate);
-
 
     }
 

@@ -21,6 +21,7 @@ struct AppStorage {
     SwapData emptySwap;
     LimitOrderData emptyLimit;
     ApproxParams defaultApprox;
+    uint32 twapDuration;
 
     //ERC20s
     IERC20 aWETH;
@@ -28,7 +29,7 @@ struct AppStorage {
     IERC20 sUSDe;
     IERC20 USDT;
     IERC20 ozUSD; //proxy
-    IERC20 pendlePT;
+    IERC20 pendlePT; //sUSDe_PT_26SEP
 
 }
 

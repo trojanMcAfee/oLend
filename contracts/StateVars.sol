@@ -21,6 +21,7 @@ import {DiamondInit} from "./upgradeInitializers/DiamondInit.sol";
 import {ozIDiamond} from "../contracts/interfaces/ozIDiamond.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSD} from "./ozUSD.sol";
+import {ozOracle} from "../contracts/facets/ozOracle.sol";
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -61,6 +62,7 @@ contract StateVars is StructGenTest, Test {
     ozIDiamond OZ;
     DiamondInit initDiamond;
     ozMinter minter;
+    ozOracle oracle;
 
     //ozUSD
     ERC1967Proxy ozUSDproxy;
