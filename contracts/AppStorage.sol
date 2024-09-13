@@ -22,6 +22,7 @@ struct AppStorage {
     LimitOrderData emptyLimit;
     ApproxParams defaultApprox;
     uint32 twapDuration;
+    uint ptDiscount;
 
     //ERC20s
     IERC20 aWETH;
@@ -50,4 +51,6 @@ struct ERC20s {
 struct PendleConfig {
     address pendleRouter;
     address sUSDeMarket;
+    uint32 twapDuration;
+    uint16 ptDiscount;
 }

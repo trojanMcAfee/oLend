@@ -85,7 +85,12 @@ contract Setup is StateVars {
             address(ozUSDproxy), 
             address(sUSDe_PT_26SEP)
         );
-        PendleConfig memory pendle = PendleConfig(address(pendleRouter), address(sUSDeMarket));
+        PendleConfig memory pendle = PendleConfig(
+            address(pendleRouter), 
+            address(sUSDeMarket),
+            twapDuration,
+            ptDiscount
+        );
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 

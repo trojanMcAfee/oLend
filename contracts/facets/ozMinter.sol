@@ -21,16 +21,6 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 import "forge-std/console.sol";
 
-interface MyPendleRouter {
-    function swapExactPtForToken(
-        address receiver,
-        address market,
-        uint256 exactPtIn,
-        TokenOutput calldata output,
-        LimitOrderData calldata limit
-    ) external returns (uint256 netTokenOut, uint256 netSyFee, uint256 netSyInterm);
-}
-
 
 contract ozMinter is StructGen {
 

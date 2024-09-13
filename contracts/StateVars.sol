@@ -38,6 +38,8 @@ contract StateVars is StructGenTest, Test {
     //Pendle
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);
     IPMarket public constant sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
+    uint32 twapDuration = 15; //secs
+    uint16 ptDiscount = 500; //5%
 
     //Aave
     address public constant aaveGW = 0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9;

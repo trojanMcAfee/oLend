@@ -145,7 +145,8 @@ contract RouterTest is Setup {
         // vm.stopPrank();
         //-----------
         console.log('--- ozOracle ---');
-        OZ.quotePT();
+        uint ptQuote = OZ.quotePT();
+        console.log('ptQuote: ', ptQuote);
         
         console.log('--- end ---');
 
