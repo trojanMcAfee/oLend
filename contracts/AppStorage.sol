@@ -7,6 +7,7 @@ import {IERC20} from "./interfaces/IERC20.sol";
 // import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3, SwapData, LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {InternalAccount} from "./InternalAccount.sol";
 
 
 struct AppStorage {
@@ -36,7 +37,8 @@ struct AppStorage {
     //System config
     address OZ;
     uint[] openOrders;
-    mapping(address user => address account) internalAccounts
+    // mapping(address user => address account) internalAccounts
+    mapping(address user => InternalAccount account) internalAccounts;
     // uint accountSequence; //<-- used in _createUser()
 
 }
@@ -67,10 +69,10 @@ struct PendleConfig {
 }
 
 struct UserAccountData {
-    uint totalCollateralBase,
-    uint totalDebtBase,
-    uint availableBorrowsBase,
-    uint currentLiquidationThreshold,
-    uint ltv,
-    uint healthFactor
+    uint totalCollateralBase;
+    uint totalDebtBase;
+    uint availableBorrowsBase;
+    uint currentLiquidationThreshold;
+    uint ltv;
+    uint healthFactor;
 }

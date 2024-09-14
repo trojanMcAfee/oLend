@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 
-// import {AppStorage} from "../AppStorage.sol";
+import {UserAccountData} from "../AppStorage.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 // import {LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionTypeV3.sol";
 // import {LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
@@ -20,6 +20,7 @@ import {IERC20, IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.so
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {Modifiers} from "../Modifiers.sol";
+import {InternalAccount} from "../InternalAccount.sol";
 
 import "forge-std/console.sol";
 
@@ -30,17 +31,22 @@ contract ozMinter is Modifiers {
     using Address for address;
 
     event NewAccountCreated(address account);
-    
+
 
     function lend(uint amountIn_, bool isETH_) external payable checkAavePool {      
-        if (s.internalAccounts[msg.sender] == address(0)) {
-            address internalAccount = _createUser();
-            emit NewAccountCreated(internalAccount);
+        InternalAccount account = s.internalAccounts[msg.sender];
+
+        if (address(s.internalAccounts[msg.sender]) == address(0)) {
+            account = _createUser();
+            emit NewAccountCreated(address(account));
         }
 
         if (isETH_) {
-            s.aaveGW.depositETH{value: msg.value}(s.aavePool, address(this), 0);
+            account.depositInAave{value: msg.value}();
             return;
+
+            // s.aaveGW.depositETH{value: msg.value}(s.aavePool, address(this), 0);
+            // return;
         }
     }
 
@@ -173,10 +179,14 @@ contract ozMinter is Modifiers {
     }
 
 
-    function _createUser() private returns(address) {
-        address internalAccount = address(bytes20(keccak256(abi.encode(block.prevrandao, msg.sender))));
-        s.internalAccounts[msg.sender] = internalAccount;
-        return internalAccount;
+    function _createUser() private returns(InternalAccount) {
+        InternalAccount account = new InternalAccount();
+        s.internalAccounts[msg.sender] = account;
+        return account;
+
+        // address internalAccount = address(bytes20(keccak256(abi.encode(block.prevrandao, msg.sender))));
+        // s.internalAccounts[msg.sender] = internalAccount;
+        // return internalAccount;
     }
 
 
