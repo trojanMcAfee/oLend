@@ -13,6 +13,7 @@ struct AppStorage {
     //Aave 
     IWrappedTokenGatewayV3 aaveGW;
     IPoolAddressesProvider aavePoolProvider;
+    address aavePool;
     uint VARIABLE_RATE;
 
     //Pendle

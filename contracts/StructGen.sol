@@ -7,7 +7,7 @@ import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {AppStorage} from "./AppStorage.sol";
 
 abstract contract StructGen {
-    AppStorage internal s;
+    // AppStorage internal s;
 
     // EmptySwap means no swap aggregator is involved
     // SwapData public emptySwap; <--- there are now in AppStorage.sol

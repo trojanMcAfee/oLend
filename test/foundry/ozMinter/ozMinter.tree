@@ -1,0 +1,17 @@
+ozMinter
+└── when lend is called
+    ├── given that two users have lent funds
+    │   └── it should both delegate credit to OZ diamond
+    ├── given that tokenIn is ETH
+    │   ├── given that amountIn is same as msgValue
+    │   │   └── it should mint ozUSD
+    │   └── given that amountIn is not the same as msgValue
+    │       └── it should throw error
+    ├── given that tokenIn is WETH
+    │   └── it should mint ozUSD
+    ├── given that tokenIn is a stablecoin
+    │   └── it should mint ozUSD
+    ├── given that amountIn is zero
+    │   └── it should throw error
+    └── given tokenIn is not authorized collateral
+        └── it should throw error
