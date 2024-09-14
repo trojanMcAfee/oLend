@@ -98,7 +98,8 @@ contract RouterTest is Setup {
 
         //User LENDS 
         vm.prank(owner);
-        OZ.lend{value: 1 ether}(true);
+        uint amountIn = 1 ether;
+        OZ.lend{value: 1 ether}(amountIn, true);
 
         (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
@@ -135,7 +136,8 @@ contract RouterTest is Setup {
         console.log('aWETH_bal pre lend: ', aWETH_bal);
 
         vm.prank(owner);
-        OZ.lend{value: 1 ether}(true);
+        uint amountIn = 1 ether;
+        OZ.lend{value: amountIn}(amountIn, true);
 
         aWETH_bal = aWETH.balanceOf(address(OZ));
         console.log('aWETH_bal post lend - 0: ', aWETH_bal);

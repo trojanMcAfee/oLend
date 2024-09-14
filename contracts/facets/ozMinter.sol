@@ -19,17 +19,17 @@ import {TokenOutput, LimitOrderData} from "@pendle/core-v2/contracts/interfaces/
 import {IERC20, IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
-import {Modifers} from "../Modifiers.sol";
+import {Modifiers} from "../Modifiers.sol";
 
 import "forge-std/console.sol";
 
 
-contract ozMinter is StructGen, Modifers {
+contract ozMinter is Modifiers {
 
     using SafeERC20 for IERC20;
     using Address for address;
 
-    function lend(bool isETH_) external payable checkAavePool {        
+    function lend(uint amountIn_, bool isETH_) external payable checkAavePool {        
         if (isETH_) {
             s.aaveGW.depositETH{value: msg.value}(s.aavePool, address(this), 0);
             return;

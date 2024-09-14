@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.0;
+pragma solidity 0.8.26;
 
-contract ozMinter {
+
+import {CoreMethods} from "../CoreMethods.sol";
+
+
+contract Lend is CoreMethods {
     modifier whenLendIsCalled() {
         _;
     }
@@ -15,7 +19,7 @@ contract ozMinter {
     }
 
     function test_GivenThatAmountInIsSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
-        // it should mint ozUSD
+        _borrow_and_mint_ozUSD(true);
     }
 
     function test_GivenThatAmountInIsNotTheSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
