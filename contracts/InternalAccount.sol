@@ -4,6 +4,7 @@ pragma solidity 0.8.26;
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 
 import "forge-std/console.sol";
 
@@ -20,10 +21,25 @@ contract InternalAccount {
         console.log('int acc: ', address(this));
         
         (,,uint availableBorrowsBase,,,) = aavePool.getUserAccountData(msg.sender);
-        console.log('availableBorrowsBase - oz: ', availableBorrowsBase);
+        console.log('availableBorrowsBase - oz - pre delegate: ', availableBorrowsBase);
 
         (,,uint availableBorrowsBase2,,,) = aavePool.getUserAccountData(address(this));
-        console.log('availableBorrowsBase - int acc: ', availableBorrowsBase2);
+        console.log('availableBorrowsBase - int acc - pre delegate: ', availableBorrowsBase2);
+
+        console.log('');
+        console.log('--- delegate credit ---');
+        console.log('');
+
+        //-----------
+        ICreditDelegationToken aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+        aaveVariableDebtUSDC.approveDelegation(msg.sender, type(uint).max);
+        // this ^ is not approving delegation to OZ <---------
+
+        (,,uint availableBorrowsBase3,,,) = aavePool.getUserAccountData(msg.sender);
+        console.log('availableBorrowsBase - oz - post delegate: ', availableBorrowsBase3);
+
+        (,,uint availableBorrowsBase4,,,) = aavePool.getUserAccountData(address(this));
+        console.log('availableBorrowsBase - int acc - post delegate: ', availableBorrowsBase4);
     }
 
     function delegateCredit() public {
