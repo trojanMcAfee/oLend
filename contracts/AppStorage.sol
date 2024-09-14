@@ -36,6 +36,8 @@ struct AppStorage {
     //System config
     address OZ;
     uint[] openOrders;
+    mapping(address user => address account) internalAccounts
+    // uint accountSequence; //<-- used in _createUser()
 
 }
 
@@ -62,4 +64,13 @@ struct PendleConfig {
     address sUSDeMarket;
     uint32 twapDuration;
     uint16 ptDiscount;
+}
+
+struct UserAccountData {
+    uint totalCollateralBase,
+    uint totalDebtBase,
+    uint availableBorrowsBase,
+    uint currentLiquidationThreshold,
+    uint ltv,
+    uint healthFactor
 }

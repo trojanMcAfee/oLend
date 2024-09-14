@@ -29,13 +29,25 @@ contract ozMinter is Modifiers {
     using SafeERC20 for IERC20;
     using Address for address;
 
-    function lend(uint amountIn_, bool isETH_) external payable checkAavePool {        
+    event NewAccountCreated(address account);
+    
+
+    function lend(uint amountIn_, bool isETH_) external payable checkAavePool {      
+        if (s.internalAccounts[msg.sender] == address(0)) {
+            address internalAccount = _createUser();
+            emit NewAccountCreated(internalAccount);
+        }
+
         if (isETH_) {
             s.aaveGW.depositETH{value: msg.value}(s.aavePool, address(this), 0);
             return;
         }
     }
 
+
+    function getUserAccountData(address user_) public view returns(UserAccountData memory) {
+
+    }
    
 
 
@@ -159,5 +171,13 @@ contract ozMinter is Modifiers {
         data = s.OZ.functionDelegateCall(data);
         return abi.decode(data, (uint));
     }
+
+
+    function _createUser() private returns(address) {
+        address internalAccount = address(bytes20(keccak256(abi.encode(block.prevrandao, msg.sender))));
+        s.internalAccounts[msg.sender] = internalAccount;
+        return internalAccount;
+    }
+
 
 }

@@ -51,6 +51,7 @@ contract CoreMethods is Setup {
         uint balanceOzUSD = ozUsd.balanceOf(owner);
         console.log('balanceOzUSD - owner: ', balanceOzUSD);
         assertTrue(balanceOzUSD > 0, '_borrow_and_mint_ozUSD: is 0');
+        //put this ^ as a ratio of discount to face-value PT 
     }
 
 
