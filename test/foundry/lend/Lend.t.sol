@@ -10,6 +10,11 @@ contract Lend is CoreMethods {
         _;
     }
 
+    //NEW
+    function test_GivenThatOneUserHasLentFunds() external whenLendIsCalled {
+        _lend(true);
+    }
+
     function test_GivenThatTwoUsersHaveLentFunds() external whenLendIsCalled {
         // it should both delegate credit to OZ diamond
     }
