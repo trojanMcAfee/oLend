@@ -65,9 +65,8 @@ contract ozMinter is Modifiers {
 
 
     function borrow2(uint amount_, address receiver_) external {
-        address aavePool = s.aavePoolProvider.getPool();
-
-        IPool(aavePool).borrow(address(s.USDC), amount_, s.VARIABLE_RATE, 0, address(this));
+        InternalAccount account = s.internalAccounts[msg.sender];
+        s.relayer.borrowInternal(amount_, receiver_, address(account));
 
         uint minTokenOut = 0;
 

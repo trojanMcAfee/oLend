@@ -15,9 +15,15 @@ contract ozRelayer {
         IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
         uint variableRate = 2;
 
-        console.log('usdc bal relayer - pre borrow: ', USDC.balanceOf(address(this)));
         aavePool.borrow(address(USDC), amount_, variableRate, 0, account_);
-        console.log('usdc bal relayer - post borrow: ', USDC.balanceOf(address(this)));
+
+        console.log('usdc bal oz - pre transfer: ', USDC.balanceOf(msg.sender));
+        console.log('msg.sender: ', msg.sender);
+
+        USDC.transfer(msg.sender, amount_);
+
+        console.log('usdc bal oz - post transfer: ', USDC.balanceOf(msg.sender));
+
     }
 
 }
