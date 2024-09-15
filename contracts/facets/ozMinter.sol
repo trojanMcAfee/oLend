@@ -57,14 +57,14 @@ contract ozMinter is Modifiers {
     }
    
 
-    function borrow(uint amount_, address receiver_) external {
+    function borrow2(uint amount_, address receiver_) external {
         InternalAccount account = s.internalAccounts[msg.sender];
         // account.borrowInternal(amount_, receiver_);
         s.relayer.borrowInternal(amount_, receiver_, address(account));
     }
 
 
-    function borrow2(uint amount_, address receiver_) external {
+    function borrow(uint amount_, address receiver_) external {
         InternalAccount account = s.internalAccounts[msg.sender];
         s.relayer.borrowInternal(amount_, receiver_, address(account));
 
@@ -75,7 +75,7 @@ contract ozMinter is Modifiers {
             address(s.USDC), 
             address(s.sUSDe), 
             address(this), 
-            s.USDC.balanceOf(address(this)), 
+            amount_, //s.USDC.balanceOf(address(this))
             minTokenOut
         );
         // console.log('sUSDeOut: ', sUSDeOut);
@@ -100,8 +100,6 @@ contract ozMinter is Modifiers {
         // console.log('discountedPT: ', discountedPT);
 
         s.openOrders.push(discountedPT);
-
-        // s.ozUSD.mint(receiver_, sUSDeOut);
     }
     
     function finishBorrow(address receiver_) external {
