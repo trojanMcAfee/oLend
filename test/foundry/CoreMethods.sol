@@ -12,7 +12,7 @@ contract CoreMethods is Setup {
 
     function _lend(bool isETH_) internal {
         uint currETHbal = owner.balance;
-        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, 'do_a_borrow: owner not enough balance');
+        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, '_lend: owner not enough balance');
 
         //User LENDS 
         vm.prank(owner);
@@ -22,12 +22,29 @@ contract CoreMethods is Setup {
         assertTrue(owner.balance == currETHbal - 1 ether);
     }
 
+    function _delegateCredit() internal {
+        _lend(true);
+
+        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
+        uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
+
+        // console.log('availableBorrowsBase: ', availableBorrowsBase);
+        console.log('');
+
+        vm.prank(owner);
+        OZ.borrow(amountBorrow, address(0));
+    }
+
     function _borrow_and_mint_ozUSD(bool isETH_) internal {
         //User LENDS 
         assertTrue(ozUsd.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
         _lend(true);
 
+        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
         // console.log('amount to borrow in USD after lend() - aave: ', availableBorrowsBase);

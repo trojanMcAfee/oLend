@@ -167,6 +167,9 @@ contract Setup is StateVars {
         vm.label(0x1A6fCc85557BC4fB7B534ed835a03EF056552D52, 'marketFactory_pendle');
         vm.label(address(sUSDe_PT_26SEP), 'sUSDe_PT_26SEP');
         vm.label(0x8903dBFFcA66b3Fbc027aC81912ea64Fa61A5219, 'ActionSwapYTV3_pendle');
+        vm.label(0x41717de714Db8630F02Dea8f6A39C73A5b5C7df1, 'BorrowLogic_aave');
+        vm.label(0x34339f94350EC5274ea44d0C37DAe9e968c44081, 'PoolInstance_aave');
+        vm.label(aavePoolProvider, 'aavePoolProvider');
     }
 
 

@@ -38,6 +38,7 @@ contract ozMinter is Modifiers {
 
         if (address(s.internalAccounts[msg.sender]) == address(0)) {
             account = _createUser();
+            console.log('InternalAccount: ', address(account));
             emit NewAccountCreated(address(account));
         }
 
@@ -56,9 +57,13 @@ contract ozMinter is Modifiers {
     }
    
 
-
-
     function borrow(uint amount_, address receiver_) external {
+        InternalAccount account = s.internalAccounts[msg.sender];
+        account.borrowInternal(amount_, receiver_);
+    }
+
+
+    function borrow2(uint amount_, address receiver_) external {
         address aavePool = s.aavePoolProvider.getPool();
 
         IPool(aavePool).borrow(address(s.USDC), amount_, s.VARIABLE_RATE, 0, address(this));
@@ -183,10 +188,6 @@ contract ozMinter is Modifiers {
         InternalAccount account = new InternalAccount();
         s.internalAccounts[msg.sender] = account;
         return account;
-
-        // address internalAccount = address(bytes20(keccak256(abi.encode(block.prevrandao, msg.sender))));
-        // s.internalAccounts[msg.sender] = internalAccount;
-        // return internalAccount;
     }
 
 

@@ -1,4 +1,4 @@
-ozMinter
+lend
 └── when lend is called
     ├── given that two users have lent funds
     │   └── it should both delegate credit to OZ diamond

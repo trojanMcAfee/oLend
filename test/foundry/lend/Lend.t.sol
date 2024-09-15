@@ -12,7 +12,9 @@ contract Lend is CoreMethods {
 
     //NEW
     function test_GivenThatOneUserHasLentFunds() external whenLendIsCalled {
-        _lend(true);
+        //it should lend funds and delegate credit to OZ
+        // _lend(true);
+        _delegateCredit();
     }
 
     function test_GivenThatTwoUsersHaveLentFunds() external whenLendIsCalled {
