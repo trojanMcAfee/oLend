@@ -21,15 +21,13 @@ import {DiamondInit} from "./upgradeInitializers/DiamondInit.sol";
 import {ozIDiamond} from "../contracts/interfaces/ozIDiamond.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSD} from "./ozUSD.sol";
+import {ozRelayer} from "./ozRelayer.sol";
 import {ozOracle} from "../contracts/facets/ozOracle.sol";
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
 
 contract StateVars is StructGenTest, Test {
-
-    address public constant ownerPT = 0x62178e35ccef8E00e33AFC95F12a590b40E51E04;
-    uint blockOwnerPT = 20468410;
 
     uint currentBlock = 20665666;
     address owner = makeAddr('owner');
@@ -71,4 +69,6 @@ contract StateVars is StructGenTest, Test {
     ozUSD ozUSDimpl;
     IERC20 ozUsd; 
     
+    //System
+    ozRelayer relayer;
 }

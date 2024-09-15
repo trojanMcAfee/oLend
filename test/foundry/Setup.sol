@@ -16,6 +16,7 @@ import {Diamond} from "../../contracts/Diamond.sol";
 import {AaveConfig, ERC20s, PendleConfig, SysConfig} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSD} from "../../contracts/ozUSD.sol";
+import {ozRelayer} from "../../contracts/ozRelayer.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {ozOracle} from "../../contracts/facets/ozOracle.sol";
 
@@ -60,6 +61,9 @@ contract Setup is StateVars {
         ozUSDproxy = new ERC1967Proxy(address(ozUSDimpl), data);
         ozUsd = IERC20(address(ozUSDproxy));
 
+        //Deploys sys config
+        relayer = new ozRelayer();
+
         //Create initial FacetCuts
         address[4] memory facets = [
             address(loupe),
@@ -77,6 +81,7 @@ contract Setup is StateVars {
 
         //Deploy initial diamond cut
         AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
+
         ERC20s memory tokens = ERC20s(
             aWETHaddr, 
             USDCaddr, 
@@ -92,7 +97,7 @@ contract Setup is StateVars {
             ptDiscount
         );
 
-        SysConfig memory sys = SysConfig(address(OZ));
+        SysConfig memory sys = SysConfig(address(OZ), address(relayer));
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
@@ -155,7 +160,6 @@ contract Setup is StateVars {
         vm.label(address(pendleRouter), 'pendleRouter');
         vm.label(address(sUSDeMarket), 'sUSDeMarket');
         vm.label(address(sUSDe), 'sUSDe');
-        vm.label(ownerPT, 'ownerPT');
         vm.label(address(sUSDe), 'sUSDe');
         vm.label(address(YT), 'sUSDe_YT_26SEP');
         vm.label(aWETHaddr, 'aWETH');
@@ -170,6 +174,7 @@ contract Setup is StateVars {
         vm.label(0x41717de714Db8630F02Dea8f6A39C73A5b5C7df1, 'BorrowLogic_aave');
         vm.label(0x34339f94350EC5274ea44d0C37DAe9e968c44081, 'PoolInstance_aave');
         vm.label(aavePoolProvider, 'aavePoolProvider');
+        vm.label(address(relayer), 'ozRelayer');
     }
 
 

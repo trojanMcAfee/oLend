@@ -58,9 +58,9 @@ contract ozMinter is Modifiers {
    
 
     function borrow(uint amount_, address receiver_) external {
-        console.log('sender in borrow - ozMinter: ', msg.sender);
         InternalAccount account = s.internalAccounts[msg.sender];
-        account.borrowInternal(amount_, receiver_);
+        // account.borrowInternal(amount_, receiver_);
+        s.relayer.borrowInternal(amount_, receiver_, address(account));
     }
 
 
@@ -186,7 +186,7 @@ contract ozMinter is Modifiers {
 
 
     function _createUser() private returns(InternalAccount) {
-        InternalAccount account = new InternalAccount();
+        InternalAccount account = new InternalAccount(address(s.relayer));
         s.internalAccounts[msg.sender] = account;
         return account;
     }

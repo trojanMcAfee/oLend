@@ -22,6 +22,7 @@ import {IERC20} from "../interfaces/IERC20.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
+import {ozRelayer} from "../ozRelayer.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -75,6 +76,7 @@ contract DiamondInit {
 
         //System config
         s.OZ = sys_.OZ;
+        s.relayer = ozRelayer(sys_.relayer);
 
 
 

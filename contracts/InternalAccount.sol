@@ -6,11 +6,18 @@ import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfac
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 import {IERC20} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+// import {ozRelayer} from "./ozRelayer.sol";
 
 import "forge-std/console.sol";
 
 
 contract InternalAccount {
+
+    address public relayer;
+
+    constructor(address relayer_) {
+        relayer = relayer_;
+    }
 
     function depositInAave() public payable {
         IWrappedTokenGatewayV3 aaveGW = IWrappedTokenGatewayV3(0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9);
@@ -32,7 +39,7 @@ contract InternalAccount {
         console.log('msg.sender - oz: ', msg.sender);
         address OZ = 0xc7183455a4C133Ae270771860664b6B7ec320bB1;
         ICreditDelegationToken aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
-        aaveVariableDebtUSDC.approveDelegation(OZ, type(uint).max);
+        aaveVariableDebtUSDC.approveDelegation(relayer, type(uint).max);
 
     }
 
@@ -51,14 +58,16 @@ contract InternalAccount {
         console.log('intAccount usdc bal - pre borrow: ', USDC.balanceOf(address(this)));
         console.log('owner usdc bal - pre borrow: ', USDC.balanceOf(owner));
 
-        // aavePool.borrow(address(USDC), amount_, variableRate, 0, address(this));
-        (bool s,) = address(aavePool).delegatecall(
-            abi.encodeWithSelector(
-                aavePool.borrow.selector, 
-                address(USDC), amount_, variableRate, 0, address(this)
-            )
-        );
-        require(s, 'fff');
+        aavePool.borrow(address(USDC), amount_, variableRate, 0, address(this));
+        //this ^ has msg.sender as InternalAccount instead of OZ. See how to change that.
+
+        // (bool s,) = address(aavePool).delegatecall(
+        //     abi.encodeWithSelector(
+        //         aavePool.borrow.selector, 
+        //         address(USDC), amount_, variableRate, 0, address(this)
+        //     )
+        // );
+        // require(s, 'fff');
 
         console.log('oz usdc bal - post borrow: ', USDC.balanceOf(OZ));
         console.log('intAccount usdc bal - post borrow: ', USDC.balanceOf(address(this)));

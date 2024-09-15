@@ -8,6 +8,7 @@ import {IERC20} from "./interfaces/IERC20.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3, SwapData, LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {InternalAccount} from "./InternalAccount.sol";
+import {ozRelayer} from "./ozRelayer.sol";
 
 
 struct AppStorage {
@@ -40,11 +41,13 @@ struct AppStorage {
     // mapping(address user => address account) internalAccounts
     mapping(address user => InternalAccount account) internalAccounts;
     // uint accountSequence; //<-- used in _createUser()
+    ozRelayer relayer;
 
 }
 
 struct SysConfig {
     address OZ; 
+    address relayer;
 }
 
 struct AaveConfig {
