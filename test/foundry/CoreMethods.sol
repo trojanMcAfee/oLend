@@ -28,7 +28,8 @@ contract CoreMethods is Setup {
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
         (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
-        uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
+        uint amountBorrow = 1000 * 1e6;
+        // uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
 
         // console.log('availableBorrowsBase: ', availableBorrowsBase);
         console.log('');

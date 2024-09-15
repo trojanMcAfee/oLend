@@ -2,6 +2,7 @@
 pragma solidity >=0.8.23 <0.9.0;
 
 
+import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IStandardizedYield} from "@pendle/core-v2/contracts/interfaces/IStandardizedYield.sol";
 import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipalToken.sol";
 import {Setup} from "./Setup.sol";
@@ -9,7 +10,8 @@ import {Setup} from "./Setup.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {stdStorage, StdStorage} from "forge-std/Test.sol";  
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";   
-import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";         
+import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";   
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";      
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -285,6 +287,41 @@ contract RouterTest is Setup {
         console.log('');
 
         test_mintPT();
+    }
+
+
+    function test_delegation() public {
+        vm.prank(owner);
+        IWrappedTokenGatewayV3(aaveGW).depositETH{value: 1 ether}(address(aavePool), owner, 0);
+
+        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(owner);
+        console.log('availableBorrowsBase owner - pre delegation: ', availableBorrowsBase);
+        uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
+
+        (,,uint256 availableBorrowsBase4,,,) = aavePool.getUserAccountData(second_owner);
+        console.log('availableBorrowsBase second_owner - pre delegation: ', availableBorrowsBase4);
+
+        ICreditDelegationToken aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+        vm.prank(owner);
+        aaveVariableDebtUSDC.approveDelegation(second_owner, type(uint).max);
+
+        console.log('');
+
+        (,,uint256 availableBorrowsBase2,,,) = aavePool.getUserAccountData(owner);
+        console.log('availableBorrowsBase owner - post delegation: ', availableBorrowsBase2);
+
+        (,,uint256 availableBorrowsBase3,,,) = aavePool.getUserAccountData(second_owner);
+        console.log('availableBorrowsBase second_owner - post delegation: ', availableBorrowsBase3);
+        //-------------------
+
+        console.log('');
+        console.log('usdc bal second_owner - pre borrow: ', IERC20(USDCaddr).balanceOf(second_owner));
+        
+        vm.prank(second_owner);
+        aavePool.borrow(USDCaddr, amountBorrow, 2, 0, owner);
+
+        console.log('usdc bal second_owner - post borrow: ', IERC20(USDCaddr).balanceOf(second_owner));
+
     }
 
 
