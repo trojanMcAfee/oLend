@@ -12,9 +12,9 @@ contract Lend is CoreMethods {
 
     //NEW
     function test_GivenThatOneUserHasLentFunds() external whenLendIsCalled {
-        //it should lend funds and delegate credit to OZ
-        // _lend(true);
-        _delegateCredit();
+        //it should lend funds and delegate credit to ozRelayer
+        _lend(true); //<--- catch the delegation on this test using the FundsDelegated event on depositInAave()
+        // _delegateCredit();
     }
 
     function test_GivenThatTwoUsersHaveLentFunds() external whenLendIsCalled {
@@ -26,6 +26,7 @@ contract Lend is CoreMethods {
     }
 
     function test_GivenThatAmountInIsSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
+        //it should mint ozUSD by borrowing
         _borrow_and_mint_ozUSD(true);
     }
 

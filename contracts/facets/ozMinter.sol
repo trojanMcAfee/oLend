@@ -46,9 +46,6 @@ contract ozMinter is Modifiers {
         if (isETH_) {
             account.depositInAave{value: msg.value}();
             return;
-
-            // s.aaveGW.depositETH{value: msg.value}(s.aavePool, address(this), 0);
-            // return;
         }
     }
 
@@ -105,17 +102,14 @@ contract ozMinter is Modifiers {
             createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
             s.emptyLimit
         );
-        // console.log('netPtOut - sUSDe: ', netPtOut);
 
         uint discountedPT = _calculateDiscountPT();
-        // console.log('discountedPT: ', discountedPT);
 
         s.openOrders.push(discountedPT);
     }
     
     function finishBorrow(address receiver_) external {
         uint balanceUSDC = s.USDC.balanceOf(address(this));
-        // console.log('balanceUSDC - in finishBorrow - not 0: ', balanceUSDC);
         s.ozUSD.mint(receiver_, balanceUSDC);
     }
 

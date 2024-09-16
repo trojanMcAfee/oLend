@@ -15,11 +15,13 @@ contract InternalAccount {
 
     address public relayer;
 
+    event FundsDelegated(address indexed internalAccount, uint indexed amount);
+
     constructor(address relayer_) {
         relayer = relayer_;
     }
 
-    function depositInAave() public payable {
+    function depositInAave() public payable { //<--- change depositInAave to depositAndDelegatex
         IWrappedTokenGatewayV3 aaveGW = IWrappedTokenGatewayV3(0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9);
         IPool aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
 
@@ -27,6 +29,8 @@ contract InternalAccount {
 
         ICreditDelegationToken aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         aaveVariableDebtUSDC.approveDelegation(relayer, type(uint).max);
+        
+        emit FundsDelegated(address(this), msg.value);
     }
 
 }
