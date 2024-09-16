@@ -18,8 +18,15 @@ contract ozRelayer {
         IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
         uint variableRate = 2;
 
-        aavePool.borrow(address(USDC), amount_, variableRate, 0, account_);
+        aavePool.borrow(address(USDC), _revertDiscount(amount_), variableRate, 0, account_);
         USDC.safeTransfer(msg.sender, amount_);
+    }
+
+    function _revertDiscount(uint amount_) private returns(uint) {
+        uint ptDiscount = 500;
+        uint hardCoded_2ndDiscount = 10;
+        return (10_000 * amount_) / (10_000 - ptDiscount - hardCoded_2ndDiscount);
+        // reverting discount here ^ so the borrow amount in aavePool call is the same as original availableBorrowsBase
     }
 
 }

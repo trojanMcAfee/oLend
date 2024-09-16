@@ -11,20 +11,20 @@ import "forge-std/console.sol";
 
 contract CoreMethods is Setup {
 
-    function _lend(bool isETH_) internal {
-        uint currETHbal = owner.balance;
-        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, '_lend: owner not enough balance');
+    function _lend(address user_, bool isETH_) internal {
+        uint currETHbal = user_.balance;
+        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, '_lend: user_ not enough balance');
 
         //User LENDS 
-        vm.prank(owner);
+        vm.prank(user_);
         uint amountIn = 1 ether;
         OZ.lend{value: amountIn}(amountIn, true);
 
-        assertTrue(owner.balance == currETHbal - 1 ether);
+        assertTrue(user_.balance == currETHbal - 1 ether);
     }
 
     function _delegateCredit() internal {
-        _lend(true);
+        _lend(owner, true);
 
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
         (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
@@ -43,7 +43,7 @@ contract CoreMethods is Setup {
         //User LENDS 
         assertTrue(ozUsd.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
-        _lend(true);
+        _lend(owner, true);
 
         //-----
         console.log('');
