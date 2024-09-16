@@ -44,27 +44,11 @@ contract CoreMethods is Setup {
         assertTrue(ozUsd.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
         _lend(owner, true);
-
-        //-----
-        console.log('');
-        console.log('--- in _borrow_and_mint_ozUSD ---');
-
         UserAccountData memory userData = OZ.getUserAccountData(owner);
-        console.log('availableBorrowsBase user: ', userData.availableBorrowsBase);
-        //-----
-
-        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        console.log('availableBorrowsBase int acc in test - aave: ', availableBorrowsBase);
-
-        // uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
-        uint toBorrow = userData.availableBorrowsBase;
-        console.log('toBorrow - _borrow test - same as revertDiscount(): ', toBorrow);
-        console.log('');
 
         //User BORROWS
         vm.startPrank(owner);
-        OZ.borrow(toBorrow, owner);
+        OZ.borrow(userData.availableBorrowsBase, owner);
         vm.stopPrank();
 
         uint ptQuote = OZ.quotePT();

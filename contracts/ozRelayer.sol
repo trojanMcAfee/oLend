@@ -20,18 +20,12 @@ contract ozRelayer {
 
         uint revertedAmount = _revertDiscount(amount_);
 
-        console.log('');
-        console.log('--- in borrowInternal ---');
-        console.log('_revertDiscount(amount_) *****: ', revertedAmount);
-        console.log('amount_: ', amount_);
-        console.log('');
-
         aavePool.borrow(address(USDC), revertedAmount, variableRate, 0, account_);
         USDC.safeTransfer(msg.sender, revertedAmount);
         return revertedAmount;
     }
 
-    function _revertDiscount(uint amount_) private returns(uint) {
+    function _revertDiscount(uint amount_) private pure returns(uint) {
         uint ptDiscount = 500;
         uint hardCoded_2ndDiscount = 10;
         return (10_000 * amount_) / (10_000 - ptDiscount - hardCoded_2ndDiscount);

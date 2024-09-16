@@ -65,13 +65,6 @@ contract ozMinter is Modifiers {
             uint healthFactor
         ) = s.aavePool.getUserAccountData(address(account));
 
-        
-        console.log('');
-        console.log('--- in getUserAccData ---');
-        console.log('availableBorrowsBase in my getAccData aave: ', availableBorrowsBase);
-        console.log('_applyDiscount(availableBorrowsBase): ', _applyDiscount(availableBorrowsBase));
-        console.log('');
-
         userData = UserAccountData(
             totalCollateralBase,
             totalDebtBase,
@@ -98,10 +91,7 @@ contract ozMinter is Modifiers {
             revertedAmount, 
             minTokenOut
         );
-        console.log('USDC in - swapUni: ', revertedAmount);
-        console.log('sUSDeOut - swapUni: ', sUSDeOut);
-
-
+      
         // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working - 2nd instance of issue - prob diff IERC20 versions
         s.sUSDe.approve(address(s.pendleRouter), sUSDeOut);
 
@@ -192,10 +182,7 @@ contract ozMinter is Modifiers {
                 amountOutMinimum: minAmountOut_
             });
 
-        // console.log(uint(1));
-        uint y = swapRouterUni.exactInput(params);
-        // console.log(uint(2));
-        return y;
+        return swapRouterUni.exactInput(params);
     }
 
 
@@ -224,19 +211,7 @@ contract ozMinter is Modifiers {
      * availableBorrowsBase's is almost the same as PT value in assetRate. 
      */
     function _applyDiscount(uint singleState_) private view returns(uint) {
-        uint x = (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
-        
-        console.log('');
-        console.log('--- in _applyDiscount() ---');
-        console.log('singleState_: ', singleState_);
-        console.log('discount: ', (s.ptDiscount - 10).mulDivDown(singleState_, 10_000));
-        console.log('availableBorrowsBase discounted - in _applyD(): ', x);
-        console.log('singleState2 - = singleState_: ', (10_000 * x) / (10_000 - s.ptDiscount - 10));
-        console.log('');
-    
-        // a = b - ([(c + 10) * b] / d)
-
-        return x;
+        return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
     }
 
 
