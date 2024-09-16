@@ -25,8 +25,8 @@ contract InternalAccount {
 
         aaveGW.depositETH{value: msg.value}(address(aavePool), address(this), 0);
 
-        console.log('msg.sender - ozDiamond: ', msg.sender);
-        console.log('int acc: ', address(this));
+        // console.log('msg.sender - ozDiamond: ', msg.sender);
+        // console.log('int acc: ', address(this));
 
         (,,uint availableBorrowsBase2,,,) = aavePool.getUserAccountData(address(this));
         console.log('availableBorrowsBase - int acc - pre delegate: ', availableBorrowsBase2);

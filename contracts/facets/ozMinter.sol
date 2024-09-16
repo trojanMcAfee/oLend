@@ -40,7 +40,6 @@ contract ozMinter is Modifiers {
 
         if (address(s.internalAccounts[msg.sender]) == address(0)) {
             account = _createUser();
-            console.log('InternalAccount: ', address(account));
             emit NewAccountCreated(address(account));
         }
 
@@ -67,6 +66,10 @@ contract ozMinter is Modifiers {
         ) = s.aavePool.getUserAccountData(address(account));
 
         // console.log('availableBorrowsBase in my getAccData: ', availableBorrowsBase);
+        console.log('');
+        console.log('--- in getUserAccData ---');
+        console.log('_applyDiscount(availableBorrowsBase): ', _applyDiscount(availableBorrowsBase));
+        console.log('');
 
         userData = UserAccountData(
             totalCollateralBase,
@@ -82,7 +85,7 @@ contract ozMinter is Modifiers {
 
     function borrow(uint amount_, address receiver_) external {
         InternalAccount account = s.internalAccounts[msg.sender];
-        s.relayer.borrowInternal(amount_, receiver_, address(account));
+        uint revertedAmount = s.relayer.borrowInternal(amount_, receiver_, address(account));
 
         uint minTokenOut = 0;
 
@@ -91,10 +94,11 @@ contract ozMinter is Modifiers {
             address(s.USDC), 
             address(s.sUSDe), 
             address(this), 
-            amount_, 
+            revertedAmount, 
             minTokenOut
         );
-        // console.log('sUSDeOut: ', sUSDeOut);
+        console.log('USDC in - swapUni: ', revertedAmount);
+        console.log('sUSDeOut - swapUni: ', sUSDeOut);
 
 
         // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working - 2nd instance of issue - prob diff IERC20 versions
@@ -176,18 +180,21 @@ contract ozMinter is Modifiers {
         ISwapRouter swapRouterUni = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
         // IERC20(tokenIn_).safeApprove(address(swapRouterUni), amountIn_); //<--- not working dont know why
         IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
-        uint24 poolFeed = 500;
+        uint24 poolFee = 500;
 
         ISwapRouter.ExactInputParams memory params =
             ISwapRouter.ExactInputParams({
-                path: abi.encodePacked(tokenIn_, poolFeed, address(s.USDT), poolFeed, tokenOut_), //500 -> 0.05
+                path: abi.encodePacked(tokenIn_, poolFee, address(s.USDT), poolFee, tokenOut_), //500 -> 0.05
                 recipient: receiver_,
                 deadline: block.timestamp,
                 amountIn: amountIn_,
                 amountOutMinimum: minAmountOut_
             });
 
-        return swapRouterUni.exactInput(params);
+        // console.log(uint(1));
+        uint y = swapRouterUni.exactInput(params);
+        // console.log(uint(2));
+        return y;
     }
 
 
@@ -216,7 +223,7 @@ contract ozMinter is Modifiers {
      * availableBorrowsBase's is almost the same as PT value in assetRate. 
      */
     function _applyDiscount(uint singleState_) private view returns(uint) {
-        uint x = singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000);
+        uint x = (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
         
         // console.log('');
         // console.log('--- in _applyDiscount() ---');

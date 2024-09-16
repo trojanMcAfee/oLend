@@ -176,6 +176,8 @@ contract Setup is StateVars {
         vm.label(0x34339f94350EC5274ea44d0C37DAe9e968c44081, 'PoolInstance_aave');
         vm.label(aavePoolProvider, 'aavePoolProvider');
         vm.label(address(relayer), 'ozRelayer');
+        vm.label(0xE592427A0AEce92De3Edee1F18E0157C05861564, 'swapRouter_uni');
+        vm.label(0x7858E59e0C01EA06Df3aF3D20aC7B0003275D4Bf, 'USDC-USDT_uni');
     }
 
 

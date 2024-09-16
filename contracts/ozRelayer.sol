@@ -13,20 +13,28 @@ contract ozRelayer {
 
     using SafeERC20 for IERC20;
 
-    function borrowInternal(uint amount_, address receiver_, address account_) external {
+    function borrowInternal(uint amount_, address receiver_, address account_) external returns(uint) {
         IPool aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
         IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
         uint variableRate = 2;
 
-        aavePool.borrow(address(USDC), _revertDiscount(amount_), variableRate, 0, account_);
-        USDC.safeTransfer(msg.sender, amount_);
+        uint revertedAmount = _revertDiscount(amount_);
+
+        console.log('');
+        console.log('--- in borrowInternal ---');
+        console.log('_revertDiscount(amount_) *****: ', revertedAmount);
+        console.log('amount_: ', amount_);
+        console.log('');
+
+        aavePool.borrow(address(USDC), revertedAmount, variableRate, 0, account_);
+        USDC.safeTransfer(msg.sender, revertedAmount);
+        return revertedAmount;
     }
 
     function _revertDiscount(uint amount_) private returns(uint) {
         uint ptDiscount = 500;
         uint hardCoded_2ndDiscount = 10;
         return (10_000 * amount_) / (10_000 - ptDiscount - hardCoded_2ndDiscount);
-        // reverting discount here ^ so the borrow amount in aavePool call is the same as original availableBorrowsBase
     }
 
 }
