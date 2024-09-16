@@ -65,9 +65,10 @@ contract ozMinter is Modifiers {
             uint healthFactor
         ) = s.aavePool.getUserAccountData(address(account));
 
-        // console.log('availableBorrowsBase in my getAccData: ', availableBorrowsBase);
+        
         console.log('');
         console.log('--- in getUserAccData ---');
+        console.log('availableBorrowsBase in my getAccData aave: ', availableBorrowsBase);
         console.log('_applyDiscount(availableBorrowsBase): ', _applyDiscount(availableBorrowsBase));
         console.log('');
 
@@ -225,14 +226,14 @@ contract ozMinter is Modifiers {
     function _applyDiscount(uint singleState_) private view returns(uint) {
         uint x = (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
         
-        // console.log('');
-        // console.log('--- in _applyDiscount() ---');
-        // console.log('singleState_: ', singleState_);
-        // console.log('discount: ', (s.ptDiscount - 10).mulDivDown(singleState_, 10_000));
-        // console.log('availableBorrowsBase discounted - in _applyD(): ', x);
-        // console.log('singleState2 - = singleState_: ', (10_000 * x) / (10_000 - s.ptDiscount - 10));
-        // console.log('');
-
+        console.log('');
+        console.log('--- in _applyDiscount() ---');
+        console.log('singleState_: ', singleState_);
+        console.log('discount: ', (s.ptDiscount - 10).mulDivDown(singleState_, 10_000));
+        console.log('availableBorrowsBase discounted - in _applyD(): ', x);
+        console.log('singleState2 - = singleState_: ', (10_000 * x) / (10_000 - s.ptDiscount - 10));
+        console.log('');
+    
         // a = b - ([(c + 10) * b] / d)
 
         return x;
