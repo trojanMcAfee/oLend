@@ -28,8 +28,9 @@ contract ozOracle {
         
         uint quoteInStable = balancePTinAsset - discount;
 
-        // console.log('quoteInStable in quotePT: ', quoteInStable);
-        // console.log('balancePTinAsset in quotePT: ', balancePTinAsset);
+        console.log('');
+        console.log('quoteInStable in quotePT: ', quoteInStable);
+        console.log('balancePTinAsset in quotePT: ', balancePTinAsset);
 
         return quoteInStable;
     }

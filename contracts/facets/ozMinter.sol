@@ -21,6 +21,7 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {Modifiers} from "../Modifiers.sol";
 import {InternalAccount} from "../InternalAccount.sol";
+import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 
 import "forge-std/console.sol";
 
@@ -29,6 +30,7 @@ contract ozMinter is Modifiers {
 
     using SafeERC20 for IERC20;
     using Address for address;
+    using FixedPointMathLib for uint;
 
     event NewAccountCreated(address account);
 
@@ -52,16 +54,30 @@ contract ozMinter is Modifiers {
     }
 
 
-    function getUserAccountData(address user_) public view returns(UserAccountData memory) {
+    function getUserAccountData(address user_) external view returns(UserAccountData memory userData) {
+        InternalAccount account = s.internalAccounts[user_];
+        
+        (
+            uint totalCollateralBase,
+            uint totalDebtBase,
+            uint availableBorrowsBase,
+            uint currentLiquidationThreshold,
+            uint ltv,
+            uint healthFactor
+        ) = s.aavePool.getUserAccountData(address(account));
 
-    }
-   
+        // console.log('availableBorrowsBase in my getAccData: ', availableBorrowsBase);
 
-    function borrow2(uint amount_, address receiver_) external {
-        InternalAccount account = s.internalAccounts[msg.sender];
-        // account.borrowInternal(amount_, receiver_);
-        s.relayer.borrowInternal(amount_, receiver_, address(account));
+        userData = UserAccountData(
+            totalCollateralBase,
+            totalDebtBase,
+            _applyDiscount(availableBorrowsBase),
+            currentLiquidationThreshold,
+            ltv,
+            healthFactor
+        );
     }
+
 
 
     function borrow(uint amount_, address receiver_) external {
@@ -75,13 +91,13 @@ contract ozMinter is Modifiers {
             address(s.USDC), 
             address(s.sUSDe), 
             address(this), 
-            amount_, //s.USDC.balanceOf(address(this))
+            amount_, 
             minTokenOut
         );
         // console.log('sUSDeOut: ', sUSDeOut);
 
 
-        // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working idk why - 2nd instance of issue 
+        // s.USDC.safeApprove(address(s.pendleRouter), amount_); <---- this is not working - 2nd instance of issue - prob diff IERC20 versions
         s.sUSDe.approve(address(s.pendleRouter), sUSDeOut);
 
         uint minPTout = 0;
@@ -109,7 +125,7 @@ contract ozMinter is Modifiers {
     }
 
 
-     function rebuyPT(uint amountInUSDC_) external {
+     function rebuyPT(uint amountInUSDC_) external { //do this with a signature instead of approve()
         require(s.openOrders.length > 0, 'rebuyPT: error');
         
         s.USDC.transferFrom(msg.sender, address(this), amountInUSDC_);
@@ -181,11 +197,32 @@ contract ozMinter is Modifiers {
         return abi.decode(data, (uint));
     }
 
-
     function _createUser() private returns(InternalAccount) {
         InternalAccount account = new InternalAccount(address(s.relayer));
         s.internalAccounts[msg.sender] = account;
         return account;
+    }
+
+
+    /**
+     * Current implementation hardcodes an extra 10 bps (0.1%) on the discount that's
+     * available for borrowing (0.1% less borrowable amount from Aave).
+     * 
+     * Once the order book is properly set up, an algorithm for this function must be created
+     * to better reflect the relationship between the value of PT in assetRate (USDC, USDe)
+     * the applied discount to PT repurchase (currently at 5%), and the original availableBorrowsBase
+     * from Aave when lending user's tokens.
+     *
+     * availableBorrowsBase's is almost the same as PT value in assetRate. 
+     */
+    function _applyDiscount(uint singleState_) private view returns(uint) {
+        uint x = singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000);
+        // console.log('');
+        // console.log('--- in _applyDiscount() ---');
+        // console.log('singleState_: ', singleState_);
+        // console.log('discount: ', (s.ptDiscount - 10).mulDivDown(singleState_, 10_000));
+        // console.log('availableBorrowsBase discounted - in _applyD(): ', x);
+        return x;
     }
 
 

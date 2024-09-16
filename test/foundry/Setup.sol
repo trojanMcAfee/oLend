@@ -121,7 +121,7 @@ contract Setup is StateVars {
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
-            length = 5;
+            length = 6;
         } else if (id_ == 3) { // ozOracle
             length = 1;
         }
@@ -143,6 +143,7 @@ contract Setup is StateVars {
             selectors[2] = minter.redeem.selector;
             selectors[3] = minter.rebuyPT.selector;
             selectors[4] = minter.finishBorrow.selector;
+            selectors[5] = minter.getUserAccountData.selector;
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
         }

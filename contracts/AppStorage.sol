@@ -9,13 +9,14 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3, SwapData, LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {InternalAccount} from "./InternalAccount.sol";
 import {ozRelayer} from "./ozRelayer.sol";
+import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 
 struct AppStorage {
     //Aave 
     IWrappedTokenGatewayV3 aaveGW;
     IPoolAddressesProvider aavePoolProvider;
-    address aavePool;
+    IPool aavePool;
     uint VARIABLE_RATE;
 
     //Pendle

@@ -4,6 +4,7 @@ pragma solidity 0.8.26;
 
 import {Setup} from "./Setup.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
+import {UserAccountData} from "../../contracts/AppStorage.sol";
 
 import "forge-std/console.sol";
 
@@ -44,11 +45,20 @@ contract CoreMethods is Setup {
 
         _lend(true);
 
+        //-----
+        console.log('');
+
+        UserAccountData memory userData = OZ.getUserAccountData(owner);
+        console.log('oz availableBorrowsBase user: ', userData.availableBorrowsBase);
+
+        console.log('');
+        //-----
+
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
         // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
-        // console.log('amount to borrow in USD after lend() - aave: ', availableBorrowsBase);
+        console.log('amount to borrow in USD after lend() - aave ****: ', availableBorrowsBase);
 
         //User BORROWS
         vm.startPrank(owner);

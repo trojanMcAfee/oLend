@@ -2,6 +2,7 @@
 pragma solidity 0.8.26;
 
 import {IDiamondCut} from "./IDiamondCut.sol";
+import {UserAccountData} from "../AppStorage.sol";
 
 
 interface ozIDiamond {
@@ -17,4 +18,5 @@ interface ozIDiamond {
     function rebuyPT(uint amountInUSDC_) external;
     function quotePT() external view returns(uint);
     function finishBorrow(address receiver_) external;
+    function getUserAccountData(address user_) external view returns(UserAccountData memory userData);
 }

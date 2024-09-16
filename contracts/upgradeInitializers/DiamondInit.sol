@@ -23,6 +23,7 @@ import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {ozRelayer} from "../ozRelayer.sol";
+import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -49,7 +50,7 @@ contract DiamondInit {
         s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
         s.VARIABLE_RATE = 2;
-        s.aavePool = s.aavePoolProvider.getPool();
+        s.aavePool = IPool(s.aavePoolProvider.getPool());
 
         //Pendle
         s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);
