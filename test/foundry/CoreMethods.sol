@@ -5,8 +5,14 @@ pragma solidity 0.8.26;
 import {Setup} from "./Setup.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {UserAccountData} from "../../contracts/AppStorage.sol";
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 
 import "forge-std/console.sol";
+
+interface MyICreditDelegationToken {
+    function scaledBalanceOf(address) external view returns(uint);
+    function balanceOf(address) external view returns(uint);
+}
 
 
 contract CoreMethods is Setup {
@@ -66,6 +72,16 @@ contract CoreMethods is Setup {
         console.log('balanceOzUSD - owner: ', balanceOzUSD);
         assertTrue(balanceOzUSD > 0, '_borrow_and_mint_ozUSD: is 0');
         //put this ^ as a ratio of discount to face-value PT instead of balanceOzUSD > 0
+
+        //---------
+        console.log('');
+        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // MyICreditDelegationToken aaveVariableDebtUSDC = MyICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+        // console.log('scaledBalanceOf: ', aaveVariableDebtUSDC.scaledBalanceOf(internalAccount));
+        // console.log('balanceOf: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
+
+        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        // console.log(')
     }
 
 

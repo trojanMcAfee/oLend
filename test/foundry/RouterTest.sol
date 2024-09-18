@@ -12,6 +12,7 @@ import {stdStorage, StdStorage} from "forge-std/Test.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";   
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";   
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";      
+import {IPool, DataTypes} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -325,8 +326,11 @@ contract RouterTest is Setup {
     }
 
 
-    
+    function test_x() public view {
+        DataTypes.ReserveData memory data = aavePool.getReserveData(USDCaddr);
+        console.log('variableBorrowIndex: ', uint(data.variableBorrowIndex));
 
+    }
 
 
     
