@@ -49,6 +49,7 @@ contract RouterTest is Setup {
             emptyLimit
         );
         console.log("netPtOut: ", netPtOut);
+        console.log('tokenIn: ', sUSDeBalance);
     }
 
 

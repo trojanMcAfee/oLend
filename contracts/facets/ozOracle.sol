@@ -28,4 +28,14 @@ contract ozOracle {
         quoteInStable = balancePTinAsset - discount;
     }
 
+    function getVariableBorrowAPY() external view returns(uint) {
+        //get PT's APY
+        //get Aave's APY
+        //substract both and the discount to get the net APY 
+    }
+
+    function getVariableSupplyAPY() external view returns(uint) {
+        
+    }
+
 }

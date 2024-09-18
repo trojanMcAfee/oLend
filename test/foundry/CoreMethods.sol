@@ -27,6 +27,20 @@ contract CoreMethods is Setup {
         OZ.lend{value: amountIn}(amountIn, true);
 
         assertTrue(user_.balance == currETHbal - 1 ether);
+
+        //---------
+        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        console.log('availableBorrowsBase: ', availableBorrowsBase);
+        console.log('totalCollateralBase: ', totalCollateralBase);
+        console.log('');
+
+        UserAccountData memory userData = OZ.getUserAccountData(owner);
+        console.log('userData.availableBorrowsBase: ', userData.availableBorrowsBase);
+        console.log('blockNum: ', block.number);
+
+        //Then do discount on the APR/Y presented to clients, follwing ptDiscount and where it's applied.
+        //Check the relation with curr ETH price
     }
 
     function _delegateCredit() internal {
@@ -74,13 +88,13 @@ contract CoreMethods is Setup {
         //put this ^ as a ratio of discount to face-value PT instead of balanceOzUSD > 0
 
         //---------
-        console.log('');
-        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
         // MyICreditDelegationToken aaveVariableDebtUSDC = MyICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         // console.log('scaledBalanceOf: ', aaveVariableDebtUSDC.scaledBalanceOf(internalAccount));
         // console.log('balanceOf: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
 
-        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         // console.log(')
     }
 

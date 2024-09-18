@@ -65,7 +65,7 @@ contract ozMinter is Modifiers {
         userData = UserAccountData(
             totalCollateralBase,
             totalDebtBase,
-            _applyDiscount(availableBorrowsBase),
+            _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
             currentLiquidationThreshold,
             ltv,
             healthFactor

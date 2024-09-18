@@ -123,7 +123,7 @@ contract Setup is StateVars {
         } else if (id_ == 2) { // ozMinter
             length = 6;
         } else if (id_ == 3) { // ozOracle
-            length = 1;
+            length = 3;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -146,6 +146,8 @@ contract Setup is StateVars {
             selectors[5] = minter.getUserAccountData.selector;
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
+            selectors[1] = oracle.getVariableBorrowAPY.selector;
+            selectors[2] = oracle.getVariableSupplyAPY.selector;
         }
        
 
