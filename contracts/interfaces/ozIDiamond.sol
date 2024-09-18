@@ -19,4 +19,7 @@ interface ozIDiamond {
     function quotePT() external view returns(uint);
     function finishBorrow(address receiver_) external;
     function getUserAccountData(address user_) external view returns(UserAccountData memory userData);
+
+    function getVariableBorrowAPY() external view returns(uint);
+    function getVariableSupplyAPY() external view returns(uint);
 }

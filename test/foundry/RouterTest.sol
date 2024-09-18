@@ -326,11 +326,13 @@ contract RouterTest is Setup {
 
     }
 
-
     function test_x() public view {
         DataTypes.ReserveData memory data = aavePool.getReserveData(USDCaddr);
         console.log('variableBorrowIndex: ', uint(data.variableBorrowIndex));
+    }
 
+    function test_fixedAPY() public view {
+        OZ.getVariableBorrowAPY();
     }
 
 

@@ -30,12 +30,24 @@ contract ozOracle {
 
     function getVariableBorrowAPY() external view returns(uint) {
         //get PT's APY
+        uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
+        uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
+        uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
+        uint apy = ( (1 + ytPrice / ptPrice) ** (365 / daysToExp) ) - 1;
+        
+        console.log('ptPrice: ', ptPrice);
+        console.log('ytPrice: ', ytPrice);
+        console.log('daysToExp: ', daysToExp);
+        console.log('apy in getVariableBorrowAPY: ', apy);
+
+        return apy;        
+
         //get Aave's APY
         //substract both and the discount to get the net APY 
     }
 
     function getVariableSupplyAPY() external view returns(uint) {
-        
+
     }
 
 }
