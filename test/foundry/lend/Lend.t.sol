@@ -26,13 +26,13 @@ contract Lend is CoreMethods {
     }
 
     function test_GivenThatAmountInIsSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
-        //it should mint ozUSD by borrowing
+        //it should mint ozUSDtoken by borrowing
         _borrow_and_mint_ozUSD(true);
     }
 
     //NEW
     function test_GivenThatAmountInIsSameAsMsgValue2() external whenLendIsCalled givenThatTokenInIsETH {
-        //it should redeem ozUSD for full amount
+        //it should redeem ozUSDtoken for full amount
         _borrow_and_mint_ozUSD(true);
 
         _redeem_ozUSD();
@@ -43,11 +43,11 @@ contract Lend is CoreMethods {
     }
 
     function test_GivenThatTokenInIsWETH() external whenLendIsCalled {
-        // it should mint ozUSD
+        // it should mint ozUSDtoken
     }
 
     function test_GivenThatTokenInIsAStablecoin() external whenLendIsCalled {
-        // it should mint ozUSD
+        // it should mint ozUSDtoken
     }
 
     function test_GivenThatAmountInIsZero() external whenLendIsCalled {

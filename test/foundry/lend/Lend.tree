@@ -4,13 +4,13 @@ lend
     │   └── it should both delegate credit to OZ diamond
     ├── given that tokenIn is ETH
     │   ├── given that amountIn is same as msgValue
-    │   │   └── it should mint ozUSD
+    │   │   └── it should mint ozUSDtoken
     │   └── given that amountIn is not the same as msgValue
     │       └── it should throw error
     ├── given that tokenIn is WETH
-    │   └── it should mint ozUSD
+    │   └── it should mint ozUSDtoken
     ├── given that tokenIn is a stablecoin
-    │   └── it should mint ozUSD
+    │   └── it should mint ozUSDtoken
     ├── given that amountIn is zero
     │   └── it should throw error
     └── given tokenIn is not authorized collateral

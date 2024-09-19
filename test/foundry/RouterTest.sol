@@ -130,11 +130,11 @@ contract RouterTest is Setup {
         IERC20(USDCaddr).approve(address(OZ), type(uint).max);
         OZ.rebuyPT(ptQuote / 1e12);
 
-        //External user MINTS ozUSD to user when buying discounted PT
+        //External user MINTS ozUSDtoken to user when buying discounted PT
         OZ.finishBorrow(owner);
         vm.stopPrank();
 
-        uint balanceOzUSD = ozUsd.balanceOf(owner);
+        uint balanceOzUSD = ozUSD.balanceOf(owner);
         console.log('balanceOzUSD - owner: ', balanceOzUSD);
         console.log('');
     }
@@ -176,10 +176,10 @@ contract RouterTest is Setup {
         console.log('');
 
         uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
-        console.log('toBorrow - ozUSD: ', toBorrow);
+        console.log('toBorrow - ozUSDtoken: ', toBorrow);
         OZ.borrow(toBorrow, owner);
 
-        uint ozUSDbal = ozUsd.balanceOf(owner);
+        uint ozUSDbal = ozUSD.balanceOf(owner);
         console.log('ozUSDbal - post borrow: ', ozUSDbal);
         console.log('');
 
@@ -361,7 +361,7 @@ contract RouterTest is Setup {
 /**
 - Fast forward time with block.timestamp and block.number.
    > So when the time advances my PT will be more valueable in USDe terms that I can exchange for USDC
-   if I want to, and would back my ozUSD
+   if I want to, and would back my ozUSDtoken
 - Do a mockCall() to pendleRouter to give as amountTokenOut from a pendle AMM swap, as the yield already within
 from calculating it from the pendleOracle (?).
 - It's not actually a swap..it's the rate of the asset in comparisson to another one. The swap only
@@ -371,6 +371,6 @@ happens when redeeming.
    > Divide the APY in 1 month from a year and simulate the balance of:
        < PT increase in respected to its underlying (USDe, USDC)
        < aUSDCVariableDebt increase, so it's money that's owed.
-       < ozUSD that gets minted and check that it's always solved.
-           ^ Solvent: can always redeem 1 ozUSD for 1 of any underlying (USDe, USDC, etc) --> 1:1 relationship
+       < ozUSDtoken that gets minted and check that it's always solved.
+           ^ Solvent: can always redeem 1 ozUSDtoken for 1 of any underlying (USDe, USDC, etc) --> 1:1 relationship
  */

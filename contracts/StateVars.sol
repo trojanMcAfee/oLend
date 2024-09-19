@@ -20,7 +20,7 @@ import {Diamond} from "./Diamond.sol";
 import {DiamondInit} from "./upgradeInitializers/DiamondInit.sol";
 import {ozIDiamond} from "../contracts/interfaces/ozIDiamond.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import {ozUSD} from "./ozUSD.sol";
+import {ozUSDtoken} from "./ozUSDtoken.sol";
 import {ozRelayer} from "./ozRelayer.sol";
 import {ozOracle} from "../contracts/facets/ozOracle.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";      
@@ -68,10 +68,10 @@ contract StateVars is StructGenTest, Test {
     ozMinter minter;
     ozOracle oracle;
 
-    //ozUSD
+    //ozUSDtoken
     ERC1967Proxy ozUSDproxy;
-    ozUSD ozUSDimpl;
-    IERC20 ozUsd; 
+    ozUSDtoken ozUSDimpl;
+    IERC20 ozUSD; 
     
     //System
     ozRelayer relayer;

@@ -110,7 +110,7 @@ contract ozMinter is Modifiers {
     
     function finishBorrow(address receiver_) external {
         uint balanceUSDC = s.USDC.balanceOf(address(this));
-        s.ozUSD.mint(receiver_, balanceUSDC);
+        s.ozUSDtoken.mint(receiver_, balanceUSDC);
     }
 
 
@@ -125,8 +125,14 @@ contract ozMinter is Modifiers {
 
 
     //This redeems PT for token, which seems not needed in this system, since the redemptions would be
-    //from ozUSD to token (prob done in the ERC20 contract)
-    function redeem(uint amount_, address receiver_) external { 
+    //from ozUSDtoken to token (prob done in the ERC20 contract)
+    function redeem(uint amount_, address sender_, address receiver_) external { 
+        //1.- burns ozUSD
+        s.ozUSD.burn(sender_, amount_);
+
+        //2.- sends part
+        s.USDC.transfer(receiver_, amount_);
+
         uint minTokenOut = 0;
         address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
 

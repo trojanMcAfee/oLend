@@ -72,7 +72,7 @@ contract DiamondInit {
         s.USDC = IERC20(tokens_.USDC);
         s.sUSDe = IERC20(tokens_.sUSDe);
         s.USDT = IERC20(tokens_.USDT);
-        s.ozUSD = IERC20(tokens_.ozUSD);
+        s.ozUSDtoken = IERC20(tokens_.ozUSDtoken);
         s.pendlePT = IERC20(tokens_.pendlePT); //sUSDe_PT
 
         //System config

@@ -15,7 +15,7 @@ import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
 import {AaveConfig, ERC20s, PendleConfig, SysConfig} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import {ozUSD} from "../../contracts/ozUSD.sol";
+import {ozUSDtoken} from "../../contracts/ozUSDtoken.sol";
 import {ozRelayer} from "../../contracts/ozRelayer.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {ozOracle} from "../../contracts/facets/ozOracle.sol";
@@ -55,11 +55,11 @@ contract Setup is StateVars {
         initDiamond = new DiamondInit();
         oracle = new ozOracle();
 
-        //Deploys ozUSD
-        ozUSDimpl = new ozUSD();
-        bytes memory data = abi.encodeWithSelector(ozUSDimpl.initialize.selector, 'Ozel Dollar', 'ozUSD');
+        //Deploys ozUSDtoken
+        ozUSDimpl = new ozUSDtoken();
+        bytes memory data = abi.encodeWithSelector(ozUSDimpl.initialize.selector, 'Ozel Dollar', 'ozUSDtoken');
         ozUSDproxy = new ERC1967Proxy(address(ozUSDimpl), data);
-        ozUsd = IERC20(address(ozUSDproxy));
+        ozUSD = IERC20(address(ozUSDproxy));
 
         //Deploys sys config
         relayer = new ozRelayer();

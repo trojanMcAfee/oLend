@@ -61,7 +61,7 @@ contract CoreMethods is Setup {
 
     function _borrow_and_mint_ozUSD(bool isETH_) internal {
         //User LENDS 
-        assertTrue(ozUsd.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
+        assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
         _lend(owner, true);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
@@ -78,21 +78,23 @@ contract CoreMethods is Setup {
         IERC20(USDCaddr).approve(address(OZ), type(uint).max);
         OZ.rebuyPT(ptQuote / 1e12);
 
-        //External user MINTS ozUSD to user when buying discounted PT
+        //External user MINTS ozUSDtoken to user when buying discounted PT
         OZ.finishBorrow(owner);
         vm.stopPrank();
 
-        uint balanceOzUSD = ozUsd.balanceOf(owner);
+        uint balanceOzUSD = ozUSD.balanceOf(owner);
         console.log('balanceOzUSD - owner: ', balanceOzUSD);
         assertTrue(balanceOzUSD > 0, '_borrow_and_mint_ozUSD: is 0');
         //put this ^ as a ratio of discount to face-value PT instead of balanceOzUSD > 0
     }
 
     function _redeem_ozUSD() internal {
-        uint ozUSDbalance = ozUsd.balanceOf(owner);
+        uint ozUSDbalance = ozUSD.balanceOf(owner);
         console.log('ozUSDbalance: ', ozUSDbalance);
 
-        ozUsd.
+        vm.startPrank(owner);
+        ozUSD.approve(address(OZ), ozUSDbalance);
+        ozUSD.redeem(ozUSDbalance, owner);
     }
 
 
