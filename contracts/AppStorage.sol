@@ -33,8 +33,9 @@ struct AppStorage {
     IERC20 USDC;
     IERC20 sUSDe;
     IERC20 USDT;
-    IERC20 ozUSDtoken; //proxy
+    IERC20 ozUSD; //proxy
     IERC20 pendlePT; //sUSDe_PT_26SEP
+    IERC20 aaveVariableDebtUSDC;
 
     //System config
     address OZ;
@@ -63,6 +64,7 @@ struct ERC20s {
     address USDT;
     address ozUSDtoken;
     address pendlePT; //sUSDe_PT
+    address aaveVariableDebtUSDC;
 }
 
 struct PendleConfig {

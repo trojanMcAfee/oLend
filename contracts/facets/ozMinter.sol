@@ -75,8 +75,8 @@ contract ozMinter is Modifiers {
 
 
     function borrow(uint amount_, address receiver_) external {
-        InternalAccount account = s.internalAccounts[msg.sender];
-        uint revertedAmount = s.relayer.borrowInternal(amount_, receiver_, address(account));
+        InternalAccount internalAccount = s.internalAccounts[msg.sender];
+        uint revertedAmount = s.relayer.borrowInternal(amount_, receiver_, address(internalAccount));
 
         uint minTokenOut = 0;
 
@@ -103,14 +103,20 @@ contract ozMinter is Modifiers {
             s.emptyLimit
         );
 
-        uint discountedPT = _calculateDiscountPT();
+        console.log('netPtOut *****: ', netPtOut);
+        // IERC20 aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+        uint internalAccountDebtUSDC = s.aaveVariableDebtUSDC.balanceOf(address(internalAccount));
+        console.log('usdc debt - int acc: ', internalAccountDebtUSDC);
 
-        s.openOrders.push(discountedPT);
+        s.ozUSD.mint(receiver_, internalAccountDebtUSDC);
+
+        // uint discountedPT = _calculateDiscountPT();
+        // s.openOrders.push(discountedPT);
     }
     
     function finishBorrow(address receiver_) external {
         uint balanceUSDC = s.USDC.balanceOf(address(this));
-        s.ozUSDtoken.mint(receiver_, balanceUSDC);
+        s.ozUSD.mint(receiver_, balanceUSDC);
     }
 
 
@@ -123,20 +129,17 @@ contract ozMinter is Modifiers {
         s.pendlePT.transfer(msg.sender, balancePT);
     }
 
+    // 1 ozUSD --- n PT --- m SY
+
 
     //This redeems PT for token, which seems not needed in this system, since the redemptions would be
     //from ozUSDtoken to token (prob done in the ERC20 contract)
-    function redeem(uint amount_, address sender_, address receiver_) external { 
-        //1.- burns ozUSD
-        s.ozUSD.burn(sender_, amount_);
-
-        //2.- sends part
-        s.USDC.transfer(receiver_, amount_);
+    function redeem(uint amount_, address owner_, address receiver_) external { 
+        s.ozUSD.burn(owner_, amount_);
 
         uint minTokenOut = 0;
         address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
 
-        console.log('sender: ', msg.sender);
         console.log('PT bal oz - pre swap: ', s.pendlePT.balanceOf(address(this)));
         console.log('sUSDe oz - pre swap: ', s.sUSDe.balanceOf(address(this)));
         console.log('');

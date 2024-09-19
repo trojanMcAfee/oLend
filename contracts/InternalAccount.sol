@@ -27,8 +27,8 @@ contract InternalAccount {
 
         aaveGW.depositETH{value: msg.value}(address(aavePool), address(this), 0);
 
-        ICreditDelegationToken aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
-        aaveVariableDebtUSDC.approveDelegation(relayer, type(uint).max);
+        ICreditDelegationToken aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+        aaveVariableDebtUSDCDelegate.approveDelegation(relayer, type(uint).max);
         
         emit FundsDelegated(address(this), msg.value);
     }

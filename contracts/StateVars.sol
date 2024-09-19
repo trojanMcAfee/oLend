@@ -44,8 +44,8 @@ contract StateVars is StructGenTest, Test {
     address public constant aaveGW = 0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9;
     address public constant aavePoolProvider = 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e;
     IPool public constant aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2); 
-    ICreditDelegationToken public constant aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
-    IERC20 public constant aaveVariableDebtUSDC_ERC20 = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+    ICreditDelegationToken public constant aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+    IERC20 public constant aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
 
     //ERC20s
     IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);

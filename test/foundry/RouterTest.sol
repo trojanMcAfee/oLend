@@ -312,9 +312,9 @@ contract RouterTest is Setup {
         (,,uint256 availableBorrowsBase4,,,) = aavePool.getUserAccountData(second_owner);
         console.log('availableBorrowsBase second_owner - pre delegation: ', availableBorrowsBase4);
 
-        ICreditDelegationToken aaveVariableDebtUSDC = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+        ICreditDelegationToken aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         vm.prank(owner);
-        aaveVariableDebtUSDC.approveDelegation(second_owner, type(uint).max);
+        aaveVariableDebtUSDCDelegate.approveDelegation(second_owner, type(uint).max);
 
         console.log('');
 

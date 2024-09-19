@@ -69,13 +69,31 @@ contract CoreMethods is Setup {
         //User BORROWS
         vm.startPrank(owner);
         OZ.borrow(userData.availableBorrowsBase, owner);
+        // vm.stopPrank();
+
+        uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
+        console.log('ozUSD owner bal: ', balanceOwnerOzUSD);
+
+        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
+        console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(twapDuration));
+
+        //get this ^ assetRate and then come up with ozUSD - PT - asset rate, which will
+        //be used for redeeming from ozUSD to the user token
+
+
+        revert('here3');
+
+
+        // ozUSD.approve(address(OZ), balanceOwnerOzUSD);
+        OZ.redeem(balanceOwnerOzUSD, owner, owner);
         vm.stopPrank();
+
 
         uint ptQuote = OZ.quotePT();
 
         //External user BUYS discounted PT
         vm.startPrank(second_owner);
-        IERC20(USDCaddr).approve(address(OZ), type(uint).max);
+        USDC.approve(address(OZ), type(uint).max);
         OZ.rebuyPT(ptQuote / 1e12);
 
         //External user MINTS ozUSDtoken to user when buying discounted PT
@@ -94,7 +112,7 @@ contract CoreMethods is Setup {
 
         vm.startPrank(owner);
         ozUSD.approve(address(OZ), ozUSDbalance);
-        ozUSD.redeem(ozUSDbalance, owner);
+        // ozUSD.redeem(ozUSDbalance, owner);
     }
 
 
@@ -103,7 +121,7 @@ contract CoreMethods is Setup {
 
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
 
-        console.log('usdc debt oz - aave: ', aaveVariableDebtUSDC_ERC20.balanceOf(internalAccount));
+        console.log('usdc debt oz - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
         console.log('PT oz - pendle: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
         console.log('usdc oz: ', USDC.balanceOf(address(OZ)));
 

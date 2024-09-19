@@ -14,7 +14,7 @@ interface ozIDiamond {
 
     function lend(uint amountIn_, bool isETH_) external payable;
     function borrow(uint amount_, address receiver_) external;
-    function redeem(uint amount_, address receiver_) external;
+    function redeem(uint amount_, address owner_, address receiver_) external;
     function rebuyPT(uint amountInUSDC_) external;
     function quotePT() external view returns(uint);
     function finishBorrow(address receiver_) external;
