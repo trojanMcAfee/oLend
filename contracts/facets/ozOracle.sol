@@ -33,12 +33,31 @@ contract ozOracle {
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
         uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
+        uint scalingFactor = 1e18;
+
+        console.logUint(1);
+        uint ytScaled = ytPrice * scalingFactor;
+        console.logUint(2);
+        uint division = ytScaled / ptPrice;
+        console.logUint(3);
+        uint base = scalingFactor + division;
+        console.logUint(4);
+        uint exponent = (365 * scalingFactor) / daysToExp;
+        console.logUint(5);
+        console.log('exponent: ', exponent);
+        console.log('base: ', base);
+        console.log('exponent / scalingFactor: ', exponent / scalingFactor);
+        uint result = base ** (exponent / scalingFactor);
+        console.logUint(6);
+        uint x = result - scalingFactor;
+
         uint apy = ( (1 + ytPrice / ptPrice) ** (365 / daysToExp) ) - 1;
         
         console.log('ptPrice: ', ptPrice);
         console.log('ytPrice: ', ytPrice);
         console.log('daysToExp: ', daysToExp);
         console.log('apy in getVariableBorrowAPY: ', apy);
+        console.log('scaled apy: ', x);
 
         return apy;        
 
