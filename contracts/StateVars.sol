@@ -29,7 +29,7 @@ import {console} from "../lib/forge-std/src/Test.sol";
 
 contract StateVars is StructGenTest, Test {
 
-    uint currentBlock = 20779705; //20665666
+    uint currentBlock = 20665666; //20665666 - 20779705 (recent)
     address owner = makeAddr('owner');
     address second_owner = makeAddr('second_owner');
 
