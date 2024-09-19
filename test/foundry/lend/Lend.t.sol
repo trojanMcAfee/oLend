@@ -30,6 +30,14 @@ contract Lend is CoreMethods {
         _borrow_and_mint_ozUSD(true);
     }
 
+    //NEW
+    function test_GivenThatAmountInIsSameAsMsgValue2() external whenLendIsCalled givenThatTokenInIsETH {
+        //it should redeem ozUSD for full amount
+        _borrow_and_mint_ozUSD(true);
+
+        _redeem_ozUSD();
+    }
+
     function test_GivenThatAmountInIsNotTheSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
         // it should throw error
     }

@@ -29,18 +29,18 @@ contract CoreMethods is Setup {
         assertTrue(user_.balance == currETHbal - 1 ether);
 
         //---------
-        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        console.log('availableBorrowsBase: ', availableBorrowsBase);
-        console.log('totalCollateralBase: ', totalCollateralBase);
-        console.log('');
+        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        // console.log('availableBorrowsBase: ', availableBorrowsBase);
+        // console.log('totalCollateralBase: ', totalCollateralBase);
+        // console.log('');
 
-        UserAccountData memory userData = OZ.getUserAccountData(owner);
-        console.log('userData.availableBorrowsBase: ', userData.availableBorrowsBase);
-        console.log('blockNum: ', block.number);
+        // UserAccountData memory userData = OZ.getUserAccountData(owner);
+        // console.log('userData.availableBorrowsBase: ', userData.availableBorrowsBase);
+        // console.log('blockNum: ', block.number);
 
-        //Then do discount on the APR/Y presented to clients, follwing ptDiscount and where it's applied.
-        //Check the relation with curr ETH price
+        // //Then do discount on the APR/Y presented to clients, follwing ptDiscount and where it's applied.
+        // //Check the relation with curr ETH price
     }
 
     function _delegateCredit() internal {
@@ -86,16 +86,25 @@ contract CoreMethods is Setup {
         console.log('balanceOzUSD - owner: ', balanceOzUSD);
         assertTrue(balanceOzUSD > 0, '_borrow_and_mint_ozUSD: is 0');
         //put this ^ as a ratio of discount to face-value PT instead of balanceOzUSD > 0
+    }
 
-        //---------
-        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        // MyICreditDelegationToken aaveVariableDebtUSDC = MyICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
-        // console.log('scaledBalanceOf: ', aaveVariableDebtUSDC.scaledBalanceOf(internalAccount));
-        // console.log('balanceOf: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
+    function _redeem_ozUSD() internal {
+        uint ozUSDbalance = ozUsd.balanceOf(owner);
+        console.log('ozUSDbalance: ', ozUSDbalance);
 
-        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        // console.log(')
+        ozUsd.
+    }
+
+
+    function test_do_accounting() public {
+        _borrow_and_mint_ozUSD(true);
+
+        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+
+        console.log('usdc debt oz - aave: ', aaveVariableDebtUSDC_ERC20.balanceOf(internalAccount));
+        console.log('PT oz - pendle: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
+        console.log('usdc oz: ', USDC.balanceOf(address(OZ)));
+
     }
 
 

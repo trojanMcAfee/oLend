@@ -344,7 +344,33 @@ contract RouterTest is Setup {
         OZ.getVariableBorrowAPY();
     }
 
+    function test_accounting() public {
+        uint oneYear = 31560000; //secs
+        vm.warp(block.timestamp + oneYear);
+
+
+
+    }
+
 
     
     
 }
+
+
+/**
+- Fast forward time with block.timestamp and block.number.
+   > So when the time advances my PT will be more valueable in USDe terms that I can exchange for USDC
+   if I want to, and would back my ozUSD
+- Do a mockCall() to pendleRouter to give as amountTokenOut from a pendle AMM swap, as the yield already within
+from calculating it from the pendleOracle (?).
+- It's not actually a swap..it's the rate of the asset in comparisson to another one. The swap only
+happens when redeeming.
+   > So I'd need to call the getExchangeRate() functions of every asset (the TWAP price)
+- In the accounting, do it first with a small amount of time, to 30 days. If all good. 1 year. 
+   > Divide the APY in 1 month from a year and simulate the balance of:
+       < PT increase in respected to its underlying (USDe, USDC)
+       < aUSDCVariableDebt increase, so it's money that's owed.
+       < ozUSD that gets minted and check that it's always solved.
+           ^ Solvent: can always redeem 1 ozUSD for 1 of any underlying (USDe, USDC, etc) --> 1:1 relationship
+ */
