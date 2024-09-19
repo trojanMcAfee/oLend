@@ -24,7 +24,7 @@ contract RouterTest is Setup {
     using PendlePYOracleLib for *;
    
     
-    function test_router() public {
+    function test_router() public { 
         (IStandardizedYield SY, IPPrincipalToken PT,) = sUSDeMarket.readTokens();
 
         console.log('SY: ', address(SY));
@@ -50,6 +50,15 @@ contract RouterTest is Setup {
         );
         console.log("netPtOut: ", netPtOut);
         console.log('tokenIn: ', sUSDeBalance);
+        
+        // console.log('');
+        // sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
+
+        // (uint256 netTokenOut,,) = pendleRouter.swapExactPtForToken(
+        //     address(this), address(sUSDeMarket), netPtOut, createTokenOutputStruct(address(sUSDe), 0), emptyLimit
+        // );
+        // console.log('netTokenOut: ', netTokenOut);
+
     }
 
 
