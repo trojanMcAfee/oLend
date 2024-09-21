@@ -58,6 +58,7 @@ contract DiamondInit {
         //Balancer
         s.balancerPoolWstETHsUSDe = IPoolBal(balancer_.balancerPoolWstETHsUSDe);
         s.balancerVault = IVault(balancer_.balancerVault);
+        s.balancerPool_wstETHWETH = IVault(balancer_.balancerPool_wstETHWETH);
 
         //Pendle
         s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);

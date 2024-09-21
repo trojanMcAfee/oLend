@@ -33,6 +33,7 @@ struct AppStorage {
     //Balancer
     IPoolBal balancerPoolWstETHsUSDe;
     IVault balancerVault;
+    IPoolBal balancerPool_wstETHWETH;
 
     //ERC20s and ERC4626
     IERC20 aWETH;
@@ -68,6 +69,7 @@ struct AaveConfig {
 struct BalancerConfig {
     address balancerPoolWstETHsUSDe;
     address balancerVault;
+    address balancerPool_wstETHWETH;
 }
 
 struct ERC20s {

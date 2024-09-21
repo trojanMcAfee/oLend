@@ -171,7 +171,8 @@ contract ozMinter is Modifiers {
                 address(s.sUSDe), 
                 address(s.wstETH), 
                 netYieldToken, 
-                minTokenOut
+                minTokenOut,
+                true
             );
 
             console.log('amountTokenOut *****: ', amountTokenOut);
@@ -215,9 +216,16 @@ contract ozMinter is Modifiers {
         address tokenIn_, 
         address tokenOut_, 
         uint amountIn_,
-        uint minAmountOut_
+        uint minAmountOut_,
+        bool isMultiHop_
     ) private returns(uint amountOut) {
 
+        if (isMultiHop_) {
+            //finish doing the multiHop swap <----- ******
+
+        }
+
+        
         IVault.SingleSwap memory singleSwap = IVault.SingleSwap({
             poolId: s.balancerPoolWstETHsUSDe.getPoolId(),
             kind: IVault.SwapKind.GIVEN_IN,

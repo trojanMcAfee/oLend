@@ -31,6 +31,15 @@ interface IVault {
         bytes userData;
     }
 
+    struct BatchSwapStep {
+        bytes32 poolId;
+        uint256 assetInIndex;
+        uint256 assetOutIndex;
+        uint256 amount;
+        bytes userData;
+    }
+
+
 
     struct FundManagement {
         address sender;
@@ -59,6 +68,16 @@ interface IVault {
         uint256 limit,
         uint256 deadline
     ) external payable returns (uint256 amountCalculated);
+
+    function batchSwap(
+        SwapKind kind,
+        BatchSwapStep[] swaps,
+        IAsset[] assets,
+        FundManagement funds,
+        int256[] limits,
+        uint256 deadline
+    ) external payable  returns (int256[] assetDeltas);
+
 
     function exitPool(
         bytes32 poolId,

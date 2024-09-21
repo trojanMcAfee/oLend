@@ -50,6 +50,7 @@ contract StateVars is StructGenTest, Test {
 
     //Balancer
     IPoolBal public constant balancerPoolWstETHsUSDe = IPoolBal(0xa8210885430aaA333c9F0D66AB5d0c312beD5E43);
+    IPoolBal public constant balancerPool_wstETHWETH = IPoolBal(0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD);
     IVault public constant balancerVault = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
     //ERC20s
