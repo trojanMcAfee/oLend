@@ -152,7 +152,7 @@ contract ozMinter is Modifiers {
         console.log('sender: ', msg.sender);
         console.log('PT bal OZ: ', s.pendlePT.balanceOf(address(this)));
 
-        (uint256 netTokenOut,,) = s.pendleRouter.swapExactPtForToken(
+        (uint256 netYieldToken,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
             address(s.sUSDeMarket), 
             s.pendlePT.balanceOf(address(this)), 
@@ -160,15 +160,21 @@ contract ozMinter is Modifiers {
             s.emptyLimit
         );
 
-        console.log('netTokenOut sUSDe: ', netTokenOut);
+        console.log('netYieldToken sUSDe: ', netYieldToken);
         console.log('PT bal oz - post swap: ', s.pendlePT.balanceOf(address(this)));
         console.log('USDe oz - post swap - 0: ', s.USDe.balanceOf(address(this)));
         console.log('sUSDe oz - post swap - not 0: ', s.sUSDe.balanceOf(address(this)));
         console.log('');
 
         if (isETH_) {
-            _swapBalancer(address(s.sUSDe), tokenOut_, amountIn_, minAmountOut_);
-            //^ finish this to swap from sUSDe to wstETH, and then unstake for getting ETH
+            uint amountTokenOut = _swapBalancer(
+                address(s.sUSDe), 
+                address(s.wstETH), 
+                netYieldToken, 
+                minTokenOut
+            );
+
+            console.log('amountTokenOut *****: ', amountTokenOut);
         }
 
 
@@ -213,7 +219,7 @@ contract ozMinter is Modifiers {
     ) private returns(uint amountOut) {
 
         IVault.SingleSwap memory singleSwap = IVault.SingleSwap({
-            poolId: balancerPoolWstETHsUSDe.getPoolId(),
+            poolId: s.balancerPoolWstETHsUSDe.getPoolId(),
             kind: IVault.SwapKind.GIVEN_IN,
             assetIn: IAsset(tokenIn_),
             assetOut: IAsset(tokenOut_),

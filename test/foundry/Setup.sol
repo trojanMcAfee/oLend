@@ -13,7 +13,7 @@ import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
 import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
-import {AaveConfig, ERC20s, PendleConfig, SysConfig} from "../../contracts/AppStorage.sol";
+import {AaveConfig, ERC20s, PendleConfig, SysConfig, BalancerConfig} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSDtoken} from "../../contracts/ozUSDtoken.sol";
 import {ozRelayer} from "../../contracts/ozRelayer.sol";
@@ -94,7 +94,8 @@ contract Setup is StateVars {
             address(ozUSDproxy), 
             address(sUSDe_PT_26SEP),
             address(aaveVariableDebtUSDC),
-            address(USDe)
+            address(USDe),
+            address(wstETH)
         );
 
         PendleConfig memory pendle = PendleConfig(
@@ -109,7 +110,7 @@ contract Setup is StateVars {
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
             aave,
-            balancer
+            balancer,
             tokens,
             pendle,
             sys

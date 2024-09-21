@@ -92,7 +92,7 @@ contract CoreMethods is Setup {
 
         vm.startPrank(owner);
         ozUSD.approve(address(OZ), balanceOwnerOzUSD);
-        OZ.redeem(balanceOwnerOzUSD, owner, owner);
+        OZ.redeem(balanceOwnerOzUSD, owner, owner, true);
         vm.stopPrank();
 
         revert('here3');

@@ -37,12 +37,13 @@ struct AppStorage {
     //ERC20s and ERC4626
     IERC20 aWETH;
     IERC20 USDC;
-    IERC4626 sUSDe;
     IERC20 USDT;
     IERC20 ozUSD; //proxy
     IERC20 pendlePT; //sUSDe_PT_26SEP
     IERC20 aaveVariableDebtUSDC;
     IERC20 USDe;
+    IERC20 wstETH;
+    IERC4626 sUSDe;
 
     //System config
     address OZ;
@@ -78,6 +79,7 @@ struct ERC20s {
     address pendlePT; //sUSDe_PT
     address aaveVariableDebtUSDC;
     address USDe; //not used
+    address wstETH;
 }
 
 struct PendleConfig {

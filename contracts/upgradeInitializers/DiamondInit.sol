@@ -16,7 +16,7 @@ import { IERC165 } from "../interfaces/IERC165.sol";
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
-import {AppStorage, AaveConfig, ERC20s, PendleConfig, SysConfig} from "../AppStorage.sol";
+import {AppStorage, AaveConfig, ERC20s, PendleConfig, SysConfig, BalancerConfig} from "../AppStorage.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {IERC4626} from "../../lib/forge-std/src/interfaces/IERC4626.sol";
@@ -57,7 +57,7 @@ contract DiamondInit {
 
         //Balancer
         s.balancerPoolWstETHsUSDe = IPoolBal(balancer_.balancerPoolWstETHsUSDe);
-        s.balancerVault = IVault(balancer_.balancerVault)
+        s.balancerVault = IVault(balancer_.balancerVault);
 
         //Pendle
         s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);
@@ -77,12 +77,13 @@ contract DiamondInit {
         //ERC20s and ERC4626
         s.aWETH = IERC20(tokens_.aWETH);
         s.USDC = IERC20(tokens_.USDC);
-        s.sUSDe = IERC4626(tokens_.sUSDe);
         s.USDT = IERC20(tokens_.USDT);
         s.ozUSD = IERC20(tokens_.ozUSDtoken);
         s.pendlePT = IERC20(tokens_.pendlePT); //sUSDe_PT
         s.aaveVariableDebtUSDC = IERC20(tokens_.aaveVariableDebtUSDC);
         s.USDe = IERC20(tokens_.USDe);
+        s.wstETH = IERC20(tokens_.wstETH);
+        s.sUSDe = IERC4626(tokens_.sUSDe);
 
         //System config
         s.OZ = sys_.OZ;
