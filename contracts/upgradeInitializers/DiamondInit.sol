@@ -19,6 +19,7 @@ import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAd
 import {AppStorage, AaveConfig, ERC20s, PendleConfig, SysConfig} from "../AppStorage.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
+import {IERC4626} from "../../lib/forge-std/src/interfaces/IERC4626.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
@@ -67,10 +68,10 @@ contract DiamondInit {
         //     uint256 eps;
         // }
 
-        //ERC20s
+        //ERC20s and ERC4626
         s.aWETH = IERC20(tokens_.aWETH);
         s.USDC = IERC20(tokens_.USDC);
-        s.sUSDe = IERC20(tokens_.sUSDe);
+        s.sUSDe = IERC4626(tokens_.sUSDe);
         s.USDT = IERC20(tokens_.USDT);
         s.ozUSD = IERC20(tokens_.ozUSDtoken);
         s.pendlePT = IERC20(tokens_.pendlePT); //sUSDe_PT

@@ -26,6 +26,17 @@ import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import "forge-std/console.sol";
 
 
+struct UserCooldown {
+        uint104 cooldownEnd;
+        uint152 underlyingAmount;
+    }
+
+interface My {
+    function unstake(address receiver) external;
+    function cooldowns(address) external view returns(UserCooldown memory);
+}
+
+
 contract ozMinter is Modifiers {
 
     using SafeERC20 for IERC20;
@@ -134,7 +145,7 @@ contract ozMinter is Modifiers {
 
     //This redeems PT for token, which seems not needed in this system, since the redemptions would be
     //from ozUSDtoken to token (prob done in the ERC20 contract)
-    function redeem(uint amount_, address owner_, address receiver_) external { 
+    function redeem(uint amount_, address owner_, address receiver_, bool isETH_) external { 
         uint minTokenOut = 0;
 
         console.log('sender: ', msg.sender);
@@ -150,10 +161,19 @@ contract ozMinter is Modifiers {
 
         console.log('netTokenOut sUSDe: ', netTokenOut);
         console.log('PT bal oz - post swap: ', s.pendlePT.balanceOf(address(this)));
-        console.log('sUSDe oz - post swap: ', s.sUSDe.balanceOf(address(this)));
+        console.log('USDe oz - post swap - 0: ', s.USDe.balanceOf(address(this)));
+        console.log('sUSDe oz - post swap - not 0: ', s.sUSDe.balanceOf(address(this)));
         console.log('');
 
-        // s.sUSDe
+        if (isETH_) {
+
+
+        }
+
+
+        console.log('sUSDe oz - post withdraw - 0: ', s.sUSDe.balanceOf(address(this)));
+        console.log('USDe oz - post withdraw - not 0: ', s.USDe.balanceOf(address(this)));
+
     }
 
 
@@ -183,6 +203,8 @@ contract ozMinter is Modifiers {
 
         return swapRouterUni.exactInput(params);
     }
+
+    
 
 
     function _calculateDiscountPT() private returns(uint) {

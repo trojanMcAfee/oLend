@@ -10,6 +10,7 @@ import {IPAllActionV3, SwapData, LimitOrderData, ApproxParams} from "@pendle/cor
 import {InternalAccount} from "./InternalAccount.sol";
 import {ozRelayer} from "./ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
+import {IERC4626} from "../lib/forge-std/src/interfaces/IERC4626.sol";
 
 
 struct AppStorage {
@@ -28,10 +29,10 @@ struct AppStorage {
     uint32 twapDuration;
     uint ptDiscount;
 
-    //ERC20s
+    //ERC20s and ERC4626
     IERC20 aWETH;
     IERC20 USDC;
-    IERC20 sUSDe;
+    IERC4626 sUSDe;
     IERC20 USDT;
     IERC20 ozUSD; //proxy
     IERC20 pendlePT; //sUSDe_PT_26SEP
