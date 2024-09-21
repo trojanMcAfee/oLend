@@ -23,7 +23,8 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 import {ozUSDtoken} from "./ozUSDtoken.sol";
 import {ozRelayer} from "./ozRelayer.sol";
 import {ozOracle} from "../contracts/facets/ozOracle.sol";
-import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";      
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol"; 
+import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";     
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -46,6 +47,10 @@ contract StateVars is StructGenTest, Test {
     IPool public constant aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2); 
     ICreditDelegationToken public constant aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
     IERC20 public constant aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
+
+    //Balancer
+    IPoolBal public constant balancerPoolWstETHsUSDe = IPoolBal(0xa8210885430aaA333c9F0D66AB5d0c312beD5E43);
+    IVault public constant balancerVault = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
     //ERC20s
     IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);

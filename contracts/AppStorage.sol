@@ -11,6 +11,7 @@ import {InternalAccount} from "./InternalAccount.sol";
 import {ozRelayer} from "./ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IERC4626} from "../lib/forge-std/src/interfaces/IERC4626.sol";
+import {IPool as IPoolBal, IVault} from "./interfaces/IBalancer.sol";
 
 
 struct AppStorage {
@@ -28,6 +29,10 @@ struct AppStorage {
     ApproxParams defaultApprox;
     uint32 twapDuration;
     uint ptDiscount;
+
+    //Balancer
+    IPoolBal balancerPoolWstETHsUSDe;
+    IVault balancerVault;
 
     //ERC20s and ERC4626
     IERC20 aWETH;
@@ -57,6 +62,11 @@ struct SysConfig {
 struct AaveConfig {
     address aaveGW;
     address aavePoolProvider;
+}
+
+struct BalancerConfig {
+    address balancerPoolWstETHsUSDe;
+    address balancerVault;
 }
 
 struct ERC20s {

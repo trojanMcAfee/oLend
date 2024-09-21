@@ -25,6 +25,7 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {ozRelayer} from "../ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
+import {IPool as IPoolBal, IVault} from "../interfaces/IBalancer.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -36,6 +37,7 @@ contract DiamondInit {
     
     function init(
         AaveConfig memory aave_, 
+        BalancerConfig memory balancer_,
         ERC20s memory tokens_,
         PendleConfig memory pendle_,
         SysConfig memory sys_
@@ -52,6 +54,10 @@ contract DiamondInit {
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
         s.VARIABLE_RATE = 2;
         s.aavePool = IPool(s.aavePoolProvider.getPool());
+
+        //Balancer
+        s.balancerPoolWstETHsUSDe = IPoolBal(balancer_.balancerPoolWstETHsUSDe);
+        s.balancerVault = IVault(balancer_.balancerVault)
 
         //Pendle
         s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);

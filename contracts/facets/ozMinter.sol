@@ -22,6 +22,7 @@ import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {Modifiers} from "../Modifiers.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 
 import "forge-std/console.sol";
 
@@ -166,8 +167,8 @@ contract ozMinter is Modifiers {
         console.log('');
 
         if (isETH_) {
-
-
+            _swapBalancer(address(s.sUSDe), tokenOut_, amountIn_, minAmountOut_);
+            //^ finish this to swap from sUSDe to wstETH, and then unstake for getting ETH
         }
 
 
@@ -204,7 +205,53 @@ contract ozMinter is Modifiers {
         return swapRouterUni.exactInput(params);
     }
 
-    
+    function _swapBalancer( 
+        address tokenIn_, 
+        address tokenOut_, 
+        uint amountIn_,
+        uint minAmountOut_
+    ) private returns(uint amountOut) {
+
+        IVault.SingleSwap memory singleSwap = IVault.SingleSwap({
+            poolId: balancerPoolWstETHsUSDe.getPoolId(),
+            kind: IVault.SwapKind.GIVEN_IN,
+            assetIn: IAsset(tokenIn_),
+            assetOut: IAsset(tokenOut_),
+            amount: amountIn_,
+            userData: new bytes(0)
+        });
+
+        IVault.FundManagement memory funds = IVault.FundManagement({
+            sender: address(this),
+            fromInternalBalance: false, 
+            recipient: payable(address(this)),
+            toInternalBalance: false
+        });
+
+        IERC20(tokenIn_).approve(address(s.balancerVault), singleSwap.amount);
+        // IERC20(tokenIn_).safeApprove(s.balancerVault, singleSwap.amount); //use this in prod - for safeApprove to work, allowance has to be reset to 0 on a mock. Can't be done on mockCall()
+        amountOut = _executeSwap(singleSwap, funds, minAmountOut_, block.timestamp);
+    }
+
+    function _executeSwap(
+        IVault.SingleSwap memory singleSwap_,
+        IVault.FundManagement memory funds_,
+        uint minAmountOut_,
+        uint blockStamp_
+    ) private returns(uint) 
+    {        
+        try s.balancerVault.swap(singleSwap_, funds_, minAmountOut_, blockStamp_) returns(uint amountOut) {
+            if (amountOut == 0) revert('my 1');
+            return amountOut;
+        } catch Error(string memory reason) {
+            revert('error in _executeSwap()');
+            // if (Helpers.compareStrings(reason, 'BAL#507')) {
+            //     revert('my 2');
+            // } else {
+            //     revert(reason);
+            // }
+        }
+    }
 
 
     function _calculateDiscountPT() private returns(uint) {

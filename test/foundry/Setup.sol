@@ -81,6 +81,10 @@ contract Setup is StateVars {
 
         //Deploy initial diamond cut
         AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
+        BalancerConfig memory balancer = BalancerConfig(
+            address(balancerPoolWstETHsUSDe),
+            address(balancerVault)
+        );
 
         ERC20s memory tokens = ERC20s(
             aWETHaddr, 
@@ -105,6 +109,7 @@ contract Setup is StateVars {
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
             aave,
+            balancer
             tokens,
             pendle,
             sys
