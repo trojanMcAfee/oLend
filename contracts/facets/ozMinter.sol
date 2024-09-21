@@ -103,7 +103,7 @@ contract ozMinter is Modifiers {
             s.emptyLimit
         );
 
-        console.log('netPtOut *****: ', netPtOut);
+        console.log('netPtOut ***** - owned by oz: ', netPtOut);
         // IERC20 aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         uint internalAccountDebtUSDC = s.aaveVariableDebtUSDC.balanceOf(address(internalAccount));
         console.log('usdc debt - int acc: ', internalAccountDebtUSDC);
@@ -135,28 +135,44 @@ contract ozMinter is Modifiers {
     //This redeems PT for token, which seems not needed in this system, since the redemptions would be
     //from ozUSDtoken to token (prob done in the ERC20 contract)
     function redeem(uint amount_, address owner_, address receiver_) external { 
-        s.ozUSD.burn(owner_, amount_);
-
         uint minTokenOut = 0;
         address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
 
-        console.log('PT bal oz - pre swap: ', s.pendlePT.balanceOf(address(this)));
-        console.log('sUSDe oz - pre swap: ', s.sUSDe.balanceOf(address(this)));
-        console.log('');
+        console.log('sender: ', msg.sender);
+        console.log('PT bal OZ: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
 
+        // bytes memory data = abi.encodeWithSelector(
+        //     s.sUSDe.approve.selector, address(s.pendleRouter), type(uint).max
+        // );
+
+        // (bool s,) = sUSDe_PT_26SEP.delegatecall(data);
+        // require(s, 'fff');
+        // sUSDe_PT_26SEP.functionDelegateCall(data);
+
+        // bytes memory data = abi.encodeWithSelector(
+        //     MyPendleRouter.swapExactPtForToken.selector,
+        //     address(this), 
+        //     address(s.sUSDeMarket), 
+        //     amount_, 
+        //     createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
+        //     s.emptyLimit
+        // );
+
+        // (s,) = address(s.pendleRouter).delegatecall(data);
+        // require(s, 'ggg');
+
+        // address(s.pendleRouter).functionDelegateCall(data);
 
         (uint256 netTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
             address(s.sUSDeMarket), 
-            amount_, 
+            IERC20(sUSDe_PT_26SEP).balanceOf(address(this)), 
             createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
             s.emptyLimit
         );
 
-        // console.log('netTokenOut sUSDe: ', 1);
-        // console.log(string('netTokenOut sUSDe: '), uint(1));
         console.log('netTokenOut sUSDe: ', netTokenOut);
-        console.log('PT bal oz - post swap: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
+        console.log('PT bal oz - post swap: ', s.pendlePT.balanceOf(address(this)));
         console.log('sUSDe oz - post swap: ', s.sUSDe.balanceOf(address(this)));
     }
 

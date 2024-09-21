@@ -6,6 +6,8 @@ import {Setup} from "./Setup.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {UserAccountData} from "../../contracts/AppStorage.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
+import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
+import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 
 import "forge-std/console.sol";
 
@@ -16,6 +18,8 @@ interface MyICreditDelegationToken {
 
 
 contract CoreMethods is Setup {
+
+    using PendlePYOracleLib for IPMarket;
 
     function _lend(address user_, bool isETH_) internal {
         uint currETHbal = user_.balance;
@@ -29,10 +33,10 @@ contract CoreMethods is Setup {
         assertTrue(user_.balance == currETHbal - 1 ether);
 
         //---------
-        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        // (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         // console.log('availableBorrowsBase: ', availableBorrowsBase);
-        // console.log('totalCollateralBase: ', totalCollateralBase);
+        console.log('eth value of eth lent: ', totalCollateralBase);
         // console.log('');
 
         // UserAccountData memory userData = OZ.getUserAccountData(owner);
@@ -69,24 +73,29 @@ contract CoreMethods is Setup {
         //User BORROWS
         vm.startPrank(owner);
         OZ.borrow(userData.availableBorrowsBase, owner);
-        // vm.stopPrank();
+        vm.stopPrank();
 
+        console.log('');
+        console.log('--- in _borrow_and_mint ---');
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
         console.log('ozUSD owner bal: ', balanceOwnerOzUSD);
 
         console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
         console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(twapDuration));
+        console.log('');
 
         //get this ^ assetRate and then come up with ozUSD - PT - asset rate, which will
         //be used for redeeming from ozUSD to the user token
 
+        vm.prank(address(OZ));
+        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
 
-        revert('here3');
-
-
-        // ozUSD.approve(address(OZ), balanceOwnerOzUSD);
+        vm.startPrank(owner);
+        ozUSD.approve(address(OZ), balanceOwnerOzUSD);
         OZ.redeem(balanceOwnerOzUSD, owner, owner);
         vm.stopPrank();
+
+        revert('here3');
 
 
         uint ptQuote = OZ.quotePT();
