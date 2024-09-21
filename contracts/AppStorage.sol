@@ -11,7 +11,7 @@ import {InternalAccount} from "./InternalAccount.sol";
 import {ozRelayer} from "./ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IERC4626} from "../lib/forge-std/src/interfaces/IERC4626.sol";
-import {IPool as IPoolBal, IVault} from "./interfaces/IBalancer.sol";
+import {IPool as IPoolBal, IVault, IAsset} from "./interfaces/IBalancer.sol";
 
 
 struct AppStorage {
@@ -31,7 +31,7 @@ struct AppStorage {
     uint ptDiscount;
 
     //Balancer
-    IPoolBal balancerPoolWstETHsUSDe;
+    IPoolBal balancerPool_wstETHsUSDe;
     IVault balancerVault;
     IPoolBal balancerPool_wstETHWETH;
 
@@ -44,6 +44,7 @@ struct AppStorage {
     IERC20 aaveVariableDebtUSDC;
     IERC20 USDe;
     IERC20 wstETH;
+    IERC20 WETH;
     IERC4626 sUSDe;
 
     //System config
@@ -67,7 +68,7 @@ struct AaveConfig {
 }
 
 struct BalancerConfig {
-    address balancerPoolWstETHsUSDe;
+    address balancerPool_wstETHsUSDe;
     address balancerVault;
     address balancerPool_wstETHWETH;
 }
@@ -82,6 +83,7 @@ struct ERC20s {
     address aaveVariableDebtUSDC;
     address USDe; //not used
     address wstETH;
+    address WETH;
 }
 
 struct PendleConfig {
@@ -98,4 +100,13 @@ struct UserAccountData {
     uint currentLiquidationThreshold;
     uint ltv;
     uint healthFactor;
+}
+
+struct BalancerSwapConfig {
+    IVault.SingleSwap singleSwap;
+    IVault.BatchSwapStep[] multiSwap;
+    IVault.SwapKind batchType;
+    IAsset[] assets;
+    int[] limits;
+    uint limit;
 }

@@ -49,7 +49,7 @@ contract StateVars is StructGenTest, Test {
     IERC20 public constant aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
 
     //Balancer
-    IPoolBal public constant balancerPoolWstETHsUSDe = IPoolBal(0xa8210885430aaA333c9F0D66AB5d0c312beD5E43);
+    IPoolBal public constant balancerPool_wstETHsUSDe = IPoolBal(0xa8210885430aaA333c9F0D66AB5d0c312beD5E43);
     IPoolBal public constant balancerPool_wstETHWETH = IPoolBal(0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD);
     IVault public constant balancerVault = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
@@ -64,6 +64,7 @@ contract StateVars is StructGenTest, Test {
     address public constant aUSDCaddr = 0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c;
     address public constant USDTaddr = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
     IERC20 public constant wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
+    IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     //Diamond
     DiamondCutFacet cut;

@@ -83,7 +83,7 @@ contract Setup is StateVars {
         AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
 
         BalancerConfig memory balancer = BalancerConfig(
-            address(balancerPoolWstETHsUSDe),
+            address(balancerPool_wstETHsUSDe),
             address(balancerVault),
             address(balancerPool_wstETHWETH)
         );
@@ -97,7 +97,8 @@ contract Setup is StateVars {
             address(sUSDe_PT_26SEP),
             address(aaveVariableDebtUSDC),
             address(USDe),
-            address(wstETH)
+            address(wstETH),
+            address(WETH)
         );
 
         PendleConfig memory pendle = PendleConfig(

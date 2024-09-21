@@ -56,9 +56,9 @@ contract DiamondInit {
         s.aavePool = IPool(s.aavePoolProvider.getPool());
 
         //Balancer
-        s.balancerPoolWstETHsUSDe = IPoolBal(balancer_.balancerPoolWstETHsUSDe);
+        s.balancerPool_wstETHsUSDe = IPoolBal(balancer_.balancerPool_wstETHsUSDe);
         s.balancerVault = IVault(balancer_.balancerVault);
-        s.balancerPool_wstETHWETH = IVault(balancer_.balancerPool_wstETHWETH);
+        s.balancerPool_wstETHWETH = IPoolBal(balancer_.balancerPool_wstETHWETH);
 
         //Pendle
         s.pendleRouter = IPAllActionV3(pendle_.pendleRouter);
@@ -84,6 +84,7 @@ contract DiamondInit {
         s.aaveVariableDebtUSDC = IERC20(tokens_.aaveVariableDebtUSDC);
         s.USDe = IERC20(tokens_.USDe);
         s.wstETH = IERC20(tokens_.wstETH);
+        s.WETH = IERC20(tokens_.WETH);
         s.sUSDe = IERC4626(tokens_.sUSDe);
 
         //System config

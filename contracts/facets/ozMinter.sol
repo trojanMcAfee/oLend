@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 
-import {UserAccountData} from "../AppStorage.sol";
+import {UserAccountData, BalancerSwapConfig} from "../AppStorage.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 // import {LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionTypeV3.sol";
 // import {LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
@@ -26,16 +26,6 @@ import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 
 import "forge-std/console.sol";
 
-
-struct UserCooldown {
-        uint104 cooldownEnd;
-        uint152 underlyingAmount;
-    }
-
-interface My {
-    function unstake(address receiver) external;
-    function cooldowns(address) external view returns(UserCooldown memory);
-}
 
 
 contract ozMinter is Modifiers {
@@ -152,7 +142,7 @@ contract ozMinter is Modifiers {
         console.log('sender: ', msg.sender);
         console.log('PT bal OZ: ', s.pendlePT.balanceOf(address(this)));
 
-        (uint256 netYieldToken,,) = s.pendleRouter.swapExactPtForToken(
+        (uint256 amountYieldTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
             address(s.sUSDeMarket), 
             s.pendlePT.balanceOf(address(this)), 
@@ -160,7 +150,7 @@ contract ozMinter is Modifiers {
             s.emptyLimit
         );
 
-        console.log('netYieldToken sUSDe: ', netYieldToken);
+        console.log('amountYieldTokenOut sUSDe: ', amountYieldTokenOut);
         console.log('PT bal oz - post swap: ', s.pendlePT.balanceOf(address(this)));
         console.log('USDe oz - post swap - 0: ', s.USDe.balanceOf(address(this)));
         console.log('sUSDe oz - post swap - not 0: ', s.sUSDe.balanceOf(address(this)));
@@ -169,8 +159,8 @@ contract ozMinter is Modifiers {
         if (isETH_) {
             uint amountTokenOut = _swapBalancer(
                 address(s.sUSDe), 
-                address(s.wstETH), 
-                netYieldToken, 
+                address(s.WETH), 
+                amountYieldTokenOut, //amountIn
                 minTokenOut,
                 true
             );
@@ -212,6 +202,7 @@ contract ozMinter is Modifiers {
         return swapRouterUni.exactInput(params);
     }
 
+
     function _swapBalancer( 
         address tokenIn_, 
         address tokenOut_, 
@@ -219,21 +210,43 @@ contract ozMinter is Modifiers {
         uint minAmountOut_,
         bool isMultiHop_
     ) private returns(uint amountOut) {
+        BalancerSwapConfig memory swapConfig;
 
         if (isMultiHop_) {
-            //finish doing the multiHop swap <----- ******
+            IVault.BatchSwapStep memory firstLeg = _createBatchStep(
+                s.balancerPool_wstETHsUSDe.getPoolId(),
+                0, 1, amountIn_
+            );
+            IVault.BatchSwapStep memory secondLeg = _createBatchStep(
+                s.balancerPool_wstETHWETH.getPoolId(),
+                1, 2, 0
+            );
 
+            IVault.BatchSwapStep[] memory swaps = new IVault.BatchSwapStep[](2);
+            swaps[0] = firstLeg;
+            swaps[1] = secondLeg;
+            swapConfig.multiSwap = swaps;
+
+            IAsset[] memory assets = new IAsset[](3);
+            assets[0] = IAsset(address(s.sUSDe));
+            assets[1] = IAsset(address(s.wstETH));
+            assets[2] = IAsset(address(s.WETH));
+            swapConfig.assets = assets;
+
+            int[] memory limits = new int[](2); //<---- this is minOut, calculate with queryBatchSwap() and then account for slippage
+            swapConfig.limits = limits;
+
+            swapConfig.batchType = IVault.SwapKind.GIVEN_IN;
+        } else {
+            IVault.SingleSwap memory singleSwap = IVault.SingleSwap({
+                poolId: s.balancerPool_wstETHsUSDe.getPoolId(),
+                kind: IVault.SwapKind.GIVEN_IN,
+                assetIn: IAsset(tokenIn_),
+                assetOut: IAsset(tokenOut_),
+                amount: amountIn_,
+                userData: new bytes(0)
+            });
         }
-
-        
-        IVault.SingleSwap memory singleSwap = IVault.SingleSwap({
-            poolId: s.balancerPoolWstETHsUSDe.getPoolId(),
-            kind: IVault.SwapKind.GIVEN_IN,
-            assetIn: IAsset(tokenIn_),
-            assetOut: IAsset(tokenOut_),
-            amount: amountIn_,
-            userData: new bytes(0)
-        });
 
         IVault.FundManagement memory funds = IVault.FundManagement({
             sender: address(this),
@@ -242,10 +255,32 @@ contract ozMinter is Modifiers {
             toInternalBalance: false
         });
 
-        IERC20(tokenIn_).approve(address(s.balancerVault), singleSwap.amount);
+        IERC20(tokenIn_).approve(address(s.balancerVault), amountIn_);
         // IERC20(tokenIn_).safeApprove(s.balancerVault, singleSwap.amount); //use this in prod - for safeApprove to work, allowance has to be reset to 0 on a mock. Can't be done on mockCall()
-        amountOut = _executeSwap(singleSwap, funds, minAmountOut_, block.timestamp);
+        // amountOut = _executeSwap(singleSwap, funds, minAmountOut_, block.timestamp);
+        amountOut = _executeSwap(swapConfig, funds, true);
     }
+
+
+    function _executeSwap(
+        BalancerSwapConfig memory swapConfig_,
+        IVault.FundManagement memory funds_,
+        bool isMultiHop_
+    ) private returns(uint) {
+        if (isMultiHop_) {
+            int[] memory assetsDeltas = s.balancerVault.batchSwap(
+                swapConfig_.batchType,
+                swapConfig_.multiSwap, 
+                swapConfig_.assets,
+                funds_,
+                swapConfig_.limits,
+                block.timestamp
+            );
+
+            return uint(assetsDeltas[1]);
+        }
+    }
+
 
     function _executeSwap(
         IVault.SingleSwap memory singleSwap_,
@@ -265,6 +300,15 @@ contract ozMinter is Modifiers {
             //     revert(reason);
             // }
         }
+    }
+
+    function _createBatchStep(
+        bytes32 poolId_,
+        uint assetInIndex_,
+        uint assetOutIndex_,
+        uint amount_
+    ) private returns(IVault.BatchSwapStep memory leg) {
+        leg = IVault.BatchSwapStep(poolId_, assetInIndex_, assetOutIndex_, amount_, new bytes(0));
     }
 
 
