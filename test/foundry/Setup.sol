@@ -89,8 +89,10 @@ contract Setup is StateVars {
             USDTaddr, 
             address(ozUSDproxy), 
             address(sUSDe_PT_26SEP),
-            address(aaveVariableDebtUSDC) 
+            address(aaveVariableDebtUSDC),
+            address(USDe)
         );
+
         PendleConfig memory pendle = PendleConfig(
             address(pendleRouter), 
             address(sUSDeMarket),

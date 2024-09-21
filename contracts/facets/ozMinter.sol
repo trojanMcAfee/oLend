@@ -136,37 +136,14 @@ contract ozMinter is Modifiers {
     //from ozUSDtoken to token (prob done in the ERC20 contract)
     function redeem(uint amount_, address owner_, address receiver_) external { 
         uint minTokenOut = 0;
-        address sUSDe_PT_26SEP = 0x6c9f097e044506712B58EAC670c9a5fd4BCceF13;
 
         console.log('sender: ', msg.sender);
-        console.log('PT bal OZ: ', IERC20(sUSDe_PT_26SEP).balanceOf(address(this)));
-
-        // bytes memory data = abi.encodeWithSelector(
-        //     s.sUSDe.approve.selector, address(s.pendleRouter), type(uint).max
-        // );
-
-        // (bool s,) = sUSDe_PT_26SEP.delegatecall(data);
-        // require(s, 'fff');
-        // sUSDe_PT_26SEP.functionDelegateCall(data);
-
-        // bytes memory data = abi.encodeWithSelector(
-        //     MyPendleRouter.swapExactPtForToken.selector,
-        //     address(this), 
-        //     address(s.sUSDeMarket), 
-        //     amount_, 
-        //     createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
-        //     s.emptyLimit
-        // );
-
-        // (s,) = address(s.pendleRouter).delegatecall(data);
-        // require(s, 'ggg');
-
-        // address(s.pendleRouter).functionDelegateCall(data);
+        console.log('PT bal OZ: ', s.pendlePT.balanceOf(address(this)));
 
         (uint256 netTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
             address(s.sUSDeMarket), 
-            IERC20(sUSDe_PT_26SEP).balanceOf(address(this)), 
+            s.pendlePT.balanceOf(address(this)), 
             createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
             s.emptyLimit
         );
@@ -174,6 +151,9 @@ contract ozMinter is Modifiers {
         console.log('netTokenOut sUSDe: ', netTokenOut);
         console.log('PT bal oz - post swap: ', s.pendlePT.balanceOf(address(this)));
         console.log('sUSDe oz - post swap: ', s.sUSDe.balanceOf(address(this)));
+        console.log('');
+
+        // s.sUSDe
     }
 
 

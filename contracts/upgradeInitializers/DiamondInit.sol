@@ -75,6 +75,7 @@ contract DiamondInit {
         s.ozUSD = IERC20(tokens_.ozUSDtoken);
         s.pendlePT = IERC20(tokens_.pendlePT); //sUSDe_PT
         s.aaveVariableDebtUSDC = IERC20(tokens_.aaveVariableDebtUSDC);
+        s.USDe = IERC20(tokens_.USDe);
 
         //System config
         s.OZ = sys_.OZ;
