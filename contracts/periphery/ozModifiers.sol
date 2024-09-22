@@ -2,14 +2,12 @@
 pragma solidity 0.8.26;
 
 
-import {AppStorage} from "../AppStorage.sol";
+// import {AppStorage} from "../AppStorage.sol";
+import {State} from "../State.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 
-contract ozModifiers {
-
-    AppStorage internal s;
-
+contract ozModifiers is State {
     
     modifier checkAavePool() {
         if (s.aavePoolProvider.getPool() != address(s.aavePool)) {
