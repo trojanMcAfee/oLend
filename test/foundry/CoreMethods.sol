@@ -19,9 +19,9 @@ contract CoreMethods is Setup {
 
     using PendlePYOracleLib for IPMarket;
 
-    function _lend(address user_, Tokens token_) internal {
+    function _lend(address user_, bool isETH_) internal {
         uint currETHbal = user_.balance;
-        if (token_ == Tokens.WETH) assertTrue(currETHbal == 100 * 1 ether, '_lend: user_ not enough balance');
+        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, '_lend: user_ not enough balance');
 
         //User LENDS 
         vm.prank(user_);
@@ -38,18 +38,20 @@ contract CoreMethods is Setup {
     }
 
 
-    function _redeem_ozUSD(uint ozUSDbalance_) internal {
+    function _redeem_ozUSD(Tokens token_) internal {
+        uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
+
         vm.prank(address(OZ));
         sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
 
         vm.startPrank(owner);
-        ozUSD.approve(address(OZ), ozUSDbalance_);
+        ozUSD.approve(address(OZ), balanceOwnerOzUSD);
 
         console.log('');
         console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
         console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
 
-        uint amountOutWETH = ozUSD.redeem(ozUSDbalance_, owner, owner, Tokens.WETH);
+        uint amountOutWETH = ozUSD.redeem(balanceOwnerOzUSD, owner, owner, token_);
         vm.stopPrank();
 
         console.log('');
@@ -60,11 +62,11 @@ contract CoreMethods is Setup {
     }
 
 
-    function _borrow_and_mint_ozUSD(Tokens token_) internal {
+    function _borrow_and_mint_ozUSD() internal {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
-        _lend(owner, token_);
+        _lend(owner, true);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
 
         //User BORROWS
@@ -88,11 +90,11 @@ contract CoreMethods is Setup {
 
     
 
-    function _borrow_and_mint_ozUSD2(Tokens token_) internal {
+    function _borrow_and_mint_ozUSD2() internal {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
-        _lend(owner, token_);
+        _lend(owner, true);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
 
         //User BORROWS
@@ -114,7 +116,7 @@ contract CoreMethods is Setup {
 
 
         //User REDEEMS ozUSD
-        _redeem_ozUSD(balanceOwnerOzUSD);
+        _redeem_ozUSD();
 
         revert('here3');
 
@@ -147,7 +149,7 @@ contract CoreMethods is Setup {
 
 
     function test_do_accounting() public {
-        _borrow_and_mint_ozUSD(Tokens.WETH);
+        _borrow_and_mint_ozUSD();
 
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
 

@@ -14,7 +14,7 @@ contract Lend is CoreMethods {
     //NEW
     function test_GivenThatOneUserHasLentFunds() external whenLendIsCalled {
         //it should lend funds and delegate credit to ozRelayer
-        _lend(owner, Tokens.WETH); //<--- catch the delegation on this test using the FundsDelegated event on depositInAave()
+        _lend(owner, true); //<--- catch the delegation on this test using the FundsDelegated event on depositInAave()
     }
 
     function test_GivenThatTwoUsersHaveLentFunds() external whenLendIsCalled {
@@ -27,13 +27,13 @@ contract Lend is CoreMethods {
 
     function test_GivenThatAmountInIsSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
         //it should mint ozUSDtoken by borrowing
-        _borrow_and_mint_ozUSD(Tokens.WETH);
+        _borrow_and_mint_ozUSD();
     }
 
     //NEW
     function test_2_GivenThatAmountInIsSameAsMsgValue() external whenLendIsCalled givenThatTokenInIsETH {
         //it should redeem ozUSDtoken for full amount
-        _borrow_and_mint_ozUSD(Tokens.WETH);
+        _borrow_and_mint_ozUSD();
 
         _redeem_ozUSD();
     }
