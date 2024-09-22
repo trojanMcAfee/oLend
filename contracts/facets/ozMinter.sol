@@ -102,13 +102,12 @@ contract ozMinter is ozTrading {
             address(this), 
             address(s.sUSDeMarket), 
             minPTout, 
-            s.defaultApprox, 
+            s.defaultApprox, //check StructGen.sol for a more gas-efficient impl of this
             address(s.sUSDe).createTokenInputStruct(sUSDeOut, s.emptySwap), 
             s.emptyLimit
         );
 
         console.log('netPtOut ***** - owned by oz: ', netPtOut);
-        // IERC20 aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         uint internalAccountDebtUSDC = s.aaveVariableDebtUSDC.balanceOf(address(internalAccount));
         console.log('usdc debt - int acc: ', internalAccountDebtUSDC);
 
