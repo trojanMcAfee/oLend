@@ -39,8 +39,6 @@ interface IVault {
         bytes userData;
     }
 
-
-
     struct FundManagement {
         address sender;
         bool fromInternalBalance;
@@ -76,7 +74,14 @@ interface IVault {
         FundManagement memory funds,
         int256[] memory limits,
         uint256 deadline
-    ) external payable  returns (int256[] memory assetDeltas);
+    ) external payable returns (int256[] memory assetDeltas);
+
+    function queryBatchSwap(
+        SwapKind kind,
+        BatchSwapStep[] memory swaps,
+        IAsset[] memory assets,
+        FundManagement memory funds)
+    external returns (int256[] memory assetDeltas);
 
 
     function exitPool(

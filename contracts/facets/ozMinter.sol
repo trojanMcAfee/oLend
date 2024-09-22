@@ -212,6 +212,13 @@ contract ozMinter is Modifiers {
     ) private returns(uint amountOut) {
         BalancerSwapConfig memory swapConfig;
 
+        IVault.FundManagement memory funds = IVault.FundManagement({
+            sender: address(this),
+            fromInternalBalance: false, 
+            recipient: payable(address(this)),
+            toInternalBalance: false
+        });
+
         if (isMultiHop_) {
             IVault.BatchSwapStep memory firstLeg = _createBatchStep(
                 s.balancerPool_wstETHsUSDe.getPoolId(),
@@ -233,7 +240,22 @@ contract ozMinter is Modifiers {
             assets[2] = IAsset(address(s.WETH));
             swapConfig.assets = assets;
 
-            int[] memory limits = new int[](2); //<---- this is minOut, calculate with queryBatchSwap() and then account for slippage
+            int[] memory assetDeltas = s.balancerVault.queryBatchSwap(
+                IVault.SwapKind.GIVEN_IN,
+                swaps,
+                assets,
+                funds
+            );
+
+            // console.log('0: ', assetDeltas[0]);
+            // console.log('1: ', assetDeltas[1]);
+            // console.log('2: ', assetDeltas[2]);
+            // revert('here7');
+
+            int[] memory limits = new int[](3); //<---- this is minOut, calculate with queryBatchSwap() and then account for slippage
+            limits[0] = type(int).max;
+            limits[2] = type(int).max;
+
             swapConfig.limits = limits;
 
             swapConfig.batchType = IVault.SwapKind.GIVEN_IN;
@@ -247,13 +269,6 @@ contract ozMinter is Modifiers {
                 userData: new bytes(0)
             });
         }
-
-        IVault.FundManagement memory funds = IVault.FundManagement({
-            sender: address(this),
-            fromInternalBalance: false, 
-            recipient: payable(address(this)),
-            toInternalBalance: false
-        });
 
         IERC20(tokenIn_).approve(address(s.balancerVault), amountIn_);
         // IERC20(tokenIn_).safeApprove(s.balancerVault, singleSwap.amount); //use this in prod - for safeApprove to work, allowance has to be reset to 0 on a mock. Can't be done on mockCall()
