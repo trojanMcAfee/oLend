@@ -58,12 +58,11 @@ contract Setup is StateVars {
         oracle = new ozOracle();
 
         //Deploys ozUSDtoken
-        ozUSDimpl = new ozUSDtoken();
+        ozUSDimpl = new ozUSDtoken(address(OZ));
         bytes memory data = abi.encodeWithSelector(
             ozUSDimpl.initialize.selector, 
             'Ozel Dollar', 
-            'ozUSD',
-            address(ozDiamond)
+            'ozUSD'        
         );
         ozUSDproxy = new ERC1967Proxy(address(ozUSDimpl), data);
         ozUSD = ozIUSD(address(ozUSDproxy));

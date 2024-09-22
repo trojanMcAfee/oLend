@@ -11,8 +11,8 @@ contract ozUSDtoken is ERC20Upgradeable {
 
     ozIDiamond public immutable OZ;
 
-    constructor() {
-        _disableInitializers();
+    constructor(address ozDiamond_) {
+        OZ = ozIDiamond(ozDiamond_); 
     }
     
 
@@ -24,9 +24,8 @@ contract ozUSDtoken is ERC20Upgradeable {
         _burn(account_, amount_);
     }
 
-    function initialize(string memory name_, string memory symbol_, address ozDiamond_) external initializer {
+    function initialize(string memory name_, string memory symbol_) external initializer {
         __ERC20_init(name_, symbol_);
-        OZ = ozIDiamond(ozDiamond_);
     }
 
     function redeem(
