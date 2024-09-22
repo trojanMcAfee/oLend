@@ -24,7 +24,8 @@ import {ozUSDtoken} from "./ozUSDtoken.sol";
 import {ozRelayer} from "./ozRelayer.sol";
 import {ozOracle} from "../contracts/facets/ozOracle.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol"; 
-import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";     
+import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";  
+import {ozIUSD} from "../contracts/interfaces/ozIUSD.sol";   
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -79,7 +80,7 @@ contract StateVars is AppStorageTest, Test {
     //ozUSDtoken
     ERC1967Proxy ozUSDproxy;
     ozUSDtoken ozUSDimpl;
-    IERC20 ozUSD; 
+    ozIUSD ozUSD; 
     
     //System
     ozRelayer relayer;

@@ -19,6 +19,7 @@ import {ozUSDtoken} from "../../contracts/ozUSDtoken.sol";
 import {ozRelayer} from "../../contracts/ozRelayer.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {ozOracle} from "../../contracts/facets/ozOracle.sol";
+import {ozIUSD} from "../../contracts/interfaces/ozIUSD.sol";
 
 import "forge-std/console.sol";
 
@@ -30,6 +31,7 @@ contract Setup is StateVars {
 
         deal(address(sUSDe), address(this), 1_000 * 1e18);
         sUSDe.approve(address(pendleRouter), type(uint).max);
+
         YT.approve(address(pendleRouter), type(uint).max);
         deal(USDCaddr, second_owner, 10_000 * 1e6);
 
@@ -57,9 +59,14 @@ contract Setup is StateVars {
 
         //Deploys ozUSDtoken
         ozUSDimpl = new ozUSDtoken();
-        bytes memory data = abi.encodeWithSelector(ozUSDimpl.initialize.selector, 'Ozel Dollar', 'ozUSDtoken');
+        bytes memory data = abi.encodeWithSelector(
+            ozUSDimpl.initialize.selector, 
+            'Ozel Dollar', 
+            'ozUSD',
+            address(ozDiamond)
+        );
         ozUSDproxy = new ERC1967Proxy(address(ozUSDimpl), data);
-        ozUSD = IERC20(address(ozUSDproxy));
+        ozUSD = ozIUSD(address(ozUSDproxy));
 
         //Deploys sys config
         relayer = new ozRelayer();
@@ -152,7 +159,7 @@ contract Setup is StateVars {
         } else if (id_ == 2) {
             selectors[0] = minter.lend.selector;
             selectors[1] = minter.borrow.selector;
-            selectors[2] = minter.redeem.selector;
+            selectors[2] = minter.performRedemption.selector;
             selectors[3] = minter.rebuyPT.selector;
             selectors[4] = minter.finishBorrow.selector;
             selectors[5] = minter.getUserAccountData.selector;

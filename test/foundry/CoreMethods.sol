@@ -34,25 +34,10 @@ contract CoreMethods is Setup {
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
         (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
         console.log('eth value of eth lent: ', totalCollateralBase);
-
    
     }
 
-    function _delegateCredit() internal {
-        // _lend(owner, true);
-
-        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        // // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
-        // uint amountBorrow = 1000 * 1e6;
-        // // uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
-
-        // // console.log('availableBorrowsBase: ', availableBorrowsBase);
-        // console.log('');
-
-        // vm.prank(owner);
-        // OZ.borrow(amountBorrow, address(0));
-    }
+    
 
     function _borrow_and_mint_ozUSD(Tokens token_) internal {
         //User LENDS 
@@ -68,6 +53,7 @@ contract CoreMethods is Setup {
 
         console.log('');
         console.log('--- in _borrow_and_mint ---');
+
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
         console.log('ozUSD owner bal: ', balanceOwnerOzUSD);
 
@@ -83,8 +69,18 @@ contract CoreMethods is Setup {
 
         vm.startPrank(owner);
         ozUSD.approve(address(OZ), balanceOwnerOzUSD);
-        OZ.redeem(balanceOwnerOzUSD, owner, owner, Tokens.WETH);
+
+        console.log('');
+        console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
+        console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
+
+        ozUSD.redeem(balanceOwnerOzUSD, owner, owner, Tokens.WETH);
         vm.stopPrank();
+
+        console.log('');
+        console.log('ozUSD bal owner - post redeemption - 0:', ozUSD.balanceOf(owner));
+        console.log('WETH bal owner - post redeeption - not 0: ', WETH.balanceOf(owner));
+        console.log('WETH bal oz - post redeemption - 0: ', WETH.balanceOf(owner));
 
         revert('here3');
 
