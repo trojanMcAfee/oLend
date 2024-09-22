@@ -59,9 +59,36 @@ contract CoreMethods is Setup {
         console.log('WETH bal oz - post redeemption - 0: ', WETH.balanceOf(address(OZ)));
     }
 
-    
 
     function _borrow_and_mint_ozUSD(Tokens token_) internal {
+        //User LENDS 
+        assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
+
+        _lend(owner, token_);
+        UserAccountData memory userData = OZ.getUserAccountData(owner);
+
+        //User BORROWS
+        vm.startPrank(owner);
+        OZ.borrow(userData.availableBorrowsBase, owner);
+        vm.stopPrank();
+
+        console.log('');
+        console.log('--- in _borrow_and_mint ---');
+
+        uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
+        console.log('ozUSD owner bal: ', balanceOwnerOzUSD);
+        assertTrue(balanceOwnerOzUSD > 0, '_borrow_and_mint_ozUSD: bal ozUSD is 0');
+
+        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
+        console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(twapDuration));
+        console.log('');
+        //get this ^ assetRate and then come up with ozUSD - PT - asset rate, which will
+        //be used for redeeming from ozUSD to the user token
+    }
+
+    
+
+    function _borrow_and_mint_ozUSD2(Tokens token_) internal {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
