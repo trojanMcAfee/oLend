@@ -37,6 +37,28 @@ contract CoreMethods is Setup {
    
     }
 
+
+    function _redeem_ozUSD(uint ozUSDbalance_) internal {
+        vm.prank(address(OZ));
+        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
+
+        vm.startPrank(owner);
+        ozUSD.approve(address(OZ), ozUSDbalance_);
+
+        console.log('');
+        console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
+        console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
+
+        uint amountOutWETH = ozUSD.redeem(ozUSDbalance_, owner, owner, Tokens.WETH);
+        vm.stopPrank();
+
+        console.log('');
+        console.log('amountOutWETH - same weth bal owner: ', amountOutWETH);
+        console.log('ozUSD bal owner - post redeemption - 0:', ozUSD.balanceOf(owner));
+        console.log('WETH bal owner - post redeeption - not 0: ', WETH.balanceOf(owner));
+        console.log('WETH bal oz - post redeemption - 0: ', WETH.balanceOf(address(OZ)));
+    }
+
     
 
     function _borrow_and_mint_ozUSD(Tokens token_) internal {
@@ -60,27 +82,12 @@ contract CoreMethods is Setup {
         console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
         console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(twapDuration));
         console.log('');
-
         //get this ^ assetRate and then come up with ozUSD - PT - asset rate, which will
         //be used for redeeming from ozUSD to the user token
 
-        vm.prank(address(OZ));
-        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
 
-        vm.startPrank(owner);
-        ozUSD.approve(address(OZ), balanceOwnerOzUSD);
-
-        console.log('');
-        console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
-        console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
-
-        ozUSD.redeem(balanceOwnerOzUSD, owner, owner, Tokens.WETH);
-        vm.stopPrank();
-
-        console.log('');
-        console.log('ozUSD bal owner - post redeemption - 0:', ozUSD.balanceOf(owner));
-        console.log('WETH bal owner - post redeeption - not 0: ', WETH.balanceOf(owner));
-        console.log('WETH bal oz - post redeemption - 0: ', WETH.balanceOf(owner));
+        //User REDEEMS ozUSD
+        _redeem_ozUSD(balanceOwnerOzUSD);
 
         revert('here3');
 
