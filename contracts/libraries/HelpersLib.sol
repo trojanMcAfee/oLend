@@ -18,7 +18,7 @@ library HelpersLib {
         address tokenIn_, 
         uint netTokenIn_,
         SwapData memory swapData_
-    ) internal view returns (TokenInput memory) {
+    ) internal pure returns (TokenInput memory) {
         return TokenInput({
             tokenIn: tokenIn_,
             netTokenIn: netTokenIn_,
@@ -33,7 +33,7 @@ library HelpersLib {
         address tokenOut_, 
         uint minTokenOut_,
         SwapData memory swapData_
-    ) internal view returns (TokenOutput memory) {
+    ) internal pure returns (TokenOutput memory) {
         return TokenOutput({
             tokenOut: tokenOut_,
             minTokenOut: minTokenOut_,

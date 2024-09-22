@@ -82,7 +82,7 @@ abstract contract ozTrading is ozModifiers {
              * Add slippage tolerance to assetDeltas.
              * Do it offchain
              */
-            int[] memory assetDeltas = s.balancerVault.queryBatchSwap(
+            s.balancerVault.queryBatchSwap( //returns(int[] memory assetDeltas)
                 IVault.SwapKind.GIVEN_IN,
                 swaps,
                 assets,
@@ -135,25 +135,25 @@ abstract contract ozTrading is ozModifiers {
     }
 
     //this below needs to be put in this ^ above, especially the error handling 
-    function _executeSwap(
-        IVault.SingleSwap memory singleSwap_,
-        IVault.FundManagement memory funds_,
-        uint minAmountOut_,
-        uint blockStamp_
-    ) private returns(uint) 
-    {        
-        try s.balancerVault.swap(singleSwap_, funds_, minAmountOut_, blockStamp_) returns(uint amountOut) {
-            if (amountOut == 0) revert('my 1');
-            return amountOut;
-        } catch Error(string memory reason) {
-            revert('error in _executeSwap()');
-            // if (Helpers.compareStrings(reason, 'BAL#507')) {
-            //     revert('my 2');
-            // } else {
-            //     revert(reason);
-            // }
-        }
-    }
+    // function _executeSwap(
+    //     IVault.SingleSwap memory singleSwap_,
+    //     IVault.FundManagement memory funds_,
+    //     uint minAmountOut_,
+    //     uint blockStamp_
+    // ) private returns(uint) 
+    // {        
+    //     try s.balancerVault.swap(singleSwap_, funds_, minAmountOut_, blockStamp_) returns(uint amountOut) {
+    //         if (amountOut == 0) revert('my 1');
+    //         return amountOut;
+    //     } catch Error(string memory reason) {
+    //         revert('error in _executeSwap()');
+    //         // if (Helpers.compareStrings(reason, 'BAL#507')) {
+    //         //     revert('my 2');
+    //         // } else {
+    //         //     revert(reason);
+    //         // }
+    //     }
+    // }
 
 
     function _createBatchStep(
@@ -161,7 +161,7 @@ abstract contract ozTrading is ozModifiers {
         uint assetInIndex_,
         uint assetOutIndex_,
         uint amount_
-    ) private returns(IVault.BatchSwapStep memory leg) {
+    ) private pure returns(IVault.BatchSwapStep memory leg) {
         leg = IVault.BatchSwapStep(poolId_, assetInIndex_, assetOutIndex_, amount_, new bytes(0));
     }
 
