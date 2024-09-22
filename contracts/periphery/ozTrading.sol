@@ -2,16 +2,15 @@
 pragma solidity 0.8.26;
 
 
-import {AppStorage, BalancerSwapConfig} from "../AppStorage.sol";
+import {BalancerSwapConfig} from "../AppStorage.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
+import {ozModifiers} from "./ozModifiers.sol";
 
 
-abstract contract ozTrading {
-
-    // AppStorage internal s;
+abstract contract ozTrading is ozModifiers {
 
     using HelpersLib for int;
 

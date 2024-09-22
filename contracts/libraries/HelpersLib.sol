@@ -14,20 +14,32 @@ library HelpersLib {
     }
 
 
-    function createTokenInputStruct(address tokenIn, uint256 netTokenIn) internal view returns (TokenInput memory) {
+    function createTokenInputStruct(
+        address tokenIn_, 
+        uint netTokenIn_,
+        SwapData memory swapData_
+    ) internal view returns (TokenInput memory) {
         return TokenInput({
-            tokenIn: tokenIn,
-            netTokenIn: netTokenIn,
-            tokenMintSy: tokenIn
+            tokenIn: tokenIn_,
+            netTokenIn: netTokenIn_,
+            tokenMintSy: tokenIn_,
+            pendleSwap: address(0),
+            swapData: swapData_
         });
     }
 
 
-    function createTokenOutputStruct(address tokenOut, uint minTokenOut) internal view returns (TokenOutput memory) {
+    function createTokenOutputStruct(
+        address tokenOut_, 
+        uint minTokenOut_,
+        SwapData memory swapData_
+    ) internal view returns (TokenOutput memory) {
         return TokenOutput({
-            tokenOut: tokenOut,
-            minTokenOut: minTokenOut,
-            tokenRedeemSy: tokenOut
+            tokenOut: tokenOut_,
+            minTokenOut: minTokenOut_,
+            tokenRedeemSy: tokenOut_,
+            pendleSwap: address(0),
+            swapData: swapData_
         });
     }
 

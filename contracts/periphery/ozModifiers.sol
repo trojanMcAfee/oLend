@@ -2,14 +2,13 @@
 pragma solidity 0.8.26;
 
 
-import {AppStorage} from "./AppStorage.sol";
-import {StructGen} from "./StructGen.sol";
+import {AppStorage} from "../AppStorage.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 
-contract Modifiers is StructGen {
+contract ozModifiers {
 
-    // AppStorage internal s;
+    AppStorage internal s;
 
     
     modifier checkAavePool() {

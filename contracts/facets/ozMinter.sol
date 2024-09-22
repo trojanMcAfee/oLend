@@ -19,23 +19,22 @@ import {TokenOutput, LimitOrderData} from "@pendle/core-v2/contracts/interfaces/
 import {IERC20, IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
-import {Modifiers} from "../Modifiers.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
-// import {HelpersLib} from "../libraries/HelpersLib.sol";
+import {HelpersLib} from "../libraries/HelpersLib.sol";
 
 import "forge-std/console.sol";
 
 
 
-contract ozMinter is ozTrading, Modifiers {
+contract ozMinter is ozTrading {
 
     using SafeERC20 for IERC20;
     using Address for address;
     using FixedPointMathLib for uint;
-    // using HelpersLib for int;
+    using HelpersLib for address;
 
     event NewAccountCreated(address account);
 
@@ -104,7 +103,7 @@ contract ozMinter is ozTrading, Modifiers {
             address(s.sUSDeMarket), 
             minPTout, 
             s.defaultApprox, 
-            createTokenInputStruct(address(s.sUSDe), sUSDeOut), 
+            address(s.sUSDe).createTokenInputStruct(sUSDeOut, s.emptySwap), 
             s.emptyLimit
         );
 
@@ -149,7 +148,7 @@ contract ozMinter is ozTrading, Modifiers {
             address(this), 
             address(s.sUSDeMarket), 
             s.pendlePT.balanceOf(address(this)), 
-            createTokenOutputStruct(address(s.sUSDe), minTokenOut), 
+            address(s.sUSDe).createTokenOutputStruct(minTokenOut, s.emptySwap), 
             s.emptyLimit
         );
 

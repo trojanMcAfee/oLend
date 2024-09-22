@@ -7,10 +7,10 @@ import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {AppStorage} from "./AppStorage.sol";
 
 abstract contract StructGen {
-    AppStorage internal s;
+    // AppStorage internal s;
 
     // EmptySwap means no swap aggregator is involved
-    // SwapData public emptySwap; <--- there are now in AppStorage.sol
+    SwapData public emptySwap; //<--- there are now in AppStorage.sol
 
     // // EmptyLimit means no limit order is involved
     // LimitOrderData public emptyLimit;
@@ -26,7 +26,7 @@ abstract contract StructGen {
             netTokenIn: netTokenIn,
             tokenMintSy: tokenIn,
             pendleSwap: address(0),
-            swapData: s.emptySwap
+            swapData: emptySwap
         });
     }
 
@@ -45,7 +45,7 @@ abstract contract StructGen {
             minTokenOut: minTokenOut,
             tokenRedeemSy: tokenOut,
             pendleSwap: address(0),
-            swapData: s.emptySwap
+            swapData: emptySwap
         });
     }
 }
