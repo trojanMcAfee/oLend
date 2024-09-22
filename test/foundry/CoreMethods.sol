@@ -39,9 +39,11 @@ contract CoreMethods is Setup {
 
 
     function _redeem_ozUSD(Tokens token_) internal {
+        //PRE-CONDITIONS
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
+        assertTrue(balanceOwnerOzUSD > 0);
 
-        vm.prank(address(OZ));
+        vm.prank(address(OZ)); //<--- ozDiamond can't call approve here
         sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
 
         vm.startPrank(owner);
@@ -51,8 +53,17 @@ contract CoreMethods is Setup {
         console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
         console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
 
+        //ACTION
         uint amountOutWETH = ozUSD.redeem(balanceOwnerOzUSD, owner, owner, token_);
         vm.stopPrank();
+
+        //POST-CONDITIONS
+        uint balanceOwnerWETH = WETH.balanceOf(owner);
+
+        assertTrue(amountOutWETH > 0);
+        assertTrue(ozUSD.balanceOf(owner) == 0);
+        assertTrue(balanceOwnerWETH == amountOutWETH);
+        assertTrue(WETH.balanceOf(address(OZ)) == 0);
 
         console.log('');
         console.log('amountOutWETH - same weth bal owner: ', amountOutWETH);
@@ -137,6 +148,7 @@ contract CoreMethods is Setup {
         assertTrue(balanceOzUSD > 0, '_borrow_and_mint_ozUSD: is 0');
         //put this ^ as a ratio of discount to face-value PT instead of balanceOzUSD > 0
     }
+
 
     function _redeem_ozUSD() internal {
         uint ozUSDbalance = ozUSD.balanceOf(owner);
