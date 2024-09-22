@@ -135,6 +135,8 @@ contract ozMinter is ozTrading {
 
 
     function performRedemption(uint amount_, address owner_, address receiver_, Tokens token_) external returns(uint) { 
+        uint amountOut;
+
         uint minTokenOut = 0;
 
         (uint256 amountYieldTokenOut,,) = s.pendleRouter.swapExactPtForToken(
@@ -146,7 +148,7 @@ contract ozMinter is ozTrading {
         );
 
         if (token_ == Tokens.WETH) {
-            uint amountOut =  _swapBalancer(
+            amountOut =  _swapBalancer(
                 address(s.sUSDe), 
                 address(s.WETH), 
                 amountYieldTokenOut, //amountIn
@@ -158,16 +160,14 @@ contract ozMinter is ozTrading {
             console.log('WETH oz - post batch - not 0: ', s.WETH.balanceOf(address(this)));
 
             s.WETH.transfer(receiver_, amountOut);
-
-            // console.log('WETH oz - post transfer - 0: ', s.WETH.balanceOf(address(this)));
-
-            return amountOut;
+        } else if (token_ == Tokens.USDC) {
+            
         }
 
 
         // console.log('sUSDe oz - post withdraw - 0: ', s.sUSDe.balanceOf(address(this)));
         // console.log('USDe oz - post withdraw - not 0: ', s.USDe.balanceOf(address(this)));
-
+        return amountOut;
     }
 
 

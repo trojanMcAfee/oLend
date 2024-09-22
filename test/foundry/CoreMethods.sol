@@ -31,9 +31,9 @@ contract CoreMethods is Setup {
         assertTrue(user_.balance == currETHbal - 1 ether);
 
         //---------
-        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        console.log('eth value of eth lent: ', totalCollateralBase);
+        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        // console.log('eth value of eth lent: ', totalCollateralBase);
    
     }
 
