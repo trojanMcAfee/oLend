@@ -23,6 +23,7 @@ import {Modifiers} from "../Modifiers.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
+import {HelpersLib} from "../libraries/HelpersLib.sol";
 
 import "forge-std/console.sol";
 
@@ -33,6 +34,7 @@ contract ozMinter is Modifiers {
     using SafeERC20 for IERC20;
     using Address for address;
     using FixedPointMathLib for uint;
+    using HelpersLib for int;
 
     event NewAccountCreated(address account);
 
@@ -155,6 +157,7 @@ contract ozMinter is Modifiers {
         console.log('USDe oz - post swap - 0: ', s.USDe.balanceOf(address(this)));
         console.log('sUSDe oz - post swap - not 0: ', s.sUSDe.balanceOf(address(this)));
         console.log('');
+        console.log('WETH oz - pre batch - 0: ', s.WETH.balanceOf(address(this)));
 
         if (isETH_) {
             uint amountTokenOut = _swapBalancer(
@@ -166,6 +169,7 @@ contract ozMinter is Modifiers {
             );
 
             console.log('amountTokenOut *****: ', amountTokenOut);
+            console.log('WETH oz - post batch - not 0: ', s.WETH.balanceOf(address(this)));
         }
 
 
@@ -240,19 +244,20 @@ contract ozMinter is Modifiers {
             assets[2] = IAsset(address(s.WETH));
             swapConfig.assets = assets;
 
+            /**
+             * You calculate minOuts with this on this step.
+             * Add slippage tolerance to assetDeltas.
+             * Do it offchain
+             */
             int[] memory assetDeltas = s.balancerVault.queryBatchSwap(
                 IVault.SwapKind.GIVEN_IN,
                 swaps,
                 assets,
                 funds
             );
+            /************/
 
-            // console.log('0: ', assetDeltas[0]);
-            // console.log('1: ', assetDeltas[1]);
-            // console.log('2: ', assetDeltas[2]);
-            // revert('here7');
-
-            int[] memory limits = new int[](3); //<---- this is minOut, calculate with queryBatchSwap() and then account for slippage
+            int[] memory limits = new int[](3); //<---- this is minOut, from above ^ 
             limits[0] = type(int).max;
             limits[2] = type(int).max;
 
@@ -292,7 +297,10 @@ contract ozMinter is Modifiers {
                 block.timestamp
             );
 
-            return uint(assetsDeltas[1]);
+            // console.log('assetDeltas[0] - post batch: ', assetsDeltas[0]);
+            // console.log('assetDeltas[0] - post batch: ', assetsDeltas[1]);
+            // console.log('assetDeltas[2] - post batch: ', assetsDeltas[2]);
+            return assetsDeltas[2].abs();
         }
     }
 
@@ -354,6 +362,7 @@ contract ozMinter is Modifiers {
     function _applyDiscount(uint singleState_) private view returns(uint) {
         return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
     }
+
 
 
 }
