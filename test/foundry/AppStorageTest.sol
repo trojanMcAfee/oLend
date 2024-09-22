@@ -3,9 +3,18 @@ pragma solidity >=0.8.23 <0.9.0;
 
 import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+// import {Tokens} from "../../contracts/AppStorage.sol";
 
 
-abstract contract StructGenTest {
+abstract contract AppStorageTest {
+
+    // enum Tokens {
+    //     WETH,
+    //     ETH,
+    //     USDe,
+    //     USDC,
+    //     PT
+    // }
 
     //EmptySwap means no swap aggregator is involved
     SwapData public emptySwap; 

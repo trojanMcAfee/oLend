@@ -110,3 +110,11 @@ struct BalancerSwapConfig {
     int[] limits;
     uint limit;
 }
+
+enum Tokens {
+    WETH,
+    ETH,
+    USDe,
+    USDC,
+    PT
+}

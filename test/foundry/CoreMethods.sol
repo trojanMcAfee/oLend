@@ -8,22 +8,20 @@ import {UserAccountData} from "../../contracts/AppStorage.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+// import {AppStorageTest} from "./AppStorageTest.sol";
+import {Tokens} from "../../contracts/AppStorage.sol";
 
 import "forge-std/console.sol";
 
-interface MyICreditDelegationToken {
-    function scaledBalanceOf(address) external view returns(uint);
-    function balanceOf(address) external view returns(uint);
-}
 
 
 contract CoreMethods is Setup {
 
     using PendlePYOracleLib for IPMarket;
 
-    function _lend(address user_, bool isETH_) internal {
+    function _lend(address user_, Tokens token_) internal {
         uint currETHbal = user_.balance;
-        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, '_lend: user_ not enough balance');
+        if (token_ == Tokens.WETH) assertTrue(currETHbal == 100 * 1 ether, '_lend: user_ not enough balance');
 
         //User LENDS 
         vm.prank(user_);
@@ -35,39 +33,32 @@ contract CoreMethods is Setup {
         //---------
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
         (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        // console.log('availableBorrowsBase: ', availableBorrowsBase);
         console.log('eth value of eth lent: ', totalCollateralBase);
-        // console.log('');
 
-        // UserAccountData memory userData = OZ.getUserAccountData(owner);
-        // console.log('userData.availableBorrowsBase: ', userData.availableBorrowsBase);
-        // console.log('blockNum: ', block.number);
-
-        // //Then do discount on the APR/Y presented to clients, follwing ptDiscount and where it's applied.
-        // //Check the relation with curr ETH price
+   
     }
 
     function _delegateCredit() internal {
-        _lend(owner, true);
+        // _lend(owner, true);
 
-        address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
-        uint amountBorrow = 1000 * 1e6;
-        // uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
+        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+        // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
+        // // (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
+        // uint amountBorrow = 1000 * 1e6;
+        // // uint amountBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
 
-        // console.log('availableBorrowsBase: ', availableBorrowsBase);
-        console.log('');
+        // // console.log('availableBorrowsBase: ', availableBorrowsBase);
+        // console.log('');
 
-        vm.prank(owner);
-        OZ.borrow(amountBorrow, address(0));
+        // vm.prank(owner);
+        // OZ.borrow(amountBorrow, address(0));
     }
 
-    function _borrow_and_mint_ozUSD(bool isETH_) internal {
+    function _borrow_and_mint_ozUSD(Tokens token_) internal {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
-        _lend(owner, true);
+        _lend(owner, token_);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
 
         //User BORROWS
@@ -92,7 +83,7 @@ contract CoreMethods is Setup {
 
         vm.startPrank(owner);
         ozUSD.approve(address(OZ), balanceOwnerOzUSD);
-        OZ.redeem(balanceOwnerOzUSD, owner, owner, true);
+        OZ.redeem(balanceOwnerOzUSD, owner, owner, Tokens.WETH);
         vm.stopPrank();
 
         revert('here3');
@@ -126,7 +117,7 @@ contract CoreMethods is Setup {
 
 
     function test_do_accounting() public {
-        _borrow_and_mint_ozUSD(true);
+        _borrow_and_mint_ozUSD(Tokens.WETH);
 
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
 
