@@ -213,6 +213,13 @@ contract Setup is StateVars {
         vm.label(0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F ,'CurveTwocryptoFactory');
         vm.label(0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf, 'CurveStableswapFactoryNG');
         vm.label(0xe06EBA9ceA16cc71d4498CdBA7240BB20d475890, 'CurveStableswapFactoryNGHandler');
+        vm.label(address(curveRouter), 'curveRouter');
+        vm.label(address(curveAddressProvider), 'curveAddressProvider');
+        vm.label(address(curvePool_sUSDesDAI), 'curvePool_sUSDesDAI');
+        vm.label(address(curvePool_sDAIFRAX), 'curvePool_sDAIFRAX');
+        vm.label(address(curvePool_FRAXUSDC), 'curvePool_FRAXUSDC');
+        vm.label(address(curvePool_USDCETHWBTC), 'curvePool_USDCETHWBTC');
+        vm.label(0x33C5252f240f02123090cfF1D8E3B80FceC31e54, 'UnverifiedCrvContract');
     }
 
 

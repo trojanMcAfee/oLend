@@ -81,10 +81,10 @@ contract DiamondInit {
         s.curveRouter = ICrvRouter(curve_.curveRouter);
         s.curveAddressProvider = ICrvAddressProvider(curve_.curveAddressProvider);
         s.curveMetaRegistry = ICrvMetaRegistry(s.curveAddressProvider.get_address(7));
-        IPoolCrv curvePool_sUSDesDAI = IPoolCrv(curve_.curvePool_sUSDesDAI);
-        IPoolCrv curvePool_sDAIFRAX = IPoolCrv(curve_.curvePool_sDAIFRAX);
-        IPoolCrv curvePool_FRAXUSDC = IPoolCrv(curve_.curvePool_FRAXUSDC);
-        IPoolCrv curvePool_USDCETHWBTC = IPoolCrv(curve_.curvePool_USDCETHWBTC);
+        s.curvePool_sUSDesDAI = IPoolCrv(curve_.curvePool_sUSDesDAI);
+        s.curvePool_sDAIFRAX = IPoolCrv(curve_.curvePool_sDAIFRAX);
+        s.curvePool_FRAXUSDC = IPoolCrv(curve_.curvePool_FRAXUSDC);
+        s.curvePool_USDCETHWBTC = IPoolCrv(curve_.curvePool_USDCETHWBTC);
 
         //ERC20s and ERC4626
         s.aWETH = IERC20(tokens_.aWETH);

@@ -10,6 +10,8 @@ import {IPoolCrv} from "../interfaces/ICurve.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
 import {ozModifiers} from "./ozModifiers.sol";
 
+import "forge-std/console.sol";
+
 
 abstract contract ozTrading is ozModifiers {
 
@@ -203,7 +205,13 @@ abstract contract ozTrading is ozModifiers {
         address tokenIn_,
         address tokenOut_
     ) private view returns(uint[5] memory params) { 
-        if (pool_.N_COINS() == 2) {
+        console.logUint(3);
+
+        bool exepFRAXUSDC = address(pool_) == address(s.curvePool_FRAXUSDC);
+
+        if (exepFRAXUSDC || pool_.N_COINS() == 2) {
+            console.logUint(4);
+
             if (pool_.coins(0) == tokenIn_) {
                 params[0] = uint(0);
                 params[1] = uint(1);
@@ -212,6 +220,8 @@ abstract contract ozTrading is ozModifiers {
                 params[1] = uint(0);
             }
         } else if (pool_.N_COINS() == 3) {
+            console.logUint(5);
+
             if (pool_.coins(0) == tokenIn_) {
                 params[0] = uint(0);
             } else if (pool_.coins(1) == tokenIn_) {
@@ -220,6 +230,8 @@ abstract contract ozTrading is ozModifiers {
                 params[0] = uint(2);
             }
 
+            console.logUint(6);
+
             if (pool_.coins(0) == tokenOut_) {
                 params[1] = uint(0);
             } else if (pool_.coins(1) == tokenOut_) {
@@ -227,6 +239,8 @@ abstract contract ozTrading is ozModifiers {
             } else if (pool_.coins(2) == tokenOut_) {
                 params[1] = uint(2);
             }
+
+            console.logUint(7);
         }
 
         params[2] = uint(1);
@@ -239,7 +253,11 @@ abstract contract ozTrading is ozModifiers {
             params[3] = uint(CrvPoolType.TRICRYPTO);
         }
 
-        params[4] = pool_.N_COINS();
+        console.logUint(8);
+
+        params[4] = exepFRAXUSDC ? 2 : pool_.N_COINS();
+
+        console.logUint(9);
         
 
     }
