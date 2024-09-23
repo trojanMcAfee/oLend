@@ -151,13 +151,18 @@ contract ozMinter is ozTrading {
             
             //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
             //the most liquid pools are always used
-            address[] memory pools = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
-            console.log('l: ', pools.length);
+            address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+            console.log('l: ', pools2.length);
             console.log('');
 
-            // _createCrvSwapParams(curvePool_sUSDesDAI, address(s.USDe));
+            (
+                address[11] memory route, 
+                uint[5][5] memory swap_params,
+                address[5] memory pools
+            ) = _createCrvSwap();
 
-            s.curveRouter.exchange(); //call exchange <-----
+            s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
+            console.log('weth bal oz - post crv swap - not 0: ', s.WETH.balanceOf(address(this)));
 
             revert('here9');
 

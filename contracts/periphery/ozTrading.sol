@@ -2,10 +2,11 @@
 pragma solidity 0.8.26;
 
 
-import {BalancerSwapConfig} from "../AppStorage.sol";
+import {BalancerSwapConfig, CrvPoolType} from "../AppStorage.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
+import {IPoolCrv} from "../interfaces/ICurve.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
 import {ozModifiers} from "./ozModifiers.sol";
 
@@ -166,9 +167,10 @@ abstract contract ozTrading is ozModifiers {
     }
 
 
-    function _createCrvSwap() private view returns(
+    function _createCrvSwap() internal view returns(
         address[11] memory route,
-        uint[5][5] memory swap_params
+        uint[5][5] memory swap_params,
+        address[5] memory pools
     ) {
         route = [
             address(s.USDe),
@@ -179,52 +181,66 @@ abstract contract ozTrading is ozModifiers {
             address(s.curvePool_FRAXUSDC),
             address(s.USDC),
             address(s.curvePool_USDCETHWBTC),
-            s.ETH,
+            address(s.WETH),
             address(0),
             address(0) //<--- see if i can delete these and it still works
         ]; 
 
-        swap_params = [
-            _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe)),
-            _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI)),
-            _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX)),
-            _createCrvSwapParams(s.curvePool_USDCETHWBTC, address(s.FRAX))
-            //see if i have to put [0,0,0,0,0] or can leave it like this
+        swap_params = [ 
+            _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
+            _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX)),
+            _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC)),
+            _createCrvSwapParams(s.curvePool_USDCETHWBTC, address(s.FRAX), address(s.WETH)),
+            [uint(0),uint(0),uint(0),uint(0),uint(0)]
         ];
+
+        pools;
     }
 
-    enum CrvPoolType {
-        NULL,
-        STABLE,
-        TWO_COIN,
-        TRICRYPTO
-    }
 
     function _createCrvSwapParams(
         IPoolCrv pool_,
-        address tokenIn_
-    ) private returns(uint[5] memory params) {
+        address tokenIn_,
+        address tokenOut_
+    ) private view returns(uint[5] memory params) { 
         if (pool_.N_COINS() == 2) {
             if (pool_.coins(0) == tokenIn_) {
-                params[0] = 0;
-                params[1] = 1;
+                params[0] = uint(0);
+                params[1] = uint(1);
             } else {
-                params[0] = 1;
-                params[1] = 0;
+                params[0] = uint(1);
+                params[1] = uint(0);
+            }
+        } else if (pool_.N_COINS() == 3) {
+            if (pool_.coins(0) == tokenIn_) {
+                params[0] = uint(0);
+            } else if (pool_.coins(1) == tokenIn_) {
+                params[0] = uint(1);
+            } else if (pool_.coins(2) == tokenIn_) {
+                params[0] = uint(2);
             }
 
-            params[2] = 1;
-
-            if (tokenIn_ == address(s.sUSDe) || tokenIn_ == address(s.FRAX)) {
-                params[3] = uint(CrvPoolType.STABLE); //could be TWO_COIN for sUSDe-sDAI
-            } else if (tokenIn_ == address(s.sDAI)) {
-                params[3] = uint(CrvPoolType.TWO_COIN);
-            } else if (tokenIn_ == address(s.USDC)) {
-                params[3] = uint(CrvPoolType.TRICRYPTO);
+            if (pool_.coins(0) == tokenOut_) {
+                params[1] = uint(0);
+            } else if (pool_.coins(1) == tokenOut_) {
+                params[1] = uint(1);
+            } else if (pool_.coins(2) == tokenOut_) {
+                params[1] = uint(2);
             }
-
-            params[4] = pool_.N_COINS();
         }
+
+        params[2] = uint(1);
+
+        if (tokenIn_ == address(s.sUSDe) || tokenIn_ == address(s.FRAX)) {
+            params[3] = uint(CrvPoolType.STABLE); //could be TWO_COIN for sUSDe-sDAI
+        } else if (tokenIn_ == address(s.sDAI)) {
+            params[3] = uint(CrvPoolType.TWO_COIN);
+        } else if (tokenIn_ == address(s.USDC)) {
+            params[3] = uint(CrvPoolType.TRICRYPTO);
+        }
+
+        params[4] = pool_.N_COINS();
+        
 
     }
 

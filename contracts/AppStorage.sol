@@ -145,3 +145,10 @@ enum Tokens {
     USDC,
     PT
 }
+
+enum CrvPoolType {
+    NULL,
+    STABLE,
+    TWO_COIN,
+    TRICRYPTO
+}

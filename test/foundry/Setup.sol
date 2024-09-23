@@ -116,9 +116,16 @@ contract Setup is StateVars {
             ptDiscount
         );
 
-        CurveConfig memory curve = CurveConfig(address(curveRouter), address(curveAddressProvider));
+        CurveConfig memory curve = CurveConfig(
+            address(curveRouter), 
+            address(curveAddressProvider),
+            address(curvePool_sUSDesDAI),
+            address(curvePool_sDAIFRAX),
+            address(curvePool_FRAXUSDC),
+            address(curvePool_USDCETHWBTC)
+        );
 
-        SysConfig memory sys = SysConfig(address(OZ), address(relayer), ETH);
+        SysConfig memory sys = SysConfig(address(OZ), address(relayer));
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 

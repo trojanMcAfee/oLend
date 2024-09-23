@@ -26,7 +26,7 @@ import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.s
 import {ozRelayer} from "../ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IPool as IPoolBal, IVault} from "../interfaces/IBalancer.sol";
-import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry} from "../interfaces/ICurve.sol";
+import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "../interfaces/ICurve.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -105,7 +105,6 @@ contract DiamondInit {
         //System config
         s.OZ = sys_.OZ;
         s.relayer = ozRelayer(sys_.relayer);
-        s.ETH = sys_.ETH;
 
 
 

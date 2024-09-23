@@ -58,10 +58,10 @@ contract StateVars is AppStorageTest, Test {
     //Curve
     ICrvRouter curveRouter = ICrvRouter(0x16C6521Dff6baB339122a0FE25a9116693265353);
     ICrvAddressProvider curveAddressProvider = ICrvAddressProvider(0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98);
-    IPoolCrv curvePool_sUSDesDAI = IPoolCrv(0x167478921b907422f8e88b43c4af2b8bea278d3a);
-    IPoolCrv curvePool_sDAIFRAX = IPoolCrv(0xce6431d21e3fb1036ce9973a3312368ed96f5ce7);
-    IPoolCrv curvePool_FRAXUSDC = IPoolCrv(0xdcef968d416a41cdac0ed8702fac8128a64241a2);
-    IPoolCrv curvePool_USDCETHWBTC = IPoolCrv(0x7f86bf177dd4f3494b841a37e810a34dd56c829b);
+    IPoolCrv curvePool_sUSDesDAI = IPoolCrv(0x167478921b907422F8E88B43C4Af2B8BEa278d3A);
+    IPoolCrv curvePool_sDAIFRAX = IPoolCrv(0xcE6431D21E3fb1036CE9973a3312368ED96F5CE7);
+    IPoolCrv curvePool_FRAXUSDC = IPoolCrv(0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2);
+    IPoolCrv curvePool_USDCETHWBTC = IPoolCrv(0x7F86Bf177Dd4F3494b841a37e810A34dD56c829B);
 
     //ERC20s
     IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);
@@ -75,8 +75,8 @@ contract StateVars is AppStorageTest, Test {
     address public constant USDTaddr = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
     IERC20 public constant wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IERC20 public constant sDAI = IERC20(0x83f20f44975d03b1b09e64809b757c47f942beea);
-    IERC20 public constant FRAX = IERC20(0x853d955acef822db058eb8505911ed77f175b99e);
+    IERC20 public constant sDAI = IERC20(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+    IERC20 public constant FRAX = IERC20(0x853d955aCEf822Db058eb8505911ED77F175b99e);
 
     //Diamond
     DiamondCutFacet cut;
@@ -95,5 +95,4 @@ contract StateVars is AppStorageTest, Test {
     
     //System
     ozRelayer relayer;
-    address ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 }
