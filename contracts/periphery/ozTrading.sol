@@ -165,4 +165,67 @@ abstract contract ozTrading is ozModifiers {
         leg = IVault.BatchSwapStep(poolId_, assetInIndex_, assetOutIndex_, amount_, new bytes(0));
     }
 
+
+    function _createCrvSwap() private view returns(
+        address[11] memory route,
+        uint[5][5] memory swap_params
+    ) {
+        route = [
+            address(s.USDe),
+            address(s.curvePool_sUSDesDAI),
+            address(s.sDAI),
+            address(s.curvePool_sDAIFRAX),
+            address(s.FRAX),
+            address(s.curvePool_FRAXUSDC),
+            address(s.USDC),
+            address(s.curvePool_USDCETHWBTC),
+            s.ETH,
+            address(0),
+            address(0) //<--- see if i can delete these and it still works
+        ]; 
+
+        swap_params = [
+            _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe)),
+            _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI)),
+            _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX)),
+            _createCrvSwapParams(s.curvePool_USDCETHWBTC, address(s.FRAX))
+            //see if i have to put [0,0,0,0,0] or can leave it like this
+        ];
+    }
+
+    enum CrvPoolType {
+        NULL,
+        STABLE,
+        TWO_COIN,
+        TRICRYPTO
+    }
+
+    function _createCrvSwapParams(
+        IPoolCrv pool_,
+        address tokenIn_
+    ) private returns(uint[5] memory params) {
+        if (pool_.N_COINS() == 2) {
+            if (pool_.coins(0) == tokenIn_) {
+                params[0] = 0;
+                params[1] = 1;
+            } else {
+                params[0] = 1;
+                params[1] = 0;
+            }
+
+            params[2] = 1;
+
+            if (tokenIn_ == address(s.sUSDe) || tokenIn_ == address(s.FRAX)) {
+                params[3] = uint(CrvPoolType.STABLE); //could be TWO_COIN for sUSDe-sDAI
+            } else if (tokenIn_ == address(s.sDAI)) {
+                params[3] = uint(CrvPoolType.TWO_COIN);
+            } else if (tokenIn_ == address(s.USDC)) {
+                params[3] = uint(CrvPoolType.TRICRYPTO);
+            }
+
+            params[4] = pool_.N_COINS();
+        }
+
+    }
+
 }

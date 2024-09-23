@@ -43,7 +43,7 @@ struct AppStorage {
     IPoolCrv curvePool_sUSDesDAI;
     IPoolCrv curvePool_sDAIFRAX;
     IPoolCrv curvePool_FRAXUSDC;
-    IPoolCrv curvePool_USDCETH;
+    IPoolCrv curvePool_USDCETHWBTC;
 
     //ERC20s
     IERC20 aWETH;
@@ -95,7 +95,7 @@ struct CurveConfig {
     address curvePool_sUSDesDAI;
     address curvePool_sDAIFRAX;
     address curvePool_FRAXUSDC;
-    address curvePool_USDCETH;
+    address curvePool_USDCETHWBTC;
 }
 
 struct ERC20s {

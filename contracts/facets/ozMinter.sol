@@ -153,6 +153,11 @@ contract ozMinter is ozTrading {
             //the most liquid pools are always used
             address[] memory pools = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
             console.log('l: ', pools.length);
+            console.log('');
+
+            // _createCrvSwapParams(curvePool_sUSDesDAI, address(s.USDe));
+
+            s.curveRouter.exchange(); //call exchange <-----
 
             revert('here9');
 
@@ -216,25 +221,7 @@ contract ozMinter is ozTrading {
     }
 
 
-    function _createCrvSwap() private view returns(
-        address[11] memory route,
-        uint[5][5] memory,
-        address[5] memory
-    ) {
-        route = [
-            address(s.USDe),
-            address(s.curvePool_sUSDesDAI),
-            address(s.sDAI),
-            address(s.curvePool_sDAIFRAX),
-            address(s.FRAX),
-            address(s.curvePool_FRAXUSDC),
-            address(s.USDC),
-            address(s.curvePool_USDCETH),
-            s.ETH
-        ]; 
-
-        //^finish this
-    }
+    
 
 
 }

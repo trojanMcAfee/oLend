@@ -61,7 +61,7 @@ contract StateVars is AppStorageTest, Test {
     IPoolCrv curvePool_sUSDesDAI = IPoolCrv(0x167478921b907422f8e88b43c4af2b8bea278d3a);
     IPoolCrv curvePool_sDAIFRAX = IPoolCrv(0xce6431d21e3fb1036ce9973a3312368ed96f5ce7);
     IPoolCrv curvePool_FRAXUSDC = IPoolCrv(0xdcef968d416a41cdac0ed8702fac8128a64241a2);
-    IPoolCrv curvePool_USDCETH = IPoolCrv(0x7f86bf177dd4f3494b841a37e810a34dd56c829b);
+    IPoolCrv curvePool_USDCETHWBTC = IPoolCrv(0x7f86bf177dd4f3494b841a37e810a34dd56c829b);
 
     //ERC20s
     IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);

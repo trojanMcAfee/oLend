@@ -29,4 +29,7 @@ interface ICrvMetaRegistry {
     function find_pool_for_coins(address from, address to, uint i) external view returns(address);
 }
 
-interface IPoolCrv {}
+interface IPoolCrv {
+    function coins(uint index) external view returns(address);
+    function N_COINS() external view returns(uint);
+}
