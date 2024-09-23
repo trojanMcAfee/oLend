@@ -148,6 +148,17 @@ contract ozMinter is ozTrading {
         );
 
         if (token_ == Tokens.WETH) {
+            
+            //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
+            //the most liquid pools are always used
+            address[] memory pools = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+            console.log('l: ', pools.length);
+
+            revert('here9');
+
+
+
+
             amountOut =  _swapBalancer(
                 address(s.sUSDe), 
                 address(s.WETH), 
@@ -161,7 +172,7 @@ contract ozMinter is ozTrading {
 
             s.WETH.transfer(receiver_, amountOut);
         } else if (token_ == Tokens.USDC) {
-            
+
         }
 
 
@@ -204,6 +215,26 @@ contract ozMinter is ozTrading {
         return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
     }
 
+
+    function _createCrvSwap() private view returns(
+        address[11] memory route,
+        uint[5][5] memory,
+        address[5] memory
+    ) {
+        route = [
+            address(s.USDe),
+            address(s.curvePool_sUSDesDAI),
+            address(s.sDAI),
+            address(s.curvePool_sDAIFRAX),
+            address(s.FRAX),
+            address(s.curvePool_FRAXUSDC),
+            address(s.USDC),
+            address(s.curvePool_USDCETH),
+            s.ETH
+        ]; 
+
+        //^finish this
+    }
 
 
 }

@@ -12,6 +12,7 @@ import {ozRelayer} from "./ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IERC4626} from "../lib/forge-std/src/interfaces/IERC4626.sol";
 import {IPool as IPoolBal, IVault, IAsset} from "./interfaces/IBalancer.sol";
+import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "./interfaces/ICurve.sol";
 
 
 struct AppStorage {
@@ -35,7 +36,16 @@ struct AppStorage {
     IVault balancerVault;
     IPoolBal balancerPool_wstETHWETH;
 
-    //ERC20s and ERC4626
+    //Curve
+    ICrvRouter curveRouter;
+    ICrvAddressProvider curveAddressProvider;
+    ICrvMetaRegistry curveMetaRegistry;
+    IPoolCrv curvePool_sUSDesDAI;
+    IPoolCrv curvePool_sDAIFRAX;
+    IPoolCrv curvePool_FRAXUSDC;
+    IPoolCrv curvePool_USDCETH;
+
+    //ERC20s
     IERC20 aWETH;
     IERC20 USDC;
     IERC20 USDT;
@@ -45,10 +55,16 @@ struct AppStorage {
     IERC20 USDe;
     IERC20 wstETH;
     IERC20 WETH;
+    IERC20 sDAI;
+    IERC20 FRAX;
+
+    //ERC4626s
     IERC4626 sUSDe;
+
 
     //System config
     address OZ;
+    address ETH;
     uint[] openOrders;
     // mapping(address user => address account) internalAccounts
     mapping(address user => InternalAccount account) internalAccounts;
@@ -73,6 +89,15 @@ struct BalancerConfig {
     address balancerPool_wstETHWETH;
 }
 
+struct CurveConfig {
+    address curveRouter;
+    address curveAddressProvider;
+    address curvePool_sUSDesDAI;
+    address curvePool_sDAIFRAX;
+    address curvePool_FRAXUSDC;
+    address curvePool_USDCETH;
+}
+
 struct ERC20s {
     address aWETH;
     address USDC;
@@ -84,6 +109,8 @@ struct ERC20s {
     address USDe; //not used
     address wstETH;
     address WETH;
+    address sDAI;
+    address FRAX;
 }
 
 struct PendleConfig {

@@ -16,7 +16,7 @@ import { IERC165 } from "../interfaces/IERC165.sol";
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
-import {AppStorage, AaveConfig, ERC20s, PendleConfig, SysConfig, BalancerConfig} from "../AppStorage.sol";
+import {AppStorage, AaveConfig, ERC20s, PendleConfig, SysConfig, BalancerConfig, CurveConfig} from "../AppStorage.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {IERC4626} from "../../lib/forge-std/src/interfaces/IERC4626.sol";
@@ -26,6 +26,7 @@ import {ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.s
 import {ozRelayer} from "../ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IPool as IPoolBal, IVault} from "../interfaces/IBalancer.sol";
+import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry} from "../interfaces/ICurve.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -38,8 +39,9 @@ contract DiamondInit {
     function init(
         AaveConfig memory aave_, 
         BalancerConfig memory balancer_,
-        ERC20s memory tokens_,
         PendleConfig memory pendle_,
+        CurveConfig memory curve_,
+        ERC20s memory tokens_,
         SysConfig memory sys_
     ) external {
         // adding ERC165 data
@@ -75,6 +77,15 @@ contract DiamondInit {
         //     uint256 eps;
         // }
 
+        //Curve
+        s.curveRouter = ICrvRouter(curve_.curveRouter);
+        s.curveAddressProvider = ICrvAddressProvider(curve_.curveAddressProvider);
+        s.curveMetaRegistry = ICrvMetaRegistry(s.curveAddressProvider.get_address(7));
+        IPoolCrv curvePool_sUSDesDAI = IPoolCrv(curve_.curvePool_sUSDesDAI);
+        IPoolCrv curvePool_sDAIFRAX = IPoolCrv(curve_.curvePool_sDAIFRAX);
+        IPoolCrv curvePool_FRAXUSDC = IPoolCrv(curve_.curvePool_FRAXUSDC);
+        IPoolCrv curvePool_USDCETH = IPoolCrv(curve_.curvePool_USDCETH);
+
         //ERC20s and ERC4626
         s.aWETH = IERC20(tokens_.aWETH);
         s.USDC = IERC20(tokens_.USDC);
@@ -85,11 +96,16 @@ contract DiamondInit {
         s.USDe = IERC20(tokens_.USDe);
         s.wstETH = IERC20(tokens_.wstETH);
         s.WETH = IERC20(tokens_.WETH);
+        s.sDAI = IERC20(tokens_.sDAI);
+        s.FRAX = IERC20 (tokens_.FRAX);
+
+        //ERC4626s
         s.sUSDe = IERC4626(tokens_.sUSDe);
 
         //System config
         s.OZ = sys_.OZ;
         s.relayer = ozRelayer(sys_.relayer);
+        s.ETH = sys_.ETH;
 
 
 

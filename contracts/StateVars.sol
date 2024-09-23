@@ -26,6 +26,7 @@ import {ozOracle} from "../contracts/facets/ozOracle.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol"; 
 import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";  
 import {ozIUSD} from "../contracts/interfaces/ozIUSD.sol";   
+import {ICrvRouter, ICrvAddressProvider, IPoolCrv} from "../contracts/interfaces/ICurve.sol";   
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -54,6 +55,14 @@ contract StateVars is AppStorageTest, Test {
     IPoolBal public constant balancerPool_wstETHWETH = IPoolBal(0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD);
     IVault public constant balancerVault = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
+    //Curve
+    ICrvRouter curveRouter = ICrvRouter(0x16C6521Dff6baB339122a0FE25a9116693265353);
+    ICrvAddressProvider curveAddressProvider = ICrvAddressProvider(0x5ffe7FB82894076ECB99A30D6A32e969e6e35E98);
+    IPoolCrv curvePool_sUSDesDAI = IPoolCrv(0x167478921b907422f8e88b43c4af2b8bea278d3a);
+    IPoolCrv curvePool_sDAIFRAX = IPoolCrv(0xce6431d21e3fb1036ce9973a3312368ed96f5ce7);
+    IPoolCrv curvePool_FRAXUSDC = IPoolCrv(0xdcef968d416a41cdac0ed8702fac8128a64241a2);
+    IPoolCrv curvePool_USDCETH = IPoolCrv(0x7f86bf177dd4f3494b841a37e810a34dd56c829b);
+
     //ERC20s
     IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);
     IERC20 public constant sUSDe = IERC20(0x9D39A5DE30e57443BfF2A8307A4256c8797A3497);
@@ -66,6 +75,8 @@ contract StateVars is AppStorageTest, Test {
     address public constant USDTaddr = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
     IERC20 public constant wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IERC20 public constant sDAI = IERC20(0x83f20f44975d03b1b09e64809b757c47f942beea);
+    IERC20 public constant FRAX = IERC20(0x853d955acef822db058eb8505911ed77f175b99e);
 
     //Diamond
     DiamondCutFacet cut;
@@ -84,4 +95,5 @@ contract StateVars is AppStorageTest, Test {
     
     //System
     ozRelayer relayer;
+    address ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 }
