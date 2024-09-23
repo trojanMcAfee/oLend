@@ -155,11 +155,14 @@ contract ozMinter is ozTrading {
             console.log('l: ', pools2.length);
             console.log('');
 
+            console.logUint(1);
             (
                 address[11] memory route, 
                 uint[5][5] memory swap_params,
                 address[5] memory pools
             ) = _createCrvSwap();
+
+            console.logUint(2);
 
             s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
             console.log('weth bal oz - post crv swap - not 0: ', s.WETH.balanceOf(address(this)));

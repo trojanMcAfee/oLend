@@ -210,6 +210,9 @@ contract Setup is StateVars {
         vm.label(address(relayer), 'ozRelayer');
         vm.label(0xE592427A0AEce92De3Edee1F18E0157C05861564, 'swapRouter_uni');
         vm.label(0x7858E59e0C01EA06Df3aF3D20aC7B0003275D4Bf, 'USDC-USDT_uni');
+        vm.label(0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F ,'CurveTwocryptoFactory');
+        vm.label(0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf, 'CurveStableswapFactoryNG');
+        vm.label(0xe06EBA9ceA16cc71d4498CdBA7240BB20d475890, 'CurveStableswapFactoryNGHandler');
     }
 
 
