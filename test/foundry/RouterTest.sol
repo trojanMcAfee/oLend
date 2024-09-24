@@ -347,9 +347,14 @@ contract RouterTest is Setup {
     function test_accounting() public {
         uint oneYear = 31560000; //secs
         vm.warp(block.timestamp + oneYear);
+    }
+    
 
-
-
+    function test_z() public {
+        uint[5] memory arr = [uint(1), uint(2)];
+        // uint[] memory arr2 = new uint[](5);
+        // arr[0][0] = arr2;
+        // console.log(arr[0][0][1]);
     }
 
 

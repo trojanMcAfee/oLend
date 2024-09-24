@@ -40,12 +40,17 @@ library HelpersLib {
         }
     }
 
-    // function initArray2D() internal pure returns(uint[][] memory) {
-    //     uint[][] memory arr = new uint[][](5);
-    //     // arr[] memory arr2 = new arr[](5);
+    function initArray2D() internal pure returns(uint[][] memory cacheUint) {
+        uint outerLength = 5;
+        uint innerLength = 5;
 
-    //     return arr;
-    // }
+        cacheUint = new uint[][](outerLength);
+
+        for (uint i = 0; i < outerLength; i++) {
+            cacheUint[i] = new uint[](innerLength);
+        }
+
+    }
 
 
     function createTokenInputStruct(
