@@ -174,25 +174,27 @@ abstract contract ozTrading is ozModifiers {
         uint[5][5] memory swap_params,
         address[5] memory pools
     ) {
-        address[] memory cache;
+        address[] memory cacheAddr;
+        uint[][] memory cacheUint;
 
         if (tokenOut_ == address(s.sDAI)) {
-            cache = new address[](11);
-            cache[0] = address(s.sUSDe);
-            cache[1] = address(s.curvePool_sUSDesDAI);
-            cache[2] = address(s.sDAI);
+            cacheAddr = new address[](11);
+            cacheAddr[0] = address(s.sUSDe);
+            cacheAddr[1] = address(s.curvePool_sUSDesDAI);
+            cacheAddr[2] = address(s.sDAI);
+            route = cacheAddr.completeZeroAddr();
 
-            route = cache.completeZeroAddr();
+            cacheUint = new uint[][](5);
+            cacheUint[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
+            swap_params = cacheUint.completeZeroUint();
 
-
-
-            swap_params = [
-                _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
-                [uint(0),uint(0),uint(0),uint(0),uint(0)],
-                [uint(0),uint(0),uint(0),uint(0),uint(0)],
-                [uint(0),uint(0),uint(0),uint(0),uint(0)],
-                [uint(0),uint(0),uint(0),uint(0),uint(0)]
-            ];
+            // swap_params = [
+            //     _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
+            //     [uint(0),uint(0),uint(0),uint(0),uint(0)],
+            //     [uint(0),uint(0),uint(0),uint(0),uint(0)],
+            //     [uint(0),uint(0),uint(0),uint(0),uint(0)],
+            //     [uint(0),uint(0),uint(0),uint(0),uint(0)]
+            // ];
         }
 
         // route = [

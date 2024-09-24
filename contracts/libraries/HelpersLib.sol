@@ -26,9 +26,26 @@ library HelpersLib {
         }
     }
 
-    function completeZeroUint(uint[] memory arr_) internal pure returns(uint[5][5] memory) {
+    function completeZeroUint(uint[][] memory arr_) internal pure returns(uint[5][5] memory newArr) {
+        uint length = arr_.length;
 
+        for (uint i=0; i < length; i++) { 
+            for (uint j=0; j < length; j++) {
+                if (arr_[i][2] != 0) {
+                    newArr[i][j] = arr_[i][j];
+                } else {
+                    newArr[i] = [uint(0),uint(0),uint(0),uint(0),uint(0)];
+                }
+            }
+        }
     }
+
+    // function initArray2D() internal pure returns(uint[][] memory) {
+    //     uint[][] memory arr = new uint[][](5);
+    //     // arr[] memory arr2 = new arr[](5);
+
+    //     return arr;
+    // }
 
 
     function createTokenInputStruct(
