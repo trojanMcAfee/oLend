@@ -16,7 +16,7 @@ import "forge-std/console.sol";
 abstract contract ozTrading is ozModifiers {
 
     using HelpersLib for *;
-    
+
 
     function _swapUni(
         address tokenIn_,
@@ -174,27 +174,17 @@ abstract contract ozTrading is ozModifiers {
         uint[5][5] memory swap_params,
         address[5] memory pools
     ) {
+        address[] memory cache;
+
         if (tokenOut_ == address(s.sDAI)) {
-            address[] memory cache = new address[](3);
+            cache = new address[](11);
             cache[0] = address(s.sUSDe);
             cache[1] = address(s.curvePool_sUSDesDAI);
             cache[2] = address(s.sDAI);
 
             route = cache.completeZeroAddr();
 
-            // route = [
-            //     address(s.sUSDe),
-            //     address(s.curvePool_sUSDesDAI),
-            //     address(s.sDAI),
-            //     address(0),
-            //     address(0),
-            //     address(0),
-            //     address(0),
-            //     address(0),
-            //     address(0),
-            //     address(0),
-            //     address(0)
-            // ];
+
 
             swap_params = [
                 _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
