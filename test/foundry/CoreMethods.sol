@@ -40,7 +40,7 @@ contract CoreMethods is Setup {
 
     function _redeem_ozUSD(Tokens token_) internal {
         //PRE-CONDITIONS
-        IERC20 tokenOut = _getTokenOut(token_);
+        IERC20 tokenOut = IERC20(_getTokenOut(token_));
 
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
         assertTrue(balanceOwnerOzUSD > 0);

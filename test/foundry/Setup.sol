@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 
 // import {Test, console} from "../../lib/forge-std/src/Test.sol";
-import {StateVars} from "../../contracts/StateVars.sol";
+// import {StateVars} from "../../contracts/StateVars.sol";
 
 import {DiamondCutFacet} from "../../contracts/facets/DiamondCutFacet.sol";
 import {DiamondLoupeFacet} from "../../contracts/facets/DiamondLoupeFacet.sol";
@@ -20,11 +20,12 @@ import {ozRelayer} from "../../contracts/ozRelayer.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {ozOracle} from "../../contracts/facets/ozOracle.sol";
 import {ozIUSD} from "../../contracts/interfaces/ozIUSD.sol";
+import {AppStorageTest} from "./AppStorageTest.sol";
 
 import "forge-std/console.sol";
 
 
-contract Setup is StateVars {
+contract Setup is AppStorageTest {
 
     function setUp() public {
         vm.createSelectFork(vm.rpcUrl('ethereum'), currentBlock); //blockOwnerPT + 100 / currentBlock

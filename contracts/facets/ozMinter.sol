@@ -9,14 +9,14 @@ import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {StructGen} from "../StructGen.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-// import {IERC20} from "../interfaces/IERC20.sol";
+import {IERC20} from "../interfaces/IERC20.sol";
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 // import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 // import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 import {IPActionSwapPTV3} from "@pendle/core-v2/contracts/interfaces/IPActionSwapPTV3.sol";
 import {TokenOutput, LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
-import {IERC20, IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {InternalAccount} from "../InternalAccount.sol";
@@ -150,18 +150,17 @@ contract ozMinter is ozTrading {
         //------------
         //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
         //the most liquid pools are always used
-        address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
-        console.log('l: ', pools2.length);
-        console.log('');
+        // address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+        // console.log('l: ', pools2.length);
+        // console.log('');
         //------------
 
-        IERC20 tokenOut = _getTokenOut(token_);
 
         (
             address[11] memory route, 
             uint[5][5] memory swap_params,
             address[5] memory pools
-        ) = _createCrvSwap(address(tokenOut));
+        ) = _createCrvSwap(address(_getTokenOut(token_)));
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 

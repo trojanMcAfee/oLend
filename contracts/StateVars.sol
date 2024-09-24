@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import {Test} from "../lib/forge-std/src/Test.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
 // import {StructGen} from "./StructGen.sol";
-import {AppStorageTest} from "../test/foundry/AppStorageTest.sol";
+// import {AppStorageTest} from "../test/foundry/AppStorageTest.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {IPAllActionV3} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 
@@ -30,8 +30,8 @@ import {ICrvRouter, ICrvAddressProvider, IPoolCrv} from "../contracts/interfaces
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
-
-contract StateVars is AppStorageTest, Test {
+//move this contracto test/foundry
+abstract contract StateVars is Test {
 
     uint currentBlock = 20665666; //20665666 - 20779705 (recent)
     address owner = makeAddr('owner');

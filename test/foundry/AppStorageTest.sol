@@ -4,18 +4,11 @@ pragma solidity >=0.8.23 <0.9.0;
 import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Tokens} from "../../contracts/AppStorage.sol";
+import {StateVars} from "../../contracts/StateVars.sol";
 // import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 
 
-abstract contract AppStorageTest {
-
-    // enum Tokens {
-    //     WETH,
-    //     ETH,
-    //     USDe,
-    //     USDC,
-    //     PT
-    // }
+contract AppStorageTest is StateVars {
 
     //EmptySwap means no swap aggregator is involved
     SwapData public emptySwap; 
@@ -58,9 +51,9 @@ abstract contract AppStorageTest {
     }
 
 
-    function _getTokenOut(Tokens token_) internal view returns(IERC20 tokenOut) {
+    function _getTokenOut(Tokens token_) internal view returns(address tokenOut) {
         if (token_ == Tokens.sDAI) {
-            tokenOut = sDAI;
+            tokenOut = address(sDAI);
         }
     }
 }
