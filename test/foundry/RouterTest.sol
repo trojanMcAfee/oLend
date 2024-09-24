@@ -351,10 +351,16 @@ contract RouterTest is Setup {
     
 
     function test_z() public {
-        uint[5] memory arr = [uint(1), uint(2)];
-        // uint[] memory arr2 = new uint[](5);
-        // arr[0][0] = arr2;
-        // console.log(arr[0][0][1]);
+        uint256[5][5] memory arr;
+        uint[5] memory param = [uint(1),uint(2),uint(0),uint(0),uint(0)];
+        arr[0] = param;
+        console.log(arr[0][1]);
+    }
+
+    function foo(uint256 param) public pure returns (uint256[5][5] memory) {
+        uint256[5][5] memory arr;
+        arr[0][0] = param;
+        return arr;
     }
 
 

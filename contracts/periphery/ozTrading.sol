@@ -184,10 +184,13 @@ abstract contract ozTrading is ozModifiers {
             cacheAddr[2] = address(s.sDAI);
             route = cacheAddr.completeZeroAddr();
 
-            // cacheUint = new uint[][](5);
-            cacheUint = HelpersLib.initArray2D();
-            cacheUint[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
-            swap_params = cacheUint.completeZeroUint();
+            // cacheUint = HelpersLib.initArray2D();
+            // cacheUint[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
+            // swap_params = cacheUint.completeZeroUint();
+
+            //------
+
+            swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
 
             // swap_params = [
             //     _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
@@ -228,9 +231,9 @@ abstract contract ozTrading is ozModifiers {
         IPoolCrv pool_,
         address tokenIn_,
         address tokenOut_
-    ) private view returns(uint[] memory params) { 
+    ) private view returns(uint[5] memory params) { 
         console.logUint(3);
-        params = new uint[](5);
+        // params = new uint[](5);
 
         bool exepFRAXUSDC = address(pool_) == address(s.curvePool_FRAXUSDC);
 
