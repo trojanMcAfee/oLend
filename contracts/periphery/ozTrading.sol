@@ -175,20 +175,18 @@ abstract contract ozTrading is ozModifiers {
         address[5] memory pools
     ) {
         address[] memory cacheAddr;
-        uint[][] memory cacheUint;
 
         if (tokenOut_ == address(s.sDAI)) {
-            cacheAddr = new address[](11);
-            cacheAddr[0] = address(s.sUSDe);
-            cacheAddr[1] = address(s.curvePool_sUSDesDAI);
-            cacheAddr[2] = address(s.sDAI);
-            route = cacheAddr.completeZeroAddr();
+            // cacheAddr = new address[](11);
+            // cacheAddr[0] = address(s.sUSDe);
+            // cacheAddr[1] = address(s.curvePool_sUSDesDAI);
+            // cacheAddr[2] = address(s.sDAI);
+            // route = cacheAddr.completeZeroAddr();
 
-            // cacheUint = HelpersLib.initArray2D();
-            // cacheUint[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
-            // swap_params = cacheUint.completeZeroUint();
-
-            //------
+            route[0] = address(s.sUSDe);
+            route[1] = address(s.curvePool_sUSDesDAI);
+            route[2] = address(s.sDAI);
+            
 
             swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
 

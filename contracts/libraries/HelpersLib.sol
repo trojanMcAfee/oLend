@@ -26,6 +26,7 @@ library HelpersLib {
         }
     }
 
+    //not used
     function completeZeroUint(uint[][] memory arr_) internal pure returns(uint[5][5] memory newArr) {
         uint length = arr_.length;
 
