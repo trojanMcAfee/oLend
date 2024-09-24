@@ -21,6 +21,11 @@ contract ozUSDTest is CoreMethods {
         _redeem_ozUSD(Tokens.WETH);
     }
 
+    function test_redeem_ozUSD_for_sDAI() public {
+        _borrow_and_mint_ozUSD();
+        _redeem_ozUSD(Tokens.sDAI);
+    }
+
     function test_redeem_ozUSD_for_USDC() internal {
         _borrow_and_mint_ozUSD();
         _redeem_ozUSD(Tokens.USDC);

@@ -169,32 +169,56 @@ abstract contract ozTrading is ozModifiers {
     }
 
 
-    function _createCrvSwap() internal view returns(
+    function _createCrvSwap(address tokenOut_) internal view returns(
         address[11] memory route,
         uint[5][5] memory swap_params,
         address[5] memory pools
     ) {
-        route = [
-            address(s.USDe),
-            address(s.curvePool_sUSDesDAI),
-            address(s.sDAI),
-            address(s.curvePool_sDAIFRAX),
-            address(s.FRAX),
-            address(s.curvePool_FRAXUSDC),
-            address(s.USDC),
-            address(s.curvePool_USDCETHWBTC),
-            address(s.WETH),
-            address(0),
-            address(0) //<--- see if i can delete these and it still works
-        ]; 
+        if (tokenOut_ == address(s.sDAI)) {
+            route = [
+                address(s.sUSDe),
+                address(s.curvePool_sUSDesDAI),
+                address(s.sDAI),
+                address(0),
+                address(0),
+                address(0),
+                address(0),
+                address(0),
+                address(0),
+                address(0),
+                address(0)
+            ];
 
-        swap_params = [ 
-            _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
-            _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX)),
-            _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC)),
-            _createCrvSwapParams(s.curvePool_USDCETHWBTC, address(s.FRAX), address(s.WETH)),
-            [uint(0),uint(0),uint(0),uint(0),uint(0)]
-        ];
+            swap_params = [
+                _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
+                [uint(0),uint(0),uint(0),uint(0),uint(0)],
+                [uint(0),uint(0),uint(0),uint(0),uint(0)],
+                [uint(0),uint(0),uint(0),uint(0),uint(0)],
+                [uint(0),uint(0),uint(0),uint(0),uint(0)]
+            ];
+        }
+
+        // route = [
+        //     address(s.USDe),
+        //     address(s.curvePool_sUSDesDAI),
+        //     address(s.sDAI),
+        //     address(s.curvePool_sDAIFRAX),
+        //     address(s.FRAX),
+        //     address(s.curvePool_FRAXUSDC),
+        //     address(s.USDC),
+        //     address(s.curvePool_USDCETHWBTC),
+        //     address(s.WETH),
+        //     address(0),
+        //     address(0) //<--- see if i can delete these and it still works
+        // ]; 
+
+        // swap_params = [ 
+        //     _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
+        //     _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX)),
+        //     _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC)),
+        //     _createCrvSwapParams(s.curvePool_USDCETHWBTC, address(s.FRAX), address(s.WETH)),
+        //     [uint(0),uint(0),uint(0),uint(0),uint(0)]
+        // ];
 
         pools;
     }

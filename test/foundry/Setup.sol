@@ -220,6 +220,8 @@ contract Setup is StateVars {
         vm.label(address(curvePool_FRAXUSDC), 'curvePool_FRAXUSDC');
         vm.label(address(curvePool_USDCETHWBTC), 'curvePool_USDCETHWBTC');
         vm.label(0x33C5252f240f02123090cfF1D8E3B80FceC31e54, 'UnverifiedCrvContract');
+        vm.label(address(USDe), 'USDe');
+        vm.label(address(sDAI), 'sDAI');
     }
 
 

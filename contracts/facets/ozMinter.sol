@@ -147,20 +147,38 @@ contract ozMinter is ozTrading {
             s.emptyLimit
         );
 
+        //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
+        //the most liquid pools are always used
+        address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
+        console.log('l: ', pools2.length);
+        console.log('');
+
+
+        if (token_ == Tokens.sDAI) {
+            (
+                address[11] memory route, 
+                uint[5][5] memory swap_params,
+                address[5] memory pools
+            ) = _createCrvSwap(address(s.sDAI));
+
+            s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
+
+            s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
+            console.log('sdai bal oz - post crv swap - not 0: ', s.sDAI.balanceOf(address(this)));
+
+            revert('here15');
+        }
+        
+
+
         if (token_ == Tokens.WETH) {
-            
-            //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
-            //the most liquid pools are always used
-            address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
-            console.log('l: ', pools2.length);
-            console.log('');
 
             console.logUint(1);
             (
                 address[11] memory route, 
                 uint[5][5] memory swap_params,
                 address[5] memory pools
-            ) = _createCrvSwap();
+            ) = _createCrvSwap(address(s.WETH));
 
             console.logUint(2);
 

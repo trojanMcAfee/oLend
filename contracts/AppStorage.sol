@@ -143,7 +143,9 @@ enum Tokens {
     ETH,
     USDe,
     USDC,
-    PT
+    PT,
+    sDAI,
+    FRAX
 }
 
 enum CrvPoolType {
