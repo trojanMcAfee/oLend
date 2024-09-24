@@ -135,7 +135,7 @@ contract ozMinter is ozTrading {
 
 
     function performRedemption(uint amount_, address owner_, address receiver_, Tokens token_) external returns(uint) { 
-        uint amountOut;
+        // uint amountOut;
 
         uint minTokenOut = 0;
 
@@ -147,43 +147,52 @@ contract ozMinter is ozTrading {
             s.emptyLimit
         );
 
+        //------------
         //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
         //the most liquid pools are always used
         address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
         console.log('l: ', pools2.length);
         console.log('');
+        //------------
 
+        IERC20 tokenOut = _getTokenOut(token_);
 
-        if (token_ == Tokens.sDAI) {
-            (
-                address[11] memory route, 
-                uint[5][5] memory swap_params,
-                address[5] memory pools
-            ) = _createCrvSwap(address(s.sDAI));
+        (
+            address[11] memory route, 
+            uint[5][5] memory swap_params,
+            address[5] memory pools
+        ) = _createCrvSwap(address(tokenOut));
 
-            s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
+        s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 
-            s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
-            console.log('sdai bal oz - post crv swap - not 0: ', s.sDAI.balanceOf(address(this)));
+        uint amountOut = s.curveRouter.exchange(
+            route, 
+            swap_params, 
+            amountYieldTokenOut, 
+            minTokenOut, 
+            pools, 
+            receiver_
+        ); 
+        console.log('sdai bal oz - post crv swap - not 0: ', s.sDAI.balanceOf(receiver_));
 
-            revert('here15');
-        }
+        // tokenOut.safeTransfer(receiver_, amountOut);
+
+        revert('here15');
         
-
 
         if (token_ == Tokens.WETH) {
 
-            console.logUint(1);
-            (
-                address[11] memory route, 
-                uint[5][5] memory swap_params,
-                address[5] memory pools
-            ) = _createCrvSwap(address(s.WETH));
+            // console.logUint(1);
+            // (
+            //     address[11] memory route, 
+            //     uint[5][5] memory swap_params,
+            //     address[5] memory pools
+            // ) = _createCrvSwap(address(s.WETH));
 
-            console.logUint(2);
+            // console.logUint(2);
 
-            s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
-            console.log('weth bal oz - post crv swap - not 0: ', s.WETH.balanceOf(address(this)));
+            // s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
+            // console.log('weth bal oz - post crv swap - not 0: ', s.WETH.balanceOf(address(this)));
 
             revert('here9');
 
@@ -247,7 +256,11 @@ contract ozMinter is ozTrading {
     }
 
 
-    
+    function _getTokenOut(Tokens token_) private view returns(IERC20 tokenOut) {
+        if (token_ == Tokens.sDAI) {
+            tokenOut = s.sDAI;
+        }
+    }
 
 
 }

@@ -40,6 +40,8 @@ contract CoreMethods is Setup {
 
     function _redeem_ozUSD(Tokens token_) internal {
         //PRE-CONDITIONS
+        IERC20 tokenOut = _getTokenOut(token_);
+
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
         assertTrue(balanceOwnerOzUSD > 0);
 
@@ -54,22 +56,22 @@ contract CoreMethods is Setup {
         console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
 
         //ACTION
-        uint amountOutWETH = ozUSD.redeem(balanceOwnerOzUSD, owner, owner, token_);
+        uint amountTokenOut = ozUSD.redeem(balanceOwnerOzUSD, owner, owner, token_);
         vm.stopPrank();
 
         //POST-CONDITIONS
-        uint balanceOwnerWETH = WETH.balanceOf(owner);
+        uint balanceOwnerTokenOut = tokenOut.balanceOf(owner);
 
-        assertTrue(amountOutWETH > 0);
+        assertTrue(amountTokenOut > 0);
         assertTrue(ozUSD.balanceOf(owner) == 0);
-        assertTrue(balanceOwnerWETH == amountOutWETH);
-        assertTrue(WETH.balanceOf(address(OZ)) == 0);
+        assertTrue(balanceOwnerTokenOut == amountTokenOut);
+        assertTrue(tokenOut.balanceOf(address(OZ)) == 0);
 
         console.log('');
-        console.log('amountOutWETH - same weth bal owner: ', amountOutWETH);
+        console.log('amountTokenOut - same tokenOut bal owner: ', amountTokenOut);
         console.log('ozUSD bal owner - post redeemption - 0:', ozUSD.balanceOf(owner));
-        console.log('WETH bal owner - post redeeption - not 0: ', WETH.balanceOf(owner));
-        console.log('WETH bal oz - post redeemption - 0: ', WETH.balanceOf(address(OZ)));
+        console.log('tokenOut bal owner - post redeeption - not 0: ', tokenOut.balanceOf(owner));
+        console.log('tokenOut bal oz - post redeemption - 0: ', tokenOut.balanceOf(address(OZ)));
     }
 
 

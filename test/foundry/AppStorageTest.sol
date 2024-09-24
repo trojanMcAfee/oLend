@@ -3,7 +3,8 @@ pragma solidity >=0.8.23 <0.9.0;
 
 import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
-// import {Tokens} from "../../contracts/AppStorage.sol";
+import {Tokens} from "../../contracts/AppStorage.sol";
+// import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 
 
 abstract contract AppStorageTest {
@@ -54,5 +55,12 @@ abstract contract AppStorageTest {
             pendleSwap: address(0),
             swapData: emptySwap
         });
+    }
+
+
+    function _getTokenOut(Tokens token_) internal view returns(IERC20 tokenOut) {
+        if (token_ == Tokens.sDAI) {
+            tokenOut = sDAI;
+        }
     }
 }
