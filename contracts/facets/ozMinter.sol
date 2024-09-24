@@ -160,7 +160,7 @@ contract ozMinter is ozTrading {
             address[11] memory route, 
             uint[5][5] memory swap_params,
             address[5] memory pools
-        ) = _createCrvSwap(address(_getTokenOut(token_)));
+        ) = _createCrvSwap(_getTokenOut(token_));
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 
@@ -173,10 +173,6 @@ contract ozMinter is ozTrading {
             receiver_
         ); 
         console.log('sdai bal oz - post crv swap - not 0: ', s.sDAI.balanceOf(receiver_));
-
-        // tokenOut.safeTransfer(receiver_, amountOut);
-
-        revert('here15');
         
 
         if (token_ == Tokens.WETH) {
@@ -255,9 +251,11 @@ contract ozMinter is ozTrading {
     }
 
 
-    function _getTokenOut(Tokens token_) private view returns(IERC20 tokenOut) {
+    function _getTokenOut(Tokens token_) private view returns(address tokenOut) {
         if (token_ == Tokens.sDAI) {
-            tokenOut = s.sDAI;
+            tokenOut = address(s.sDAI);
+        } else if (token_ == Tokens.FRAX) {
+            tokenOut = address(s.FRAX);
         }
     }
 

@@ -174,7 +174,13 @@ abstract contract ozTrading is ozModifiers {
         uint[5][5] memory swap_params,
         address[5] memory pools
     ) {
-        if (tokenOut_ == address(s.sDAI)) {
+        route[0] = address(s.sUSDe);
+        route[1] = address(s.curvePool_sUSDesDAI);
+        route[2] = address(s.sDAI);
+        
+        swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
+
+        if (tokenOut_ == address(s.FRAX)) {
             route[0] = address(s.sUSDe);
             route[1] = address(s.curvePool_sUSDesDAI);
             route[2] = address(s.sDAI);
