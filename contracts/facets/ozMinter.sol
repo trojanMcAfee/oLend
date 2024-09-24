@@ -172,9 +172,10 @@ contract ozMinter is ozTrading {
             pools, 
             receiver_
         ); 
-        console.log('sdai bal oz - post crv swap - not 0: ', s.sDAI.balanceOf(receiver_));
+        console.log('frax bal oz - post crv swap - not 0: ', s.FRAX.balanceOf(receiver_));
         
 
+        //balancer impl
         if (token_ == Tokens.WETH) {
 
             // console.logUint(1);

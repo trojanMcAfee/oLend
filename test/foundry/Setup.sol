@@ -223,6 +223,7 @@ contract Setup is AppStorageTest {
         vm.label(0x33C5252f240f02123090cfF1D8E3B80FceC31e54, 'UnverifiedCrvContract');
         vm.label(address(USDe), 'USDe');
         vm.label(address(sDAI), 'sDAI');
+        vm.label(address(FRAX), 'FRAX');
     }
 
 
