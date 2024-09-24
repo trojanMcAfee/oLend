@@ -13,6 +13,19 @@ library HelpersLib {
         return uint(num);
     }
 
+    
+    function completeZeroAddr(address[] memory arr_) internal pure returns(address[11] memory newArr) {
+        uint length = newArr.length;
+
+        for (uint i=0; i < length; i++) {
+            if (i < arr_.length) {
+                newArr[i] = arr_[i];
+            } else {
+                newArr[i] = address(0);
+            }
+        }
+    }
+
 
     function createTokenInputStruct(
         address tokenIn_, 
