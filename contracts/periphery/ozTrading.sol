@@ -184,18 +184,39 @@ abstract contract ozTrading is ozModifiers {
         IPoolCrv pool_, 
         address tokenIn_,
         address tokenOut_,
-        bool issDAI_
+        bool issDAI_,
+        bytes memory cacheParams_
     ) private view returns(address[11] memory route, uint[5][5] memory swap_params) {
+       
+    //    (address[11] memory route, uint[5][5] memory swap_params) =
+    //         _decodeCacheParams(cacheParams_);
+
+            route;
+            swap_params;
+
         if (issDAI_) {
+            // address[11] memory route;
+            // uint[5][5] memory swap_params;
+
             route[routeIndex_] = tokenIn_;    
             route[routeIndex_ + 1] = address(pool_);
             route[routeIndex_ + 2] = tokenOut_;
+
+            // swap_params[issDAI_ ? routeIndex_ : swapIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
         } else {
+            (
+                address[11] memory route, 
+                uint[5][5] memory swap_params
+            ) = abi.decode(
+                cacheParams_,
+                (address[11] , uint[5][5])
+            );
+
             route[routeIndex_] = address(pool_);
             route[routeIndex_ + 1] = tokenOut_;
         }   
 
-        swap_params[routeIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
+        swap_params[issDAI_ ? routeIndex_ : swapIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
     }
 
 
@@ -210,7 +231,7 @@ abstract contract ozTrading is ozModifiers {
         
         // swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
 
-        (route, swap_params) = _setCrvLeg(0, 1, s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI), true);
+        (route, swap_params) = _setCrvLeg(0, 1, s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI), true, new bytes(0));
 
         //-------
         // CrvTier memory tier1 = CrvTier(address(s.curvePool_sDAIFRAX), address(s.FRAX));
@@ -218,20 +239,23 @@ abstract contract ozTrading is ozModifiers {
         //-------
 
         if (tokenOut_ == address(s.FRAX)) { 
-            route[3] = address(s.curvePool_sDAIFRAX);
-            route[4] = address(s.FRAX);
+            // route[3] = address(s.curvePool_sDAIFRAX);
+            // route[4] = address(s.FRAX);
 
-            swap_params[1] = _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
+            // swap_params[1] = _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
 
-            // (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
+            (route, swap_params) = _setCrvLeg(0, 1, s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI), true, new bytes(0));
+            bytes memory cacheParams = abi.encode(route, swap_params);
+
+            (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
         } else if (tokenOut_ == address(s.USDC)) {
             // route[5] = address(s.curvePool_FRAXUSDC);
             // route[6] = address(s.USDC);
 
             // swap_params[2] = _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
 
-            _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false);
-            _setCrvLeg(4, 2, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false);
+            _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, new bytes(0));
+            _setCrvLeg(4, 2, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false, new bytes(0));
         }
 
 
@@ -297,7 +321,33 @@ abstract contract ozTrading is ozModifiers {
         params[4] = exepFRAXUSDC ? 2 : pool_.N_COINS();
 
         console.logUint(9);
+    }
+
+
+    function _decodeCacheParams(bytes memory data_) private pure returns(
+        address[11] memory, 
+        uint[5][5] memory
+    ) {
         
+
+        if (data_.length == 0) {
+            address[11] memory route;
+            uint[5][5] memory swap_params;
+
+            return (route, swap_params);
+        } else {
+            (
+                address[11] memory route, 
+                uint[5][5] memory swap_params
+            ) = abi.decode(
+                data_,
+                (address[11] , uint[5][5])
+            );
+
+            return (route, swap_params);
+        }
+
+
 
     }
 
