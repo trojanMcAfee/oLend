@@ -170,12 +170,9 @@ contract ozMinter is ozTrading {
             amountYieldTokenOut, 
             minTokenOut, 
             pools, 
-            address(this)
+            receiver_
         ); 
-        console.log('frax bal oz - post crv swap - not 0: ', s.FRAX.balanceOf(address(this)));
-
-        s.FRAX.transfer(receiver_, amountOut);
-        
+        console.log('frax bal oz - post crv swap - not 0: ', s.FRAX.balanceOf(address(this)));        
 
         //balancer impl
         if (token_ == Tokens.WETH) {
