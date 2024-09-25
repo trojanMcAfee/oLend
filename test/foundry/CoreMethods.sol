@@ -53,7 +53,7 @@ contract CoreMethods is Setup {
 
         console.log('');
         console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
-        console.log('WETH bal owner - pre redeeption - 0: ', WETH.balanceOf(owner));
+        console.log('USDC bal owner - pre redeeption - 0: ', USDC.balanceOf(owner));
 
         //ACTION
         uint amountTokenOut = ozUSD.redeem(balanceOwnerOzUSD, owner, owner, token_);
@@ -61,10 +61,22 @@ contract CoreMethods is Setup {
 
         //POST-CONDITIONS
         uint balanceOwnerTokenOut = tokenOut.balanceOf(owner);
+        console.log('USDC.balanceOf - post redeemption - not 0: ', USDC.balanceOf(owner));
+        console.log('tokenOut: ', address(tokenOut));
 
+        console.logUint(11);
         assertTrue(amountTokenOut > 0);
+        console.logUint(12);
         assertTrue(ozUSD.balanceOf(owner) == 0);
+
+        console.logUint(13);
+        console.log('balanceOwnerTokenOut: ', balanceOwnerTokenOut);
+        console.log('amountTokenOut: ', amountTokenOut);
+        console.log('sDAI.balanceOf - post redeemption - 0: ', sDAI.balanceOf(owner));
+
         assertTrue(balanceOwnerTokenOut == amountTokenOut);
+
+        console.logUint(14);
         assertTrue(tokenOut.balanceOf(address(OZ)) == 0);
 
         console.log('');

@@ -76,6 +76,7 @@ struct AppStorage {
 struct SysConfig {
     address OZ; 
     address relayer;
+    address ETH;
 }
 
 struct AaveConfig {

@@ -56,6 +56,12 @@ contract AppStorageTest is StateVars {
             tokenOut = address(sDAI);
         } else if (token_ == Tokens.FRAX) {
             tokenOut = address(FRAX);
+        } else if (token_ == Tokens.USDC) {
+            tokenOut = address(USDC);
+        } else if (token_ == Tokens.WETH) {
+            tokenOut = address(WETH);
+        } else if (token_ == Tokens.ETH) {
+            tokenOut = ETH;
         }
     }
 }

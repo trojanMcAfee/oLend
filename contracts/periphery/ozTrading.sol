@@ -185,6 +185,11 @@ abstract contract ozTrading is ozModifiers {
             route[4] = tokenOut_;
 
             swap_params[1] = _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
+        } else if (tokenOut_ == address(s.USDC)) {
+            route[5] = address(s.curvePool_FRAXUSDC);
+            route[6] = tokenOut_;
+
+            swap_params[2] = _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
         }
 
         // route = [

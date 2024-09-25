@@ -34,7 +34,7 @@ contract ozUSDTest is CoreMethods {
     }
 
     //working on...
-    function test_redeem_ozUSD_for_USDC() internal {
+    function test_redeem_ozUSD_for_USDC() public {
         _borrow_and_mint_ozUSD();
         _redeem_ozUSD(Tokens.USDC);
     }

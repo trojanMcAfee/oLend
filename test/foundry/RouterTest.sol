@@ -364,17 +364,17 @@ contract RouterTest is Setup {
     }
 
     function test_curvePool() public {
-        deal(address(sDAI), owner, 10_000 * 1e18);
+        deal(address(FRAX), owner, 10_000 * 1e18);
         uint amountIn = 1847897020441118686974;
         uint minOut = 0;
 
         vm.startPrank(owner);
-        sDAI.approve(address(curvePool_sDAIFRAX), type(uint).max);
+        FRAX.approve(address(curvePool_FRAXUSDC), type(uint).max);
 
-        uint amountOut = curvePool_sDAIFRAX.exchange(1, 0, amountIn, minOut);
+        uint amountOut = curvePool_FRAXUSDC.exchange(0, 1, amountIn, minOut);
 
         console.log('amountOut: ', amountOut);
-        console.log('FRAX bal this: ', FRAX.balanceOf(owner));  
+        console.log('USDC bal owner: ', USDC.balanceOf(owner));  
     }
 
     function test_curveRouter() public {

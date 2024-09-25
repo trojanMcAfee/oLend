@@ -135,14 +135,12 @@ contract ozMinter is ozTrading {
 
 
     function performRedemption(uint amount_, address owner_, address receiver_, Tokens token_) external returns(uint) { 
-        // uint amountOut;
-
-        uint minTokenOut = 0;
+        uint minTokenOut = 0; //param of the function
 
         (uint256 amountYieldTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
             address(s.sUSDeMarket), 
-            s.pendlePT.balanceOf(address(this)), 
+            s.pendlePT.balanceOf(address(this)), //don't use balanceOf()
             address(s.sUSDe).createTokenOutputStruct(minTokenOut, s.emptySwap), 
             s.emptyLimit
         );
@@ -164,6 +162,10 @@ contract ozMinter is ozTrading {
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 
+        console.log('sUSDe bal oz - pre crv swap - not 0: ', s.sUSDe.balanceOf(address(this)));
+        console.log('USDC bal oz - pre crv swap - not 0: ', s.USDC.balanceOf(address(this)));
+        console.log('');
+
         uint amountOut = s.curveRouter.exchange(
             route, 
             swap_params, 
@@ -172,7 +174,10 @@ contract ozMinter is ozTrading {
             pools, 
             receiver_
         ); 
-        console.log('frax bal oz - post crv swap - not 0: ', s.FRAX.balanceOf(address(this)));        
+
+        console.log('sUSDe bal oz - post crv swap - 0: ', s.sUSDe.balanceOf(address(this)));     
+        console.log('USDC bal oz - post crv swap - not 0: ', s.USDC.balanceOf(address(this)));     
+        // s.USDC.transfer(receiver_, amountOut);
 
         //balancer impl
         if (token_ == Tokens.WETH) {
@@ -207,7 +212,6 @@ contract ozMinter is ozTrading {
 
             s.WETH.transfer(receiver_, amountOut);
         } else if (token_ == Tokens.USDC) {
-
         }
 
 
@@ -250,12 +254,18 @@ contract ozMinter is ozTrading {
         return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
     }
 
-
+    //this could be a mapping
     function _getTokenOut(Tokens token_) private view returns(address tokenOut) {
         if (token_ == Tokens.sDAI) {
             tokenOut = address(s.sDAI);
         } else if (token_ == Tokens.FRAX) {
             tokenOut = address(s.FRAX);
+        } else if (token_ == Tokens.USDC) {
+            tokenOut = address(s.USDC);
+        } else if (token_ == Tokens.WETH) {
+            tokenOut = address(s.WETH);
+        } else if (token_ == Tokens.ETH) {
+            tokenOut = s.ETH;
         }
     }
 

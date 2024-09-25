@@ -105,6 +105,7 @@ contract DiamondInit {
         //System config
         s.OZ = sys_.OZ;
         s.relayer = ozRelayer(sys_.relayer);
+        s.ETH = sys_.ETH;
 
 
 

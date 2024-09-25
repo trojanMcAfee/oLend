@@ -126,7 +126,7 @@ contract Setup is AppStorageTest {
             address(curvePool_USDCETHWBTC)
         );
 
-        SysConfig memory sys = SysConfig(address(OZ), address(relayer));
+        SysConfig memory sys = SysConfig(address(OZ), address(relayer), ETH);
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
