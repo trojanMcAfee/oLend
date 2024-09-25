@@ -191,22 +191,14 @@ abstract contract ozTrading is ozModifiers {
        (address[11] memory route, uint[5][5] memory swap_params) =
             _decodeCacheParams(cacheParams_);
 
-            // route;
-            // swap_params;
-
         if (issDAI_) {
-            // address[11] memory route;
-            // uint[5][5] memory swap_params;
-
             route[routeIndex_] = tokenIn_;    
             route[routeIndex_ + 1] = address(pool_);
             route[routeIndex_ + 2] = tokenOut_;
-
-            // swap_params[issDAI_ ? routeIndex_ : swapIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
         } else {
             (
-                address[11] memory route, 
-                uint[5][5] memory swap_params
+                route, 
+                swap_params
             ) = abi.decode(
                 cacheParams_,
                 (address[11] , uint[5][5])
@@ -330,27 +322,10 @@ abstract contract ozTrading is ozModifiers {
         address[11] memory route, 
         uint[5][5] memory swap_params
     ) {
-        
-
-        if (data_.length == 0) {
-            // address[11] memory route;
-            // uint[5][5] memory swap_params;
-
-            // return (route, swap_params);
-        } else {
-            (
-                route, 
-                swap_params
-            ) = abi.decode(
-                data_,
-                (address[11] , uint[5][5])
-            );
-
-            // return (route, swap_params);
-        }
-
-
-
+        if (data_.length != 0) {
+            (route, swap_params) = 
+                abi.decode(data_, (address[11] , uint[5][5]));
+        } 
     }
 
 }
