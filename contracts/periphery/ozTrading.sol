@@ -251,16 +251,21 @@ abstract contract ozTrading is ozModifiers {
 
             // swap_params[2] = _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
 
-            (route, swap_params) = _setCrvLeg(0, counter, s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI), true, new bytes(0));
-            counter++;
-            cacheParams = abi.encode(route, swap_params);
+            //-----------
+            // (route, swap_params) = _setCrvLeg(0, counter, s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI), true, new bytes(0));
+            // counter++;
+            // cacheParams = abi.encode(route, swap_params);
 
-            (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
-            counter++;
-            cacheParams = abi.encode(route, swap_params);
+            // (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
+            // counter++;
+            // cacheParams = abi.encode(route, swap_params);
             //-----------
 
-            (route, swap_params) = _setCrvLeg(5, 6, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false, cacheParams);
+            (route, swap_params) = _setCrvLeg(3, counter, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
+            cacheParams = abi.encode(route, swap_params);
+            
+            counter++;
+            (route, swap_params) = _setCrvLeg(5, counter, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false, cacheParams);
         }
 
 
