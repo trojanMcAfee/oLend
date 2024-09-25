@@ -183,12 +183,19 @@ abstract contract ozTrading is ozModifiers {
         uint swapIndex_,
         IPoolCrv pool_, 
         address tokenIn_,
-        address tokenOut_
+        address tokenOut_,
+        bool issDAI_
     ) private view returns(address[11] memory route, uint[5][5] memory swap_params) {
-        route[routeIndex_] = address(pool_);
-        route[routeIndex_ + 1] = tokenOut_;                
+        if (issDAI_) {
+            route[routeIndex_] = tokenIn_;    
+            route[routeIndex_ + 1] = address(pool_);
+            route[routeIndex_ + 2] = tokenOut_;
+        } else {
+            route[routeIndex_] = address(pool_);
+            route[routeIndex_ + 1] = tokenOut_;
+        }   
 
-        swap_params[swapIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
+        swap_params[routeIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
     }
 
 
@@ -197,18 +204,18 @@ abstract contract ozTrading is ozModifiers {
         uint[5][5] memory swap_params,
         address[5] memory pools
     ) {
-        route[0] = address(s.sUSDe);
-        route[1] = address(s.curvePool_sUSDesDAI);
-        route[2] = address(s.sDAI);
+        // route[0] = address(s.sUSDe);
+        // route[1] = address(s.curvePool_sUSDesDAI);
+        // route[2] = address(s.sDAI);
         
-        swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
+        // swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
+
+        (route, swap_params) = _setCrvLeg(0, 1, s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI), true);
 
         //-------
         // CrvTier memory tier1 = CrvTier(address(s.curvePool_sDAIFRAX), address(s.FRAX));
         // CrvTier memory tier2 = CrvTier(address(s.curvePool_FRAXUSDC), address(s.USDC));
         //-------
-
-        (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
 
         if (tokenOut_ == address(s.FRAX)) { 
             route[3] = address(s.curvePool_sDAIFRAX);
@@ -223,8 +230,8 @@ abstract contract ozTrading is ozModifiers {
 
             // swap_params[2] = _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
 
-            _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
-            _setCrvLeg(4, 2, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
+            _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false);
+            _setCrvLeg(4, 2, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false);
         }
 
 
