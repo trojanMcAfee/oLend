@@ -16,11 +16,6 @@ contract ozUSDTest is CoreMethods {
         _borrow_and_mint_ozUSD();
     }
 
-    function test_redeem_ozUSD_for_WETH() public {
-        _borrow_and_mint_ozUSD();
-        _redeem_ozUSD(Tokens.WETH);
-    }
-
     //done
     function test_redeem_ozUSD_for_sDAI() public {
         _borrow_and_mint_ozUSD();
@@ -33,10 +28,16 @@ contract ozUSDTest is CoreMethods {
         _redeem_ozUSD(Tokens.FRAX);
     }
 
-    //working on...
+    //done
     function test_redeem_ozUSD_for_USDC() public {
         _borrow_and_mint_ozUSD();
         _redeem_ozUSD(Tokens.USDC);
+    }
+
+    //working on...
+    function test_redeem_ozUSD_for_WETH() public {
+        _borrow_and_mint_ozUSD();
+        _redeem_ozUSD(Tokens.WETH);
     }
 
     function test_redeem_ozUSD_for_USDe() internal {

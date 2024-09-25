@@ -264,8 +264,34 @@ abstract contract ozTrading is ozModifiers {
             (route, swap_params) = _setCrvLeg(3, counter, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
             cacheParams = abi.encode(route, swap_params);
             
-            counter++;
+            counter++; // 1
             (route, swap_params) = _setCrvLeg(5, counter, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false, cacheParams);
+        } else if (tokenOut_ == address(s.WETH)) {
+            (route, swap_params) = _setCrvLeg(
+                3, 
+                counter, 
+                s.curvePool_sDAIFRAX, 
+                address(s.sDAI), 
+                address(s.FRAX), 
+                false, 
+                cacheParams
+            );
+            cacheParams = abi.encode(route, swap_params);
+            
+            counter++; //1
+            (route, swap_params) = _setCrvLeg(
+                5, counter, s.curvePool_FRAXUSDC, 
+                address(s.FRAX), address(s.USDC), false, cacheParams
+            );
+            cacheParams = abi.encode(route, swap_params);
+
+            counter++; //2
+            (route, swap_params) = _setCrvLeg(
+                7, counter, s.curvePool_USDCETHWBTC,
+                address(s.USDC), address(s.WETH), false, cacheParams
+            );
+
+
         }
 
 
@@ -343,5 +369,6 @@ abstract contract ozTrading is ozModifiers {
                 abi.decode(data_, (address[11] , uint[5][5]));
         } 
     }
+
 
 }
