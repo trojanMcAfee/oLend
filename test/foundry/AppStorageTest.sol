@@ -54,6 +54,8 @@ contract AppStorageTest is StateVars {
     function _getTokenOut(Tokens token_) internal view returns(address tokenOut) {
         if (token_ == Tokens.sDAI) {
             tokenOut = address(sDAI);
+        } else if (token_ == Tokens.FRAX) {
+            tokenOut = address(FRAX);
         }
     }
 }
