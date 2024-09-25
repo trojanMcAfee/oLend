@@ -363,6 +363,41 @@ contract RouterTest is Setup {
         return arr;
     }
 
+    function test_curvePool() public {
+        deal(address(sDAI), owner, 10_000 * 1e18);
+        uint amountIn = 1847897020441118686974;
+        uint minOut = 0;
+
+        vm.startPrank(owner);
+        sDAI.approve(address(curvePool_sDAIFRAX), type(uint).max);
+
+        uint amountOut = curvePool_sDAIFRAX.exchange(1, 0, amountIn, minOut);
+
+        console.log('amountOut: ', amountOut);
+        console.log('FRAX bal this: ', FRAX.balanceOf(owner));  
+    }
+
+    function test_curveRouter() public {
+
+        address[11] memory route = [
+            address(sDAI),
+            address(curvePool_sDAIFRAX),
+            address(FRAX),
+            address(0),
+            address(0),
+            address(0),
+            address(0),
+            address(0),
+            address(0),
+            address(0),
+            address(0)
+        ];
+
+        // uint[5][5] memory swap_params = [
+
+        // ];
+    }
+
 
     
     

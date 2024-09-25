@@ -261,7 +261,7 @@ abstract contract ozTrading is ozModifiers {
         if (tokenIn_ == address(s.sUSDe) || tokenIn_ == address(s.FRAX)) {
             params[3] = uint(CrvPoolType.STABLE); //could be TWO_COIN for sUSDe-sDAI
         } else if (tokenIn_ == address(s.sDAI)) {
-            params[3] = uint(CrvPoolType.TWO_COIN);
+            params[3] = uint(CrvPoolType.STABLE);
         } else if (tokenIn_ == address(s.USDC)) {
             params[3] = uint(CrvPoolType.TRICRYPTO);
         }

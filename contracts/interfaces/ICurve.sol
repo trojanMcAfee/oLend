@@ -32,4 +32,10 @@ interface ICrvMetaRegistry {
 interface IPoolCrv {
     function coins(uint index) external view returns(address);
     function N_COINS() external view returns(uint);
+    function exchange(
+        int128 i,
+        int128 j,
+        uint dx,
+        uint min_dy
+    ) external returns(uint);
 }
