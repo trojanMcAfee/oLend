@@ -168,6 +168,29 @@ abstract contract ozTrading is ozModifiers {
         leg = IVault.BatchSwapStep(poolId_, assetInIndex_, assetOutIndex_, amount_, new bytes(0));
     }
 
+    
+    // function _setCrvSwapTier(Tier tier_, address[11] memory route) private returns() {
+    //     route[3] = tier
+    // }
+
+    // struct CrvTier {
+    //     address pool;
+    //     address tokenOut;
+    // }
+
+    function _setCrvLeg(
+        uint routeIndex_, 
+        uint swapIndex_,
+        IPoolCrv pool_, 
+        address tokenIn_,
+        address tokenOut_
+    ) private view returns(address[11] memory route, uint[5][5] memory swap_params) {
+        route[routeIndex_] = address(pool_);
+        route[routeIndex_ + 1] = tokenOut_;                
+
+        swap_params[swapIndex_] = _createCrvSwapParams(pool_, tokenIn_, tokenOut_);
+    }
+
 
     function _createCrvSwap(address tokenOut_) internal view returns(
         address[11] memory route,
@@ -180,39 +203,30 @@ abstract contract ozTrading is ozModifiers {
         
         swap_params[0] = _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI));
 
-        if (tokenOut_ == address(s.FRAX)) {
+        //-------
+        // CrvTier memory tier1 = CrvTier(address(s.curvePool_sDAIFRAX), address(s.FRAX));
+        // CrvTier memory tier2 = CrvTier(address(s.curvePool_FRAXUSDC), address(s.USDC));
+        //-------
+
+        (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
+
+        if (tokenOut_ == address(s.FRAX)) { 
             route[3] = address(s.curvePool_sDAIFRAX);
-            route[4] = tokenOut_;
+            route[4] = address(s.FRAX);
 
             swap_params[1] = _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
-        } else if (tokenOut_ == address(s.USDC)) {
-            route[5] = address(s.curvePool_FRAXUSDC);
-            route[6] = tokenOut_;
 
-            swap_params[2] = _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
+            // (route, swap_params) = _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
+        } else if (tokenOut_ == address(s.USDC)) {
+            // route[5] = address(s.curvePool_FRAXUSDC);
+            // route[6] = address(s.USDC);
+
+            // swap_params[2] = _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
+
+            _setCrvLeg(3, 1, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX));
+            _setCrvLeg(4, 2, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC));
         }
 
-        // route = [
-        //     address(s.USDe),
-        //     address(s.curvePool_sUSDesDAI),
-        //     address(s.sDAI),
-        //     address(s.curvePool_sDAIFRAX),
-        //     address(s.FRAX),
-        //     address(s.curvePool_FRAXUSDC),
-        //     address(s.USDC),
-        //     address(s.curvePool_USDCETHWBTC),
-        //     address(s.WETH),
-        //     address(0),
-        //     address(0) //<--- see if i can delete these and it still works
-        // ]; 
-
-        // swap_params = [ 
-        //     _createCrvSwapParams(s.curvePool_sUSDesDAI, address(s.sUSDe), address(s.sDAI)),
-        //     _createCrvSwapParams(s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX)),
-        //     _createCrvSwapParams(s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC)),
-        //     _createCrvSwapParams(s.curvePool_USDCETHWBTC, address(s.FRAX), address(s.WETH)),
-        //     [uint(0),uint(0),uint(0),uint(0),uint(0)]
-        // ];
 
         pools;
     }
