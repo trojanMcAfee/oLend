@@ -85,6 +85,7 @@ contract DiamondInit {
         s.curvePool_sDAIFRAX = IPoolCrv(curve_.curvePool_sDAIFRAX);
         s.curvePool_FRAXUSDC = IPoolCrv(curve_.curvePool_FRAXUSDC);
         s.curvePool_USDCETHWBTC = IPoolCrv(curve_.curvePool_USDCETHWBTC);
+        s.curvePool_FRAXUSDe = IPoolCrv(curve_.curvePool_FRAXUSDe);
 
         //ERC20s and ERC4626
         s.aWETH = IERC20(tokens_.aWETH);

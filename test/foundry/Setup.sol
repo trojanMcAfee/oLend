@@ -124,7 +124,8 @@ contract Setup is AppStorageTest {
             address(curvePool_sUSDesDAI),
             address(curvePool_sDAIFRAX),
             address(curvePool_FRAXUSDC),
-            address(curvePool_USDCETHWBTC)
+            address(curvePool_USDCETHWBTC),
+            address(curvePool_FRAXUSDe)
         );
 
         SysConfig memory sys = SysConfig(address(OZ), address(relayer));

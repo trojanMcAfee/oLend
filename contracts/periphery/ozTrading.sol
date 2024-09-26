@@ -237,7 +237,7 @@ abstract contract ozTrading is ozModifiers {
 
             (route, swap_params) = _setCrvLeg(3, counter, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
 
-        } else if (tokenOut_ == address(s.USDC)) {
+        } else if (tokenOut_ == address(s.USDC) || tokenOut_ == address(s.USDe)) {
             // route[5] = address(s.curvePool_FRAXUSDC);
             // route[6] = address(s.USDC);
 
@@ -252,12 +252,14 @@ abstract contract ozTrading is ozModifiers {
             // counter++;
             // cacheParams = abi.encode(route, swap_params);
             //-----------
+            IPoolCrv outPool = tokenOut_ == address(s.USDC) ? s.curvePool_FRAXUSDC : s.curvePool_FRAXUSDe;
 
             (route, swap_params) = _setCrvLeg(3, counter, s.curvePool_sDAIFRAX, address(s.sDAI), address(s.FRAX), false, cacheParams);
             cacheParams = abi.encode(route, swap_params);
             
             counter++; // 1
-            (route, swap_params) = _setCrvLeg(5, counter, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false, cacheParams);
+            (route, swap_params) = _setCrvLeg(5, counter, outPool, address(s.FRAX), tokenOut_, false, cacheParams);
+
         } else if (tokenOut_ == address(s.WETH) || tokenOut_ == address(s.WBTC)) {
             (route, swap_params) = _setCrvLeg(
                 3, 
@@ -298,7 +300,7 @@ abstract contract ozTrading is ozModifiers {
     ) private view returns(uint[5] memory params) {
         console.logUint(31);
 
-        bool exepFRAXUSDC = address(pool_) == address(s.curvePool_FRAXUSDC);
+        // bool exepFRAXUSDC = address(pool_) == address(s.curvePool_FRAXUSDC);
         uint coins;
 
         try pool_.coins(2) returns(address) {
