@@ -30,6 +30,7 @@ contract ozUSDtoken is ERC20Upgradeable {
 
     function redeem(
         uint amount_, 
+        uint minAmountOut_,
         address account_, 
         address receiver_, 
         Tokens token_
@@ -38,6 +39,7 @@ contract ozUSDtoken is ERC20Upgradeable {
 
         uint amountOut = OZ.performRedemption(
             amount_, 
+            minAmountOut_,
             account_, 
             receiver_, 
             token_

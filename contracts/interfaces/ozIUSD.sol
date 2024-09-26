@@ -9,6 +9,7 @@ import {Tokens} from "../AppStorage.sol";
 interface ozIUSD is IERC20 {
     function redeem(
         uint amount, 
+        uint minAmountOut,
         address account, 
         address receiver, 
         Tokens token

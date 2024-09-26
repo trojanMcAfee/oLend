@@ -134,14 +134,19 @@ contract ozMinter is ozTrading {
 
 
 
-    function performRedemption(uint amount_, address owner_, address receiver_, Tokens token_) external returns(uint) { 
-        uint minTokenOut = 0; //param of the function
-
+    function performRedemption(
+        uint amount_, 
+        uint minAmountOut_,
+        address owner_, 
+        address receiver_, 
+        Tokens token_
+    ) external returns(uint) { 
+    
         (uint256 amountYieldTokenOut,,) = s.pendleRouter.swapExactPtForToken(
             address(this), 
             address(s.sUSDeMarket), 
             s.pendlePT.balanceOf(address(this)), //don't use balanceOf()
-            address(s.sUSDe).createTokenOutputStruct(minTokenOut, s.emptySwap), 
+            address(s.sUSDe).createTokenOutputStruct(minAmountOut_, s.emptySwap), 
             s.emptyLimit
         );
 
@@ -167,61 +172,24 @@ contract ozMinter is ozTrading {
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 
-        console.log('sUSDe bal oz - pre crv swap - not 0: ', s.sUSDe.balanceOf(address(this)));
-        console.log('USDC bal oz - pre crv swap - not 0: ', s.USDC.balanceOf(address(this)));
-        console.log('');
-
         uint amountOut = s.curveRouter.exchange(
             route, 
             swap_params, 
             amountYieldTokenOut, 
-            minTokenOut, 
+            minAmountOut_, 
             pools, 
             receiver_
         ); 
 
-        console.log('sUSDe bal oz - post crv swap - 0: ', s.sUSDe.balanceOf(address(this)));     
-        console.log('USDC bal oz - post crv swap - not 0: ', s.USDC.balanceOf(address(this)));     
-        // s.USDC.transfer(receiver_, amountOut);
-
-        //balancer impl
-        if (false) { //token_ == Tokens.WETH
-
-            // console.logUint(1);
-            // (
-            //     address[11] memory route, 
-            //     uint[5][5] memory swap_params,
-            //     address[5] memory pools
-            // ) = _createCrvSwap(address(s.WETH));
-
-            // console.logUint(2);
-
-            // s.curveRouter.exchange(route, swap_params, amountYieldTokenOut, minTokenOut, pools, address(this)); 
-            // console.log('weth bal oz - post crv swap - not 0: ', s.WETH.balanceOf(address(this)));
-
-            revert('here9');
-
-
-
-
-            amountOut =  _swapBalancer(
-                address(s.sUSDe), 
-                address(s.WETH), 
-                amountYieldTokenOut, //amountIn
-                minTokenOut,
-                true
-            );
-
-            console.log('amountOut *****: ', amountOut);
-            console.log('WETH oz - post batch - not 0: ', s.WETH.balanceOf(address(this)));
-
-            s.WETH.transfer(receiver_, amountOut);
-        } else if (token_ == Tokens.USDC) {
-        }
-
-
-        // console.log('sUSDe oz - post withdraw - 0: ', s.sUSDe.balanceOf(address(this)));
-        // console.log('USDe oz - post withdraw - not 0: ', s.USDe.balanceOf(address(this)));
+        //balancer impl (in case Curve is not possible)
+        // amountOut =  _swapBalancer(
+        //     address(s.sUSDe), 
+        //     address(s.WETH), 
+        //     amountYieldTokenOut,
+        //     minAmountOut_,
+        //     true
+        // );
+    
         return amountOut;
     }
 

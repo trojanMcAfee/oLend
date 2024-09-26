@@ -56,7 +56,8 @@ contract CoreMethods is Setup {
         console.log('USDC bal owner - pre redeeption - 0: ', USDC.balanceOf(owner));
 
         //ACTION
-        uint amountTokenOut = ozUSD.redeem(balanceOwnerOzUSD, owner, owner, token_);
+        uint minAmountOut = 0;
+        uint amountTokenOut = ozUSD.redeem(balanceOwnerOzUSD, minAmountOut, owner, owner, token_);
         vm.stopPrank();
 
         //POST-CONDITIONS
