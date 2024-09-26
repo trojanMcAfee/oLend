@@ -294,15 +294,17 @@ abstract contract ozTrading is ozModifiers {
             (,,cacheParams) = _FRAX_tokenOut(counter, cacheParams, true, address(s.USDC));
 
             counter++; //2
-            (route, swap_params) = _setCrvLeg(
-                7, 
-                counter, 
-                s.curvePool_USDCETHWBTC,
-                address(s.USDC), 
-                tokenOut_, 
-                false, 
-                cacheParams
-            );
+            // (route, swap_params) = _setCrvLeg(
+            //     7, 
+            //     counter, 
+            //     s.curvePool_USDCETHWBTC,
+            //     address(s.USDC), 
+            //     tokenOut_, 
+            //     false, 
+            //     cacheParams
+            // );
+
+            (route, swap_params) = _USDC_ETH_WBTC(counter, tokenOut_, cacheParams);
         }
 
 
@@ -431,6 +433,25 @@ abstract contract ozTrading is ozModifiers {
         );
 
         if (encode_) encodedParams = abi.encode(route, swap_params);
+    }
+
+    function _USDC_ETH_WBTC(
+        uint counter_, 
+        address tokenOut_, 
+        bytes memory cacheParams_
+    ) private view returns(
+        address[11] memory route, 
+        uint[5][5] memory swap_params
+    ) {
+        (route, swap_params) = _setCrvLeg(
+            7, 
+            counter_, 
+            s.curvePool_USDCETHWBTC,
+            address(s.USDC), 
+            tokenOut_, 
+            false, 
+            cacheParams_
+        );
     }
 
 
