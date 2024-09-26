@@ -216,16 +216,19 @@ abstract contract ozTrading is ozModifiers {
     ) {
         uint counter = 0;
 
-        (route, swap_params) = _setCrvLeg(
-            0, 
-            counter, 
-            s.curvePool_sUSDesDAI, 
-            address(s.sUSDe), 
-            address(s.sDAI), 
-            true, 
-            new bytes(0)
-        );
-        bytes memory cacheParams = abi.encode(route, swap_params);
+        // (route, swap_params) = _setCrvLeg(
+        //     0, 
+        //     counter, 
+        //     s.curvePool_sUSDesDAI, 
+        //     address(s.sUSDe), 
+        //     address(s.sDAI), 
+        //     true, 
+        //     new bytes(0)
+        // );
+        // bytes memory cacheParams = abi.encode(route, swap_params);
+        bytes memory cacheParams;
+
+        (route, swap_params, cacheParams) = _sUSDe_sDAI(counter);
 
         if (tokenOut_ == address(s.FRAX)) { 
             // (route, swap_params) = _setCrvLeg(
@@ -392,6 +395,25 @@ abstract contract ozTrading is ozModifiers {
     /**
      * Refactor all these functions into one
      */
+
+    function _sUSDe_sDAI(uint counter_) private view returns(
+        address[11] memory route,
+        uint[5][5] memory swap_params,
+        bytes memory cacheParams
+    ) {
+        (route, swap_params) = _setCrvLeg(
+            0, 
+            counter_, 
+            s.curvePool_sUSDesDAI, 
+            address(s.sUSDe), 
+            address(s.sDAI), 
+            true, 
+            new bytes(0)
+        );
+
+        cacheParams = abi.encode(route, swap_params);
+    }
+
     function _sDAI_FRAX(uint counter_, bytes memory cacheParams_, bool encode_) private view returns(
         address[11] memory route, 
         uint[5][5] memory swap_params,
