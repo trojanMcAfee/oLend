@@ -65,7 +65,6 @@ struct AppStorage {
 
     //System config
     address OZ;
-    address ETH;
     uint[] openOrders;
     // mapping(address user => address account) internalAccounts
     mapping(address user => InternalAccount account) internalAccounts;
@@ -77,7 +76,6 @@ struct AppStorage {
 struct SysConfig {
     address OZ; 
     address relayer;
-    address ETH;
 }
 
 struct AaveConfig {

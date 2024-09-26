@@ -47,12 +47,6 @@ contract ozUSDTest is CoreMethods {
     }
 
 
-    function test_redeem_ozUSD_for_ETH() public {
-        _borrow_and_mint_ozUSD();
-        _redeem_ozUSD(Tokens.ETH);
-    }
-
-
     function test_redeem_ozUSD_for_USDe() internal {
 
 

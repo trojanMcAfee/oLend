@@ -60,8 +60,6 @@ contract AppStorageTest is StateVars {
             tokenOut = address(USDC);
         } else if (token_ == Tokens.WETH) {
             tokenOut = address(WETH);
-        } else if (token_ == Tokens.ETH) {
-            tokenOut = ETH;
         } else if (token_ == Tokens.WBTC) {
             tokenOut = address (WBTC);
         }
