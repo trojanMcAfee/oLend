@@ -209,107 +209,35 @@ abstract contract ozTrading is ozModifiers {
     }
 
 
+    //Refactor this using a loop and the indexes (branch -> crvRefactoring_1.1)
     function _createCrvSwap(address tokenOut_) internal view returns(
         address[11] memory route,
         uint[5][5] memory swap_params,
         address[5] memory pools
     ) {
         uint counter = 0;
-
-        // (route, swap_params) = _setCrvLeg(
-        //     0, 
-        //     counter, 
-        //     s.curvePool_sUSDesDAI, 
-        //     address(s.sUSDe), 
-        //     address(s.sDAI), 
-        //     true, 
-        //     new bytes(0)
-        // );
-        // bytes memory cacheParams = abi.encode(route, swap_params);
         bytes memory cacheParams;
 
         (route, swap_params, cacheParams) = _sUSDe_sDAI(counter);
 
-        if (tokenOut_ == address(s.FRAX)) { 
-            // (route, swap_params) = _setCrvLeg(
-            //     3, 
-            //     counter, 
-            //     s.curvePool_sDAIFRAX, 
-            //     address(s.sDAI), 
-            //     address(s.FRAX), 
-            //     false, 
-            //     cacheParams
-            // );
+        if (tokenOut_ == address(s.FRAX)) 
+        { 
             (route, swap_params,) = _sDAI_FRAX(counter, cacheParams, false);
-
-        } else if (tokenOut_ == address(s.USDC) || tokenOut_ == address(s.USDe)) {
-            // IPoolCrv outPool = tokenOut_ == address(s.USDC) ? s.curvePool_FRAXUSDC : s.curvePool_FRAXUSDe;
-
-            // (route, swap_params) = _setCrvLeg(
-            //     3, 
-            //     counter, 
-            //     s.curvePool_sDAIFRAX, 
-            //     address(s.sDAI), 
-            //     address(s.FRAX), 
-            //     false, 
-            //     cacheParams
-            // );
-            // cacheParams = abi.encode(route, swap_params);
+        } else if (tokenOut_ == address(s.USDC) || tokenOut_ == address(s.USDe)) 
+        {
             (,,cacheParams) = _sDAI_FRAX(counter, cacheParams, true);
-            
-            counter++; // 1
-            // (route, swap_params) = _setCrvLeg(
-            //     5, 
-            //     counter, 
-            //     outPool, 
-            //     address(s.FRAX), 
-            //     tokenOut_, 
-            //     false, 
-            //     cacheParams
-            // );
+            counter++;
+
             (route, swap_params,) = _FRAX_tokenOut(counter, cacheParams, false, tokenOut_);
-
-        } else if (tokenOut_ == address(s.WETH) || tokenOut_ == address(s.WBTC)) {
-            // (route, swap_params) = _setCrvLeg(
-            //     3, 
-            //     counter, 
-            //     s.curvePool_sDAIFRAX, 
-            //     address(s.sDAI), 
-            //     address(s.FRAX), 
-            //     false, 
-            //     cacheParams
-            // );
-            // cacheParams = abi.encode(route, swap_params);
+        } else if (tokenOut_ == address(s.WETH) || tokenOut_ == address(s.WBTC)) 
+        {
             (,,cacheParams) = _sDAI_FRAX(counter, cacheParams, true);
-            
-            counter++; //1
-            // (route, swap_params) = _setCrvLeg(
-            //     5, 
-            //     counter, 
-            //     s.curvePool_FRAXUSDC, 
-            //     address(s.FRAX), 
-            //     address(s.USDC), 
-            //     false, 
-            //     cacheParams
-            // );
-            // cacheParams = abi.encode(route, swap_params);
+            counter++; 
 
             (,,cacheParams) = _FRAX_tokenOut(counter, cacheParams, true, address(s.USDC));
-
-            counter++; //2
-            // (route, swap_params) = _setCrvLeg(
-            //     7, 
-            //     counter, 
-            //     s.curvePool_USDCETHWBTC,
-            //     address(s.USDC), 
-            //     tokenOut_, 
-            //     false, 
-            //     cacheParams
-            // );
-
+            counter++; 
             (route, swap_params) = _USDC_ETH_WBTC(counter, tokenOut_, cacheParams);
         }
-
 
         pools;
     }
