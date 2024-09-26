@@ -303,12 +303,18 @@ abstract contract ozTrading is ozModifiers {
         IPoolCrv pool_,
         address tokenIn_,
         address tokenOut_
-    ) private view returns(uint[5] memory params) { 
-        console.logUint(3);
+    ) private view returns(uint[5] memory params) {
+        console.logUint(31);
 
         bool exepFRAXUSDC = address(pool_) == address(s.curvePool_FRAXUSDC);
+        uint coins;
 
-        if (exepFRAXUSDC || pool_.N_COINS() == 2) {
+        try pool_.coins(2) returns(address) {
+        } catch {
+            coins = 2;
+        }
+
+        if (coins == 2) {
             console.logUint(4);
 
             if (pool_.coins(0) == tokenIn_) {
@@ -318,7 +324,7 @@ abstract contract ozTrading is ozModifiers {
                 params[0] = uint(1);
                 params[1] = uint(0);
             }
-        } else if (pool_.N_COINS() == 3) {
+        } else {
             console.logUint(5);
 
             if (pool_.coins(0) == tokenIn_) {
@@ -354,7 +360,7 @@ abstract contract ozTrading is ozModifiers {
 
         console.logUint(8);
 
-        params[4] = exepFRAXUSDC ? 2 : pool_.N_COINS();
+        params[4] = address(pool_) == address(s.curvePool_USDCETHWBTC) ? 3 : 2;
 
         console.logUint(9);
     }

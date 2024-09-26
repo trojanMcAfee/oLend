@@ -180,7 +180,7 @@ contract ozMinter is ozTrading {
         // s.USDC.transfer(receiver_, amountOut);
 
         //balancer impl
-        if (token_ == Tokens.WETH) {
+        if (false) { //token_ == Tokens.WETH
 
             // console.logUint(1);
             // (
