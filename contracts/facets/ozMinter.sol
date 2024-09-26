@@ -152,7 +152,7 @@ contract ozMinter is ozTrading {
         // console.log('l: ', pools2.length);
         // console.log('');
         //------------
-
+        
 
         (
             address[11] memory route, 
@@ -266,6 +266,8 @@ contract ozMinter is ozTrading {
             tokenOut = address(s.WETH);
         } else if (token_ == Tokens.WBTC) {
             tokenOut = address(s.WBTC);
+        } else if (token_ == Tokens.USDe) {
+            tokenOut = address(s.USDe);
         }
     }
 

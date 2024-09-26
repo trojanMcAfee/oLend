@@ -106,7 +106,7 @@ struct ERC20s {
     address ozUSDtoken;
     address pendlePT; //sUSDe_PT
     address aaveVariableDebtUSDC;
-    address USDe; //not used
+    address USDe; 
     address wstETH;
     address WETH;
     address sDAI;
