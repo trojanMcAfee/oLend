@@ -147,7 +147,8 @@ enum Tokens {
     PT,
     sDAI,
     FRAX,
-    WBTC
+    WBTC,
+    sUSDe
 }
 
 enum CrvPoolType {

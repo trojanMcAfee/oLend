@@ -145,6 +145,11 @@ contract ozMinter is ozTrading {
             s.emptyLimit
         );
 
+        if (token_ == Tokens.sUSDe) {
+            s.sUSDe.transfer(receiver_, amountYieldTokenOut);
+            return amountYieldTokenOut;
+        }
+
         //------------
         //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
         //the most liquid pools are always used
@@ -268,6 +273,8 @@ contract ozMinter is ozTrading {
             tokenOut = address(s.WBTC);
         } else if (token_ == Tokens.USDe) {
             tokenOut = address(s.USDe);
+        } else if (token_ == Tokens.sUSDe) {
+            tokenOut = address(s.sUSDe);
         }
     }
 
