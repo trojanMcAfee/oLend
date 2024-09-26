@@ -98,6 +98,7 @@ contract DiamondInit {
         s.WETH = IERC20(tokens_.WETH);
         s.sDAI = IERC20(tokens_.sDAI);
         s.FRAX = IERC20 (tokens_.FRAX);
+        s.WBTC = IERC20 (tokens_.WBTC);
 
         //ERC4626s
         s.sUSDe = IERC4626(tokens_.sUSDe);

@@ -77,6 +77,7 @@ abstract contract StateVars is Test {
     IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 public constant sDAI = IERC20(0x83F20F44975D03b1b09e64809B757c47f942BEeA);
     IERC20 public constant FRAX = IERC20(0x853d955aCEf822Db058eb8505911ED77F175b99e);
+    IERC20 public constant WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
     //Diamond
     DiamondCutFacet cut;

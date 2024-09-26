@@ -57,6 +57,7 @@ struct AppStorage {
     IERC20 WETH;
     IERC20 sDAI;
     IERC20 FRAX;
+    IERC20 WBTC;
 
     //ERC4626s
     IERC4626 sUSDe;
@@ -112,6 +113,7 @@ struct ERC20s {
     address WETH;
     address sDAI;
     address FRAX;
+    address WBTC;
 }
 
 struct PendleConfig {
@@ -146,7 +148,8 @@ enum Tokens {
     USDC,
     PT,
     sDAI,
-    FRAX
+    FRAX,
+    WBTC
 }
 
 enum CrvPoolType {

@@ -266,6 +266,8 @@ contract ozMinter is ozTrading {
             tokenOut = address(s.WETH);
         } else if (token_ == Tokens.ETH) {
             tokenOut = s.ETH;
+        } else if (token_ == Tokens.WBTC) {
+            tokenOut = address(s.WBTC);
         }
     }
 

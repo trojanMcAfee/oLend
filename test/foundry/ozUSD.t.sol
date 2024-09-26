@@ -34,11 +34,24 @@ contract ozUSDTest is CoreMethods {
         _redeem_ozUSD(Tokens.USDC);
     }
 
-    //working on...
+    //done
     function test_redeem_ozUSD_for_WETH() public {
         _borrow_and_mint_ozUSD();
         _redeem_ozUSD(Tokens.WETH);
     }
+
+    //working on...
+    function test_redeem_ozUSD_for_WBTC() public {
+        _borrow_and_mint_ozUSD();
+        _redeem_ozUSD(Tokens.WBTC);
+    }
+
+
+    function test_redeem_ozUSD_for_ETH() public {
+        _borrow_and_mint_ozUSD();
+        _redeem_ozUSD(Tokens.ETH);
+    }
+
 
     function test_redeem_ozUSD_for_USDe() internal {
 

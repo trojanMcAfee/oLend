@@ -107,7 +107,8 @@ contract Setup is AppStorageTest {
             address(wstETH),
             address(WETH),
             address(sDAI),
-            address(FRAX)
+            address(FRAX),
+            address(WBTC)
         );
 
         PendleConfig memory pendle = PendleConfig(

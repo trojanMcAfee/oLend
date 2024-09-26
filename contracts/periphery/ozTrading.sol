@@ -169,14 +169,6 @@ abstract contract ozTrading is ozModifiers {
     }
 
     
-    // function _setCrvSwapTier(Tier tier_, address[11] memory route) private returns() {
-    //     route[3] = tier
-    // }
-
-    // struct CrvTier {
-    //     address pool;
-    //     address tokenOut;
-    // }
 
     function _setCrvLeg(
         uint routeIndex_, 
@@ -266,7 +258,7 @@ abstract contract ozTrading is ozModifiers {
             
             counter++; // 1
             (route, swap_params) = _setCrvLeg(5, counter, s.curvePool_FRAXUSDC, address(s.FRAX), address(s.USDC), false, cacheParams);
-        } else if (tokenOut_ == address(s.WETH)) {
+        } else if (tokenOut_ == address(s.WETH) || tokenOut_ == address(s.WBTC)) {
             (route, swap_params) = _setCrvLeg(
                 3, 
                 counter, 
@@ -288,7 +280,7 @@ abstract contract ozTrading is ozModifiers {
             counter++; //2
             (route, swap_params) = _setCrvLeg(
                 7, counter, s.curvePool_USDCETHWBTC,
-                address(s.USDC), address(s.WETH), false, cacheParams
+                address(s.USDC), tokenOut_, false, cacheParams
             );
 
 
