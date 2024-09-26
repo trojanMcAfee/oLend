@@ -51,10 +51,6 @@ contract CoreMethods is Setup {
         vm.startPrank(owner);
         ozUSD.approve(address(OZ), balanceOwnerOzUSD);
 
-        console.log('');
-        console.log('ozUSD bal owner - pre redeemption - not 0:', ozUSD.balanceOf(owner));
-        console.log('USDC bal owner - pre redeeption - 0: ', USDC.balanceOf(owner));
-
         //ACTION
         uint minAmountOut = 0;
         uint amountTokenOut = ozUSD.redeem(balanceOwnerOzUSD, minAmountOut, owner, owner, token_);
@@ -62,29 +58,11 @@ contract CoreMethods is Setup {
 
         //POST-CONDITIONS
         uint balanceOwnerTokenOut = tokenOut.balanceOf(owner);
-        console.log('USDC.balanceOf - post redeemption - not 0: ', USDC.balanceOf(owner));
-        console.log('tokenOut: ', address(tokenOut));
 
-        console.logUint(11);
         assertTrue(amountTokenOut > 0);
-        console.logUint(12);
         assertTrue(ozUSD.balanceOf(owner) == 0);
-
-        console.logUint(13);
-        console.log('balanceOwnerTokenOut: ', balanceOwnerTokenOut);
-        console.log('amountTokenOut: ', amountTokenOut);
-        console.log('sDAI.balanceOf - post redeemption - 0: ', sDAI.balanceOf(owner));
-
         assertTrue(balanceOwnerTokenOut == amountTokenOut);
-
-        console.logUint(14);
         assertTrue(tokenOut.balanceOf(address(OZ)) == 0);
-
-        console.log('');
-        console.log('amountTokenOut - same tokenOut bal owner: ', amountTokenOut);
-        console.log('ozUSD bal owner - post redeemption - 0:', ozUSD.balanceOf(owner));
-        console.log('tokenOut bal owner - post redeeption - not 0: ', tokenOut.balanceOf(owner));
-        console.log('tokenOut bal oz - post redeemption - 0: ', tokenOut.balanceOf(address(OZ)));
     }
 
 

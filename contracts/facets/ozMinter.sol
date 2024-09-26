@@ -40,6 +40,8 @@ contract ozMinter is ozTrading {
 
 
     function lend(uint amountIn_, bool isETH_) external payable checkAavePool {      
+        require(amountIn_ == msg.value, 'put a custom error');
+
         InternalAccount account = s.internalAccounts[msg.sender];
 
         if (address(s.internalAccounts[msg.sender]) == address(0)) {
@@ -135,7 +137,7 @@ contract ozMinter is ozTrading {
 
 
     function performRedemption(
-        uint amount_, 
+        uint amount_, //it should be s.pendlePT.balanceOf(address(this)) from below
         uint minAmountOut_,
         address owner_, 
         address receiver_, 
