@@ -254,16 +254,17 @@ abstract contract ozTrading is ozModifiers {
             // cacheParams = abi.encode(route, swap_params);
             (,,cacheParams) = _sDAI_FRAX(counter, cacheParams, true);
             
-            counter++; // 1
-            (route, swap_params) = _setCrvLeg(
-                5, 
-                counter, 
-                outPool, 
-                address(s.FRAX), 
-                tokenOut_, 
-                false, 
-                cacheParams
-            );
+            // counter++; // 1
+            // (route, swap_params) = _setCrvLeg(
+            //     5, 
+            //     counter, 
+            //     outPool, 
+            //     address(s.FRAX), 
+            //     tokenOut_, 
+            //     false, 
+            //     cacheParams
+            // );
+            (route, swap_params,) = _FRAX_tokenOut(counter + 1, cacheParams, false, outPool, tokenOut_);
 
         } else if (tokenOut_ == address(s.WETH) || tokenOut_ == address(s.WBTC)) {
             // (route, swap_params) = _setCrvLeg(
@@ -384,6 +385,9 @@ abstract contract ozTrading is ozModifiers {
         } 
     }
 
+    /**
+     * Refactor all these functions into one
+     */
     function _sDAI_FRAX(uint counter_, bytes memory cacheParams_, bool encode_) private view returns(
         address[11] memory route, 
         uint[5][5] memory swap_params,
@@ -400,6 +404,28 @@ abstract contract ozTrading is ozModifiers {
         );
 
         if (encode_) encodedParams = abi.encode(route, swap_params);
+    }
+
+    function _FRAX_tokenOut(
+        uint counter_, 
+        bytes memory cacheParams_, 
+        bool encode_,
+        IPoolCrv outPool_,
+        address tokenOut_
+    ) private view returns(
+        address[11] memory route, 
+        uint[5][5] memory swap_params,
+        bytes memory encodedParams
+    ) {
+        (route, swap_params) = _setCrvLeg(
+            5, 
+            counter_, 
+            outPool_, 
+            address(s.FRAX), 
+            tokenOut_, 
+            false, 
+            cacheParams_
+        );
     }
 
 
