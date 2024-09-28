@@ -96,7 +96,7 @@ contract Setup is AppStorageTest {
         );
 
         ERC20s memory tokens = ERC20s(
-            aWETHaddr, 
+            address(aWETH), 
             USDCaddr, 
             address(sUSDe), 
             USDTaddr, 
@@ -196,7 +196,7 @@ contract Setup is AppStorageTest {
         vm.label(address(sUSDe), 'sUSDe');
         vm.label(address(sUSDe), 'sUSDe');
         vm.label(address(YT), 'sUSDe_YT_26SEP');
-        vm.label(aWETHaddr, 'aWETH');
+        vm.label(address(aWETH), 'aWETH');
         vm.label(address(aavePool), 'aavePool');
         vm.label(USDCaddr, 'USDCproxy');
         vm.label(0x43506849D7C04F9138D1A2050bbF3A0c054402dd, 'USDCimpl');

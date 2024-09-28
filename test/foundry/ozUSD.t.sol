@@ -8,7 +8,7 @@ import {Tokens} from "../../contracts/AppStorage.sol";
 
 contract ozUSDTest is CoreMethods {
 
-    function test_lend() public {
+    function test_lend_ETH() public {
         _lend(owner, true);
     }
 

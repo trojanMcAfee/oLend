@@ -90,9 +90,13 @@ contract CoreMethods is Setup {
 
         address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
 
-        console.log('usdc debt oz - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
+        console.log('usdc debt intAcc - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
+        console.log('usdc debt oz - aave: ', aaveVariableDebtUSDC.balanceOf(address(0)));
         console.log('PT oz - pendle: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
-        console.log('usdc oz: ', USDC.balanceOf(address(OZ)));
+        console.log('aweth intAcc: ', aWETH.balanceOf(internalAccount));
+        console.log('aweth oz: ', aWETH.balanceOf(address(OZ)));
+
+        
 
     }
 

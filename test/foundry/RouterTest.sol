@@ -144,7 +144,6 @@ contract RouterTest is Setup {
         uint ethToSend = owner.balance;
         require(ethToSend == 100 * 1 ether, 'owner not enough balance');
 
-        IERC20 aWETH = IERC20(aWETHaddr);
         uint aWETH_bal = aWETH.balanceOf(address(OZ));
         console.log('aWETH_bal pre lend: ', aWETH_bal);
 
