@@ -52,7 +52,7 @@ contract CoreMethods is Setup {
         ozUSD.approve(address(OZ), balanceOwnerOzUSD);
 
         //ACTION
-        uint minAmountOut = 0;
+        uint minAmountOut = 0; //<--- has to be with slippage calculation
         uint amountTokenOut = ozUSD.redeem(balanceOwnerOzUSD, minAmountOut, owner, owner, token_);
         vm.stopPrank();
 
@@ -81,6 +81,8 @@ contract CoreMethods is Setup {
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
         assertTrue(balanceOwnerOzUSD > 0, '_borrow_and_mint_ozUSD: bal ozUSD is 0');
     }
+
+    //-------------
 
 
     function test_do_accounting() public {
