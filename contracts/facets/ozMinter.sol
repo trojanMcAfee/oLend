@@ -39,7 +39,7 @@ contract ozMinter is ozTrading {
     event NewAccountCreated(address account);
 
 
-    function lend(uint amountIn_, bool isETH_) external payable checkAavePool {      
+    function lend(uint amountIn_, address tokenIn_, bool isETH_) external payable checkAavePool {      
         require(amountIn_ == msg.value, 'put a custom error');
 
         InternalAccount account = s.internalAccounts[msg.sender];

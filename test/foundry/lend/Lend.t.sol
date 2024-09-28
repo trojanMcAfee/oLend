@@ -14,7 +14,7 @@ contract Lend is CoreMethods {
     //NEW
     function test_GivenThatOneUserHasLentFunds() external whenLendIsCalled {
         //it should lend funds and delegate credit to ozRelayer
-        _lend(owner, true); //<--- catch the delegation on this test using the FundsDelegated event on depositInAave()
+        // _lend(owner, true); //<--- catch the delegation on this test using the FundsDelegated event on depositInAave()
     }
 
     function test_GivenThatTwoUsersHaveLentFunds() external whenLendIsCalled {

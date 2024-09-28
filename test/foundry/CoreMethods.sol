@@ -19,16 +19,22 @@ contract CoreMethods is Setup {
 
     using PendlePYOracleLib for IPMarket;
 
-    function _lend(address user_, bool isETH_) internal {
-        uint currETHbal = user_.balance;
-        if (isETH_) assertTrue(currETHbal == 100 * 1 ether, '_lend: user_ not enough balance');
+    function _lend(address user_, uint amountIn_, bool isETH_) internal {
+        address tokenIn;
+
+        if (isETH_) {
+            assertTrue(amountIn_ == 100 * 1 ether, '_lend: user_ not enough balance');
+            tokenIn = ETH;
+        } else if (!isETH_) {
+            tokenIn = address(USDC);
+        }
 
         //User LENDS 
         vm.prank(user_);
         uint amountIn = 1 ether;
-        OZ.lend{value: amountIn}(amountIn, true);
+        OZ.lend{value: amountIn}(amountIn, tokenIn, true);
 
-        assertTrue(user_.balance == currETHbal - 1 ether);
+        assertTrue(user_.balance == amountIn_ - 1 ether);
 
         //---------
         // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
@@ -70,7 +76,7 @@ contract CoreMethods is Setup {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
-        _lend(owner, true);
+        _lend(owner, owner.balance, true);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
 
         //User BORROWS

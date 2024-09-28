@@ -97,4 +97,7 @@ abstract contract StateVars is Test {
     
     //System
     ozRelayer relayer;
+
+    //For testing purposes only
+    address ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 }

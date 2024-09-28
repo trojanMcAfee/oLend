@@ -12,7 +12,7 @@ interface ozIDiamond {
         bytes calldata _calldata
     ) external;
 
-    function lend(uint amountIn_, bool isETH_) external payable;
+    function lend(uint amountIn_, address tokenIn_, bool isETH_) external payable;
     function borrow(uint amount_, address receiver_) external;
     function performRedemption(
         uint amount_, 

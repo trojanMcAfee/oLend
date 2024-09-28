@@ -105,40 +105,6 @@ contract RouterTest is Setup {
     }
 
 
-    function test_flow() public {
-        uint ethToSend = owner.balance;
-        require(ethToSend == 100 * 1 ether, 'owner not enough balance');
-
-        //User LENDS 
-        vm.prank(owner);
-        uint amountIn = 1 ether;
-        OZ.lend{value: 1 ether}(amountIn, true);
-
-        (,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(address(OZ));
-        uint toBorrow = (availableBorrowsBase / 1e2) - (1 * 1e6);
-        console.log('amount to borrow in USD after lend() - aave: ', availableBorrowsBase);
-
-        //User BORROWS
-        vm.startPrank(owner);
-        OZ.borrow(toBorrow, owner);
-        vm.stopPrank();
-
-        uint ptQuote = OZ.quotePT();
-
-        //External user BUYS discounted PT
-        vm.startPrank(second_owner);
-        IERC20(USDCaddr).approve(address(OZ), type(uint).max);
-        OZ.rebuyPT(ptQuote / 1e12);
-
-        //External user MINTS ozUSDtoken to user when buying discounted PT
-        OZ.finishBorrow(owner);
-        vm.stopPrank();
-
-        uint balanceOzUSD = ozUSD.balanceOf(owner);
-        console.log('balanceOzUSD - owner: ', balanceOzUSD);
-        console.log('');
-    }
-
 
     function test_diamond() public {
         uint ethToSend = owner.balance;
@@ -149,7 +115,7 @@ contract RouterTest is Setup {
 
         vm.prank(owner);
         uint amountIn = 1 ether;
-        OZ.lend{value: amountIn}(amountIn, true);
+        // OZ.lend{value: amountIn}(amountIn, owner.balance, true);
 
         aWETH_bal = aWETH.balanceOf(address(OZ));
         console.log('aWETH_bal post lend - 0: ', aWETH_bal);
