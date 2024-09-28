@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 
-import {UserAccountData, BalancerSwapConfig, Tokens} from "../AppStorage.sol";
+import {UserAccountData, BalancerSwapConfig, Tokens, CrvSwapConfig} from "../AppStorage.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 // import {LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionTypeV3.sol";
 // import {LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
@@ -119,6 +119,8 @@ contract ozMinter is ozTrading {
         // s.openOrders.push(discountedPT);
     }
     
+
+
     function finishBorrow(address receiver_) external {
         uint balanceUSDC = s.USDC.balanceOf(address(this));
         s.ozUSD.mint(receiver_, balanceUSDC);
@@ -156,32 +158,38 @@ contract ozMinter is ozTrading {
             s.sUSDe.transfer(receiver_, amountYieldTokenOut);
             return amountYieldTokenOut;
         }
-
-        //------------
-        //Before the swap, gotta do a triage offchain using these functions below in order to guarantee that
-        //the most liquid pools are always used
-        // address[] memory pools2 = s.curveMetaRegistry.find_pools_for_coins(address(s.sUSDe), 0x83F20F44975D03b1b09e64809B757c47f942BEeA);
-        // console.log('l: ', pools2.length);
-        // console.log('');
-        //------------
         
 
-        (
-            address[11] memory route, 
-            uint[5][5] memory swap_params,
-            address[5] memory pools
-        ) = _createCrvSwap(_getTokenOut(token_));
+        // (
+        //     address[11] memory route, 
+        //     uint[5][5] memory swap_params,
+        //     address[5] memory pools
+        // ) = _createCrvSwap(_getTokenOut(token_));
+
+        (CrvSwapConfig memory swapConfig) = _getCrvSwap(_getTokenOut(token_));
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 
+        // uint amountOut = s.curveRouter.exchange(
+        //     route, 
+        //     swap_params, 
+        //     amountYieldTokenOut, 
+        //     minAmountOut_, 
+        //     pools, 
+        //     receiver_
+        // ); 
+
         uint amountOut = s.curveRouter.exchange(
-            route, 
-            swap_params, 
+            swapConfig.route, 
+            swapConfig.swap_params, 
             amountYieldTokenOut, 
             minAmountOut_, 
-            pools, 
+            swapConfig.pools, 
             receiver_
         ); 
+
+
+
 
         //balancer impl (in case Curve is not possible)
         // amountOut =  _swapBalancer(

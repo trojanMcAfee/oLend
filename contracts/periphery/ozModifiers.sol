@@ -17,6 +17,7 @@ contract ozModifiers is State {
         _;
     }
 
+    //for finding pools containing certain tokens
     modifier checkCrvMetaRegistry { //not used so far
         if (address(s.curveMetaRegistry) != s.curveAddressProvider.get_address(7)) {
             s.curveMetaRegistry = ICrvMetaRegistry(s.curveAddressProvider.get_address(7));

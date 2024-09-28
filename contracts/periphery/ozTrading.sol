@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 
-import {BalancerSwapConfig, CrvPoolType} from "../AppStorage.sol";
+import {BalancerSwapConfig, CrvPoolType, CrvSwapConfig} from "../AppStorage.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
@@ -209,14 +209,18 @@ abstract contract ozTrading is ozModifiers {
     }
 
 
-    //Refactor this using a loop and the indexes (branch -> crvRefactoring_1.1)
+    //Refactor this using a loop and the indexes (branch -> crvRefactoring_1.1 branch)
     function _createCrvSwap(address tokenOut_) internal view returns(
-        address[11] memory route,
-        uint[5][5] memory swap_params,
-        address[5] memory pools
+        // address[11] memory route,
+        // uint[5][5] memory swap_params,
+        // address[5] memory pools
+        CrvSwapConfig memory swapConfig
     ) {
         uint counter = 0;
         bytes memory cacheParams;
+        address[11] memory route;
+        uint[5][5] memory swap_params;
+        address[5] memory pools;
 
         (route, swap_params, cacheParams) = _sUSDe_sDAI(counter);
 
@@ -239,7 +243,24 @@ abstract contract ozTrading is ozModifiers {
             (route, swap_params) = _USDC_ETH_WBTC(counter, tokenOut_, cacheParams);
         }
 
-        pools;
+        swapConfig = CrvSwapConfig(route, swap_params, pools);
+    }
+
+
+    function _getCrvSwap(address tokenOut_) internal view returns(CrvSwapConfig memory) {
+        if (tokenOut_ == address(s.sDAI)) {
+            return s.sUSDe_sDAI;
+        } else if (tokenOut_ == address(s.FRAX)) {
+            return s.sDAI_FRAX;
+        } else if (tokenOut_ == address(s.USDC)) {
+            return s.FRAX_USDC;
+        } else if (tokenOut_ == address(s.USDe)) {
+            return s.FRAX_USDe;
+        } else if (tokenOut_ == address(s.WETH)) {
+            return s.USDC_WETH;
+        } else if (tokenOut_ == address(s.WBTC)) {
+            return s.USDC_WBTC;
+        }
     }
 
 
@@ -248,9 +269,6 @@ abstract contract ozTrading is ozModifiers {
         address tokenIn_,
         address tokenOut_
     ) private view returns(uint[5] memory params) {
-        console.logUint(31);
-
-        // bool exepFRAXUSDC = address(pool_) == address(s.curvePool_FRAXUSDC);
         uint coins;
 
         try pool_.coins(2) returns(address) {
@@ -259,8 +277,6 @@ abstract contract ozTrading is ozModifiers {
         }
 
         if (coins == 2) {
-            console.logUint(4);
-
             if (pool_.coins(0) == tokenIn_) {
                 params[0] = uint(0);
                 params[1] = uint(1);
@@ -269,8 +285,6 @@ abstract contract ozTrading is ozModifiers {
                 params[1] = uint(0);
             }
         } else {
-            console.logUint(5);
-
             if (pool_.coins(0) == tokenIn_) {
                 params[0] = uint(0);
             } else if (pool_.coins(1) == tokenIn_) {
@@ -279,8 +293,6 @@ abstract contract ozTrading is ozModifiers {
                 params[0] = uint(2);
             }
 
-            console.logUint(6);
-
             if (pool_.coins(0) == tokenOut_) {
                 params[1] = uint(0);
             } else if (pool_.coins(1) == tokenOut_) {
@@ -288,25 +300,19 @@ abstract contract ozTrading is ozModifiers {
             } else if (pool_.coins(2) == tokenOut_) {
                 params[1] = uint(2);
             }
-
-            console.logUint(7);
         }
 
         params[2] = uint(1);
 
         if (tokenIn_ == address(s.sUSDe) || tokenIn_ == address(s.FRAX)) {
-            params[3] = uint(CrvPoolType.STABLE); //could be TWO_COIN for sUSDe-sDAI
+            params[3] = uint(CrvPoolType.STABLE); 
         } else if (tokenIn_ == address(s.sDAI)) {
             params[3] = uint(CrvPoolType.STABLE);
         } else if (tokenIn_ == address(s.USDC)) {
             params[3] = uint(CrvPoolType.TRICRYPTO);
         }
 
-        console.logUint(8);
-
         params[4] = address(pool_) == address(s.curvePool_USDCETHWBTC) ? 3 : 2;
-
-        console.logUint(9);
     }
 
 

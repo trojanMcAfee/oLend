@@ -16,7 +16,16 @@ import { IERC165 } from "../interfaces/IERC165.sol";
 
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
-import {AppStorage, AaveConfig, ERC20s, PendleConfig, SysConfig, BalancerConfig, CurveConfig} from "../AppStorage.sol";
+import {
+    AppStorage, 
+    AaveConfig, 
+    ERC20s, 
+    PendleConfig, 
+    SysConfig, 
+    BalancerConfig, 
+    CurveConfig,
+    CrvSwapConfig
+} from "../AppStorage.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {IERC4626} from "../../lib/forge-std/src/interfaces/IERC4626.sol";
@@ -27,13 +36,14 @@ import {ozRelayer} from "../ozRelayer.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IPool as IPoolBal, IVault} from "../interfaces/IBalancer.sol";
 import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "../interfaces/ICurve.sol";
+import {ozTrading} from "../periphery/ozTrading.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
 
-contract DiamondInit {    
+contract DiamondInit is ozTrading {    
 
-    AppStorage private s;
+    // AppStorage private s;
 
     
     function init(
@@ -86,6 +96,13 @@ contract DiamondInit {
         s.curvePool_FRAXUSDC = IPoolCrv(curve_.curvePool_FRAXUSDC);
         s.curvePool_USDCETHWBTC = IPoolCrv(curve_.curvePool_USDCETHWBTC);
         s.curvePool_FRAXUSDe = IPoolCrv(curve_.curvePool_FRAXUSDe);
+
+        s.sUSDe_sDAI = _createCrvSwap(tokens_.sDAI);
+        s.sDAI_FRAX = _createCrvSwap(tokens_.FRAX);
+        s.FRAX_USDC = _createCrvSwap(tokens_.USDC);
+        s.FRAX_USDe = _createCrvSwap(tokens_.USDe);
+        s.USDC_WETH = _createCrvSwap(tokens_.WETH);
+        s.USDC_WBTC = _createCrvSwap(tokens_.WBTC);
 
         //ERC20s and ERC4626
         s.aWETH = IERC20(tokens_.aWETH);

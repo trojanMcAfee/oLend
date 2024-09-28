@@ -46,6 +46,13 @@ struct AppStorage {
     IPoolCrv curvePool_USDCETHWBTC;
     IPoolCrv curvePool_FRAXUSDe;
 
+    CrvSwapConfig sUSDe_sDAI;
+    CrvSwapConfig sDAI_FRAX;
+    CrvSwapConfig FRAX_USDC;
+    CrvSwapConfig FRAX_USDe;
+    CrvSwapConfig USDC_WETH;
+    CrvSwapConfig USDC_WBTC;
+
     //ERC20s
     IERC20 aWETH;
     IERC20 USDC;
@@ -158,4 +165,10 @@ enum CrvPoolType {
     STABLE,
     TWO_COIN,
     TRICRYPTO
+}
+
+struct CrvSwapConfig {
+    address[11] route;
+    uint[5][5] swap_params;
+    address[5] pools;
 }
