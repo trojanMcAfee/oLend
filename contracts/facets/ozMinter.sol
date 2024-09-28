@@ -118,21 +118,6 @@ contract ozMinter is ozTrading {
     
 
 
-    function finishBorrow(address receiver_) external {
-        uint balanceUSDC = s.USDC.balanceOf(address(this));
-        s.ozUSD.mint(receiver_, balanceUSDC);
-    }
-
-
-     function rebuyPT(uint amountInUSDC_) external { //do this with a signature instead of approve()
-        require(s.openOrders.length > 0, 'rebuyPT: error');
-        
-        s.USDC.transferFrom(msg.sender, address(this), amountInUSDC_);
-
-        uint balancePT = s.pendlePT.balanceOf(address(this));
-        s.pendlePT.transfer(msg.sender, balancePT);
-}
-
 
 
     function performRedemption(
@@ -184,15 +169,6 @@ contract ozMinter is ozTrading {
 
 
     //************* */
-
-    
-
-    function _calculateDiscountPT() private returns(uint) {
-        bytes memory data = abi.encodeWithSelector(ozIDiamond.quotePT.selector);
-        data = s.OZ.functionDelegateCall(data);
-        return abi.decode(data, (uint));
-    }
-
     function _createUser() private returns(InternalAccount) {
         InternalAccount account = new InternalAccount(address(s.relayer));
         s.internalAccounts[msg.sender] = account;

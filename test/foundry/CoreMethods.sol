@@ -82,66 +82,6 @@ contract CoreMethods is Setup {
         assertTrue(balanceOwnerOzUSD > 0, '_borrow_and_mint_ozUSD: bal ozUSD is 0');
     }
 
-    
-
-    function _borrow_and_mint_ozUSD2() internal {
-        //User LENDS 
-        assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
-
-        _lend(owner, true);
-        UserAccountData memory userData = OZ.getUserAccountData(owner);
-
-        //User BORROWS
-        vm.startPrank(owner);
-        OZ.borrow(userData.availableBorrowsBase, owner);
-        vm.stopPrank();
-
-        console.log('');
-        console.log('--- in _borrow_and_mint ---');
-
-        uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
-        console.log('ozUSD owner bal: ', balanceOwnerOzUSD);
-
-        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
-        console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(twapDuration));
-        console.log('');
-        //get this ^ assetRate and then come up with ozUSD - PT - asset rate, which will
-        //be used for redeeming from ozUSD to the user token
-
-
-        //User REDEEMS ozUSD
-        _redeem_ozUSD();
-
-        revert('here3');
-
-
-        uint ptQuote = OZ.quotePT();
-
-        //External user BUYS discounted PT
-        vm.startPrank(second_owner);
-        USDC.approve(address(OZ), type(uint).max);
-        OZ.rebuyPT(ptQuote / 1e12);
-
-        //External user MINTS ozUSDtoken to user when buying discounted PT
-        OZ.finishBorrow(owner);
-        vm.stopPrank();
-
-        uint balanceOzUSD = ozUSD.balanceOf(owner);
-        console.log('balanceOzUSD - owner: ', balanceOzUSD);
-        assertTrue(balanceOzUSD > 0, '_borrow_and_mint_ozUSD: is 0');
-        //put this ^ as a ratio of discount to face-value PT instead of balanceOzUSD > 0
-    }
-
-
-    function _redeem_ozUSD() internal {
-        uint ozUSDbalance = ozUSD.balanceOf(owner);
-        console.log('ozUSDbalance: ', ozUSDbalance);
-
-        vm.startPrank(owner);
-        ozUSD.approve(address(OZ), ozUSDbalance);
-        // ozUSD.redeem(ozUSDbalance, owner);
-    }
-
 
     function test_do_accounting() public {
         _borrow_and_mint_ozUSD();

@@ -154,7 +154,7 @@ contract Setup is AppStorageTest {
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
-            length = 6;
+            length = 4;
         } else if (id_ == 3) { // ozOracle
             length = 3;
         }
@@ -174,9 +174,7 @@ contract Setup is AppStorageTest {
             selectors[0] = minter.lend.selector;
             selectors[1] = minter.borrow.selector;
             selectors[2] = minter.performRedemption.selector;
-            selectors[3] = minter.rebuyPT.selector;
-            selectors[4] = minter.finishBorrow.selector;
-            selectors[5] = minter.getUserAccountData.selector;
+            selectors[3] = minter.getUserAccountData.selector;
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
             selectors[1] = oracle.getVariableBorrowAPY.selector;
