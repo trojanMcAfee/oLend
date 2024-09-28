@@ -78,18 +78,8 @@ contract CoreMethods is Setup {
         OZ.borrow(userData.availableBorrowsBase, owner);
         vm.stopPrank();
 
-        console.log('');
-        console.log('--- in _borrow_and_mint ---');
-
         uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
-        console.log('ozUSD owner bal: ', balanceOwnerOzUSD);
         assertTrue(balanceOwnerOzUSD > 0, '_borrow_and_mint_ozUSD: bal ozUSD is 0');
-
-        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
-        console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(twapDuration));
-        console.log('');
-        //get this ^ assetRate and then come up with ozUSD - PT - asset rate, which will
-        //be used for redeeming from ozUSD to the user token
     }
 
     

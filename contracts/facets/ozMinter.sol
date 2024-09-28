@@ -109,10 +109,7 @@ contract ozMinter is ozTrading {
             s.emptyLimit
         );
 
-        console.log('netPtOut ***** - owned by oz: ', netPtOut);
         uint internalAccountDebtUSDC = s.aaveVariableDebtUSDC.balanceOf(address(internalAccount));
-        console.log('usdc debt - int acc: ', internalAccountDebtUSDC);
-
         s.ozUSD.mint(receiver_, internalAccountDebtUSDC);
 
         // uint discountedPT = _calculateDiscountPT();
@@ -159,15 +156,7 @@ contract ozMinter is ozTrading {
             return amountYieldTokenOut;
         }
         
-
-        // CrvSwapConfig memory swapConfig = _createCrvSwap(_getTokenOut(token_));
         CrvSwapConfig memory swapConfig = _getCrvSwap(_getTokenOut(token_));
-
-        console.log('*******');
-        console.log(swapConfig.route[0]);
-        console.log(swapConfig.route[1]);
-        console.log(swapConfig.route[2]);
-        console.log('*******');
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut); 
 
@@ -179,9 +168,6 @@ contract ozMinter is ozTrading {
             swapConfig.pools, 
             receiver_
         ); 
-
-
-
 
         //balancer impl (in case Curve is not possible)
         // amountOut =  _swapBalancer(
