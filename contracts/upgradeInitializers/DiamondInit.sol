@@ -122,6 +122,10 @@ contract DiamondInit is ozTrading {
         s.OZ = sys_.OZ;
         s.relayer = ozRelayer(sys_.relayer);
 
+        for (uint i=0; i < sys_.authTokens.length; i++) {
+            s.authTokens[sys_.authTokens[i]] = true;
+        }
+
 
 
 

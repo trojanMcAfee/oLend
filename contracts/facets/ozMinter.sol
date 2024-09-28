@@ -24,6 +24,7 @@ import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
+import "../OZErrors.sol";
 
 import "forge-std/console.sol";
 
@@ -38,9 +39,10 @@ contract ozMinter is ozTrading {
 
     event NewAccountCreated(address account);
 
-
+    
     function lend(uint amountIn_, address tokenIn_, bool isETH_) external payable checkAavePool {      
         require(amountIn_ == msg.value, 'put a custom error');
+        if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
         InternalAccount account = s.internalAccounts[msg.sender];
 
@@ -49,10 +51,13 @@ contract ozMinter is ozTrading {
             emit NewAccountCreated(address(account));
         }
 
-        if (isETH_) {
-            account.depositInAave{value: msg.value}();
-            return;
-        }
+        // if (isETH_) {
+            // account.depositInAave{value: msg.value}();
+        //     return;
+        // }
+
+        account.depositInAave{value: isETH_ ? msg.value : 0}(amountIn_, isETH_);
+
     }
 
 

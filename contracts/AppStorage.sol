@@ -74,16 +74,15 @@ struct AppStorage {
     //System config
     address OZ;
     uint[] openOrders;
-    // mapping(address user => address account) internalAccounts
     mapping(address user => InternalAccount account) internalAccounts;
-    // uint accountSequence; //<-- used in _createUser()
     ozRelayer relayer;
-
+    mapping(address token => bool isAuth) authTokens;
 }
 
 struct SysConfig {
     address OZ; 
     address relayer;
+    address[] authTokens;
 }
 
 struct AaveConfig {

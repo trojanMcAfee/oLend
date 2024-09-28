@@ -21,11 +21,16 @@ contract InternalAccount {
         relayer = relayer_;
     }
 
-    function depositInAave() public payable { //<--- change depositInAave to depositAndDelegatex
+    function depositInAave(uint amountIn_, bool isETH_) public payable { //<--- change depositInAave to depositAndDelegate
+        
         IWrappedTokenGatewayV3 aaveGW = IWrappedTokenGatewayV3(0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9);
         IPool aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
 
-        aaveGW.depositETH{value: msg.value}(address(aavePool), address(this), 0);
+        if (isETH_) {
+            aaveGW.depositETH{value: msg.value}(address(aavePool), address(this), 0); //0 --> refCode
+        } else {
+            //working on depositing USDC on aave
+        }
 
         ICreditDelegationToken aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         aaveVariableDebtUSDCDelegate.approveDelegation(relayer, type(uint).max);

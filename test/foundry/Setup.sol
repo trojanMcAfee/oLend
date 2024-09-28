@@ -135,7 +135,10 @@ contract Setup is AppStorageTest {
             address(curvePool_FRAXUSDe)
         );
 
-        SysConfig memory sys = SysConfig(address(OZ), address(relayer));
+        address[] memory authTokens = new address[](1);
+        authTokens[0] = address(USDC);
+
+        SysConfig memory sys = SysConfig(address(OZ), address(relayer), authTokens);
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 
