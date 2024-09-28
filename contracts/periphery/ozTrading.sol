@@ -210,12 +210,7 @@ abstract contract ozTrading is ozModifiers {
 
 
     //Refactor this using a loop and the indexes (branch -> crvRefactoring_1.1 branch)
-    function _createCrvSwap(address tokenOut_) internal view returns(
-        // address[11] memory route,
-        // uint[5][5] memory swap_params,
-        // address[5] memory pools
-        CrvSwapConfig memory swapConfig
-    ) {
+    function _createCrvSwap(address tokenOut_) internal view returns(CrvSwapConfig memory swapConfig) {
         uint counter = 0;
         bytes memory cacheParams;
         address[11] memory route;

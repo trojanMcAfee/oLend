@@ -160,26 +160,16 @@ contract ozMinter is ozTrading {
         }
         
 
-        // (
-        //     address[11] memory route, 
-        //     uint[5][5] memory swap_params,
-        //     address[5] memory pools
-        // ) = _createCrvSwap(_getTokenOut(token_));
+        // CrvSwapConfig memory swapConfig = _createCrvSwap(_getTokenOut(token_));
+        CrvSwapConfig memory swapConfig = _getCrvSwap(_getTokenOut(token_));
 
-        CrvSwapConfig memory swapConfig = _createCrvSwap(_getTokenOut(token_));
+        console.log('*******');
+        console.log(swapConfig.route[0]);
+        console.log(swapConfig.route[1]);
+        console.log(swapConfig.route[2]);
+        console.log('*******');
 
-        // (CrvSwapConfig memory swapConfig) = _getCrvSwap(_getTokenOut(token_));
-
-        s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
-
-        // uint amountOut = s.curveRouter.exchange(
-        //     route, 
-        //     swap_params, 
-        //     amountYieldTokenOut, 
-        //     minAmountOut_, 
-        //     pools, 
-        //     receiver_
-        // ); 
+        s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut); 
 
         uint amountOut = s.curveRouter.exchange(
             swapConfig.route, 

@@ -61,6 +61,23 @@ contract DiamondInit is ozTrading {
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
 
+        //ERC20s and ERC4626
+        s.aWETH = IERC20(tokens_.aWETH);
+        s.USDC = IERC20(tokens_.USDC);
+        s.USDT = IERC20(tokens_.USDT);
+        s.ozUSD = IERC20(tokens_.ozUSDtoken);
+        s.pendlePT = IERC20(tokens_.pendlePT); //sUSDe_PT
+        s.aaveVariableDebtUSDC = IERC20(tokens_.aaveVariableDebtUSDC);
+        s.USDe = IERC20(tokens_.USDe);
+        s.wstETH = IERC20(tokens_.wstETH);
+        s.WETH = IERC20(tokens_.WETH);
+        s.sDAI = IERC20(tokens_.sDAI);
+        s.FRAX = IERC20 (tokens_.FRAX);
+        s.WBTC = IERC20 (tokens_.WBTC);
+
+        //ERC4626s
+        s.sUSDe = IERC4626(tokens_.sUSDe);
+
         //Aave
         s.aaveGW = IWrappedTokenGatewayV3(aave_.aaveGW);
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
@@ -103,23 +120,6 @@ contract DiamondInit is ozTrading {
         s.FRAX_USDe = _createCrvSwap(tokens_.USDe);
         s.USDC_WETH = _createCrvSwap(tokens_.WETH);
         s.USDC_WBTC = _createCrvSwap(tokens_.WBTC);
-
-        //ERC20s and ERC4626
-        s.aWETH = IERC20(tokens_.aWETH);
-        s.USDC = IERC20(tokens_.USDC);
-        s.USDT = IERC20(tokens_.USDT);
-        s.ozUSD = IERC20(tokens_.ozUSDtoken);
-        s.pendlePT = IERC20(tokens_.pendlePT); //sUSDe_PT
-        s.aaveVariableDebtUSDC = IERC20(tokens_.aaveVariableDebtUSDC);
-        s.USDe = IERC20(tokens_.USDe);
-        s.wstETH = IERC20(tokens_.wstETH);
-        s.WETH = IERC20(tokens_.WETH);
-        s.sDAI = IERC20(tokens_.sDAI);
-        s.FRAX = IERC20 (tokens_.FRAX);
-        s.WBTC = IERC20 (tokens_.WBTC);
-
-        //ERC4626s
-        s.sUSDe = IERC4626(tokens_.sUSDe);
 
         //System config
         s.OZ = sys_.OZ;
