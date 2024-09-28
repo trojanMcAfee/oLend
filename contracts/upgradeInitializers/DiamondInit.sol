@@ -42,9 +42,6 @@ import {console} from "../../lib/forge-std/src/Test.sol";
 
 
 contract DiamondInit is ozTrading {    
-
-    // AppStorage private s;
-
     
     function init(
         AaveConfig memory aave_, 

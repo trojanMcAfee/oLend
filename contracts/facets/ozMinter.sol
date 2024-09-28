@@ -156,7 +156,7 @@ contract ozMinter is ozTrading {
             return amountYieldTokenOut;
         }
         
-        CrvSwapConfig memory swapConfig = _getCrvSwap(_getTokenOut(token_));
+        CrvSwapConfig memory swapConfig = _getCrvSwap(token_);
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut); 
 
@@ -213,25 +213,6 @@ contract ozMinter is ozTrading {
      */
     function _applyDiscount(uint singleState_) private view returns(uint) {
         return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
-    }
-
-    //this could be a mapping
-    function _getTokenOut(Tokens token_) private view returns(address tokenOut) {
-        if (token_ == Tokens.sDAI) {
-            tokenOut = address(s.sDAI);
-        } else if (token_ == Tokens.FRAX) {
-            tokenOut = address(s.FRAX);
-        } else if (token_ == Tokens.USDC) {
-            tokenOut = address(s.USDC);
-        } else if (token_ == Tokens.WETH) {
-            tokenOut = address(s.WETH);
-        } else if (token_ == Tokens.WBTC) {
-            tokenOut = address(s.WBTC);
-        } else if (token_ == Tokens.USDe) {
-            tokenOut = address(s.USDe);
-        } else if (token_ == Tokens.sUSDe) {
-            tokenOut = address(s.sUSDe);
-        }
     }
 
 

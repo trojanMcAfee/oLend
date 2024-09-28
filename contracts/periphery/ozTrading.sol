@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 
-import {BalancerSwapConfig, CrvPoolType, CrvSwapConfig} from "../AppStorage.sol";
+import {BalancerSwapConfig, CrvPoolType, CrvSwapConfig, Tokens} from "../AppStorage.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
@@ -242,18 +242,18 @@ abstract contract ozTrading is ozModifiers {
     }
 
 
-    function _getCrvSwap(address tokenOut_) internal view returns(CrvSwapConfig memory) {
-        if (tokenOut_ == address(s.sDAI)) {
+    function _getCrvSwap(Tokens token_) internal view returns(CrvSwapConfig memory) {
+        if (token_ == Tokens.sDAI) {
             return s.sUSDe_sDAI;
-        } else if (tokenOut_ == address(s.FRAX)) {
+        } else if (token_ == Tokens.FRAX) {
             return s.sDAI_FRAX;
-        } else if (tokenOut_ == address(s.USDC)) {
+        } else if (token_ == Tokens.USDC) {
             return s.FRAX_USDC;
-        } else if (tokenOut_ == address(s.USDe)) {
+        } else if (token_ == Tokens.USDe) {
             return s.FRAX_USDe;
-        } else if (tokenOut_ == address(s.WETH)) {
+        } else if (token_ == Tokens.WETH) {
             return s.USDC_WETH;
-        } else if (tokenOut_ == address(s.WBTC)) {
+        } else if (token_ == Tokens.WBTC) {
             return s.USDC_WBTC;
         }
     }
