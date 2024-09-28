@@ -166,7 +166,9 @@ contract ozMinter is ozTrading {
         //     address[5] memory pools
         // ) = _createCrvSwap(_getTokenOut(token_));
 
-        (CrvSwapConfig memory swapConfig) = _getCrvSwap(_getTokenOut(token_));
+        CrvSwapConfig memory swapConfig = _createCrvSwap(_getTokenOut(token_));
+
+        // (CrvSwapConfig memory swapConfig) = _getCrvSwap(_getTokenOut(token_));
 
         s.sUSDe.approve(address(s.curveRouter), amountYieldTokenOut);
 
