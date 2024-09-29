@@ -89,7 +89,11 @@ contract Setup is AppStorageTest {
         }
 
         //Deploy initial diamond cut
-        AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider, address(aaveVariableDebtUSDCDelegate));
+        AaveConfig memory aave = AaveConfig(
+            address(aaveGW), 
+            address(aavePoolProvider), 
+            address(aaveVariableDebtUSDCDelegate)
+        );
 
         BalancerConfig memory balancer = BalancerConfig(
             address(balancerPool_wstETHsUSDe),
@@ -213,7 +217,7 @@ contract Setup is AppStorageTest {
         vm.label(0x8903dBFFcA66b3Fbc027aC81912ea64Fa61A5219, 'ActionSwapYTV3_pendle');
         vm.label(0x41717de714Db8630F02Dea8f6A39C73A5b5C7df1, 'BorrowLogic_aave');
         vm.label(0x34339f94350EC5274ea44d0C37DAe9e968c44081, 'PoolInstance_aave');
-        vm.label(aavePoolProvider, 'aavePoolProvider');
+        vm.label(address(aavePoolProvider), 'aavePoolProvider');
         vm.label(address(relayer), 'ozRelayer');
         vm.label(0xE592427A0AEce92De3Edee1F18E0157C05861564, 'swapRouter_uni');
         vm.label(0x7858E59e0C01EA06Df3aF3D20aC7B0003275D4Bf, 'USDC-USDT_uni');

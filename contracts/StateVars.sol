@@ -28,6 +28,7 @@ import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";
 import {ozIUSD} from "../contracts/interfaces/ozIUSD.sol";   
 import {ICrvRouter, ICrvAddressProvider, IPoolCrv} from "../contracts/interfaces/ICurve.sol";   
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
+import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -45,8 +46,8 @@ abstract contract StateVars is Test {
     uint16 ptDiscount = 500; //5%
 
     //Aave
-    address public constant aaveGW = 0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9;
-    address public constant aavePoolProvider = 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e;
+    IWrappedTokenGatewayV3 public constant aaveGW = IWrappedTokenGatewayV3(0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9);
+    IPoolAddressesProvider public constant aavePoolProvider = IPoolAddressesProvider(0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e);
     IPool public constant aavePool = IPool(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2); 
     ICreditDelegationToken public constant aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
     IERC20 public constant aaveVariableDebtUSDC = IERC20(0x72E95b8931767C79bA4EeE721354d6E99a61D004);

@@ -20,7 +20,7 @@ contract InternalAccount {
     IPool aavePool;
     ICreditDelegationToken aaveVariableDebtUSDCDelegate;
 
-    event FundsDelegated(address indexed internalAccount, uint indexed amount);
+    event FundsDelegated(address internalAccount, address depositToken, uint amount);
 
     constructor(
         address relayer_, 
@@ -36,9 +36,6 @@ contract InternalAccount {
         aaveVariableDebtUSDCDelegate = ICreditDelegationToken(aaveDebtUsdc_);
     }
 
-    function internalApprove(address tokenIn_, uint amountIn_) external {
-        IERC20(tokenIn_).approve(address(aavePool), amountIn_);
-    }
 
     function depositInAave(uint amountIn_, address tokenIn_) public payable { //<--- change depositInAave to depositAndDelegate
         if (tokenIn_ == ETH) {
@@ -48,10 +45,9 @@ contract InternalAccount {
             aavePool.supply(tokenIn_, amountIn_, address(this), 0);
         }
 
-        // ICreditDelegationToken aaveVariableDebtUSDCDelegate = ICreditDelegationToken(0x72E95b8931767C79bA4EeE721354d6E99a61D004);
         aaveVariableDebtUSDCDelegate.approveDelegation(relayer, type(uint).max);
         
-        emit FundsDelegated(address(this), msg.value);
+        emit FundsDelegated(address(this), tokenIn_, amountIn_);
     }
 
 }

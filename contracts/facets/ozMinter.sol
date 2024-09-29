@@ -51,11 +51,7 @@ contract ozMinter is ozTrading {
             emit NewAccountCreated(address(account));
         }
 
-        if (tokenIn_ != s.ETH) {
-            console.log('sender in lend - usdc: ', msg.sender);
-            IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
-            // account.internalApprove(tokenIn_, amountIn_);
-        }
+        if (tokenIn_ != s.ETH) IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
 
         account.depositInAave{value: isETH_ ? msg.value : 0}(amountIn_, tokenIn_);
 
