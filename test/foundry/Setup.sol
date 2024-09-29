@@ -89,7 +89,7 @@ contract Setup is AppStorageTest {
         }
 
         //Deploy initial diamond cut
-        AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider);
+        AaveConfig memory aave = AaveConfig(aaveGW, aavePoolProvider, address(aaveVariableDebtUSDCDelegate));
 
         BalancerConfig memory balancer = BalancerConfig(
             address(balancerPool_wstETHsUSDe),

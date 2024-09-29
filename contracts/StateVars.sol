@@ -27,6 +27,7 @@ import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICredit
 import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";  
 import {ozIUSD} from "../contracts/interfaces/ozIUSD.sol";   
 import {ICrvRouter, ICrvAddressProvider, IPoolCrv} from "../contracts/interfaces/ICurve.sol";   
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 
 import {console} from "../lib/forge-std/src/Test.sol";
 

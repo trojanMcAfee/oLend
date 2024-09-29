@@ -46,8 +46,8 @@ contract CoreMethods is Setup {
             assertTrue(user_.balance == initUserBal - 1 ether, 'custom -_lend: userBal  check');
         } else {
             address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-            uint bal = aUSDC.balanceOf(internalAccount);
-            console.log('aUSDC bal intAcc: ', bal);
+            console.log('aUSDC bal intAcc: ', aUSDC.balanceOf(internalAccount));
+            assertTrue(aUSDC.balanceOf(internalAccount) == amountIn_, "custom - _lend: aUSDC check");
         }
 
         //---------

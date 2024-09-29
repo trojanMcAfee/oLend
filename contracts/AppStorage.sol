@@ -13,6 +13,7 @@ import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IERC4626} from "../lib/forge-std/src/interfaces/IERC4626.sol";
 import {IPool as IPoolBal, IVault, IAsset} from "./interfaces/IBalancer.sol";
 import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "./interfaces/ICurve.sol";
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 
 
 struct AppStorage {
@@ -21,6 +22,7 @@ struct AppStorage {
     IPoolAddressesProvider aavePoolProvider;
     IPool aavePool;
     uint VARIABLE_RATE;
+    ICreditDelegationToken aaveVariableDebtUSDCDelegate;
 
     //Pendle
     IPAllActionV3 pendleRouter;
@@ -90,6 +92,7 @@ struct SysConfig {
 struct AaveConfig {
     address aaveGW;
     address aavePoolProvider;
+    address aaveVariableDebtUSDCDelegate;
 }
 
 struct BalancerConfig {

@@ -37,6 +37,7 @@ import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IPool as IPoolBal, IVault} from "../interfaces/IBalancer.sol";
 import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "../interfaces/ICurve.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
+import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -80,6 +81,7 @@ contract DiamondInit is ozTrading {
         s.aavePoolProvider = IPoolAddressesProvider(aave_.aavePoolProvider);
         s.VARIABLE_RATE = 2;
         s.aavePool = IPool(s.aavePoolProvider.getPool());
+        s.aaveVariableDebtUSDCDelegate = ICreditDelegationToken(aave_.aaveVariableDebtUSDCDelegate);
 
         //Balancer
         s.balancerPool_wstETHsUSDe = IPoolBal(balancer_.balancerPool_wstETHsUSDe);

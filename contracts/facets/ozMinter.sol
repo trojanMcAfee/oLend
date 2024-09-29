@@ -51,11 +51,6 @@ contract ozMinter is ozTrading {
             emit NewAccountCreated(address(account));
         }
 
-        // if (isETH_) {
-            // account.depositInAave{value: msg.value}();
-        //     return;
-        // }
-
         if (tokenIn_ != s.ETH) {
             console.log('sender in lend - usdc: ', msg.sender);
             IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
@@ -183,8 +178,10 @@ contract ozMinter is ozTrading {
     function _createUser() private returns(InternalAccount) {
         InternalAccount account = new InternalAccount(
             address(s.relayer),
+            s.ETH,
             address(s.aaveGW),
-            address(s.aavePool)
+            address(s.aavePool),
+            address(s.aaveVariableDebtUSDCDelegate)
         );
         s.internalAccounts[msg.sender] = account;
         return account;
