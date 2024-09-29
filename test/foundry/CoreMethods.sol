@@ -21,20 +21,29 @@ contract CoreMethods is Setup {
 
     function _lend(address user_, uint amountIn_, bool isETH_) internal {
         address tokenIn;
+        uint msgValue;
 
         if (isETH_) {
-            assertTrue(amountIn_ == 100 * 1 ether, '_lend: user_ not enough balance');
             tokenIn = ETH;
-        } else if (!isETH_) {
+            msgValue = amountIn_;
+
+            assertTrue(amountIn_ == 1 ether, 'assert -_lend: user_ not enough balance');
+        } else {
             tokenIn = address(USDC);
+            msgValue = 0;
         }
 
         //User LENDS 
         vm.prank(user_);
-        uint amountIn = 1 ether;
-        OZ.lend{value: amountIn}(amountIn, tokenIn, true);
+        // uint amountIn = 1 ether;
+        // console.log('msgValue: ', msgValue);
+        // console.log('amountIn_: ', amountIn_);
+        // console.log('msg.value: ', msg.value);
+        uint initUserBal = user_.balance;
 
-        assertTrue(user_.balance == amountIn_ - 1 ether);
+        OZ.lend{value: msgValue}(amountIn_, tokenIn, true);
+
+        assertTrue(user_.balance == initUserBal - 1 ether, 'assert -_lend: userBal  check');
 
         //---------
         // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
