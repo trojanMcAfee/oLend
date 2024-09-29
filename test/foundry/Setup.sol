@@ -53,7 +53,6 @@ contract Setup is AppStorageTest {
     function _runDiamondSetup() private {
         //Deploy facets and init diamond config
         cut = new DiamondCutFacet();
-        // loupe = new DiamondLoupeFacet();
         ownership = new OwnershipFacet();
         minter = new ozMinter();
         ozDiamond = new Diamond(owner, address(cut));
@@ -162,7 +161,7 @@ contract Setup is AppStorageTest {
     ) private view returns(IDiamondCut.FacetCut memory cut) {
         uint length;
         if (id_ == 0) { //ozLoupe
-            length = 6;
+            length = 7;
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
@@ -180,6 +179,7 @@ contract Setup is AppStorageTest {
             selectors[3] = loupe.facetAddress.selector;
             selectors[4] = loupe.supportsInterface.selector;
             selectors[5] = loupe.getUserAccountData.selector;
+            selectors[6] = loupe.getBorrowingRates.selector;
         } else if (id_ == 1) {
             selectors[0] = ownership.transferOwnership.selector;
             selectors[1] = ownership.owner.selector;
@@ -187,7 +187,6 @@ contract Setup is AppStorageTest {
             selectors[0] = minter.lend.selector;
             selectors[1] = minter.borrow.selector;
             selectors[2] = minter.performRedemption.selector;
-            // selectors[3] = minter.getUserAccountData.selector;
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
             selectors[1] = oracle.getVariableBorrowAPY.selector;
