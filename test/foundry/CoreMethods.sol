@@ -90,7 +90,7 @@ contract CoreMethods is Setup {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
 
-        _lend(owner, owner.balance, true);
+        _lend(owner, 1 ether, true);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
 
         //User BORROWS
