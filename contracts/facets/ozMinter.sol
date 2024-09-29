@@ -40,10 +40,11 @@ contract ozMinter is ozTrading {
     event NewAccountCreated(address account);
 
     
-    function lend(uint amountIn_, address tokenIn_, bool isETH_) external payable checkAavePool {      
-        if (isETH_) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
+    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+        if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
+        uint msgValue;
         InternalAccount account = s.internalAccounts[msg.sender];
 
         if (address(s.internalAccounts[msg.sender]) == address(0)) {
@@ -51,9 +52,14 @@ contract ozMinter is ozTrading {
             emit NewAccountCreated(address(account));
         }
 
-        if (tokenIn_ != s.ETH) IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
+        if (tokenIn_ != s.ETH) {
+            IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
+            msgValue = 0;
+        } else {
+            msgValue = msg.value;
+        }
 
-        account.depositInAave{value: isETH_ ? msg.value : 0}(amountIn_, tokenIn_);
+        account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
 
     }
 

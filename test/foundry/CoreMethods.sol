@@ -19,30 +19,30 @@ contract CoreMethods is Setup {
 
     using PendlePYOracleLib for IPMarket;
 
-    function _lend(address user_, uint amountIn_, bool isETH_) internal {
-        address tokenIn;
+    function _lend(address user_, address tokenIn_, uint amountIn_) internal {
+        // address tokenIn;
         uint msgValue;
 
-        if (isETH_) {
-            tokenIn = ETH;
+        if (tokenIn_ == ETH) {
+            // tokenIn = tokenIn_;
             msgValue = amountIn_;
 
             assertTrue(amountIn_ == 1 ether, 'custom -_lend: user_ not enough balance');
         } else {
-            tokenIn = address(USDC);
+            // tokenIn = address(USDC);
             msgValue = 0;
 
             vm.prank(user_);
-            IERC20(tokenIn).approve(address(OZ), amountIn_);
+            IERC20(tokenIn_).approve(address(OZ), amountIn_);
         }
 
         //User LENDS 
         vm.prank(user_);
         uint initUserBal = user_.balance;
 
-        OZ.lend{value: msgValue}(amountIn_, tokenIn, isETH_);
+        OZ.lend{value: msgValue}(amountIn_, tokenIn_);
 
-        if (isETH_) {
+        if (tokenIn_ == ETH) {
             assertTrue(user_.balance == initUserBal - 1 ether, 'custom -_lend: userBal  check');
         } else {
             address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
@@ -88,9 +88,9 @@ contract CoreMethods is Setup {
 
     function _borrow_and_mint_ozUSD() internal {
         //User LENDS 
-        assertTrue(ozUSD.balanceOf(owner) == 0, '_borrow_and_mint_ozUSD: not 0');
+        assertTrue(ozUSD.balanceOf(owner) == 0, 'custom - _borrow_and_mint_ozUSD: not 0');
 
-        _lend(owner, 1 ether, true);
+        _lend(owner, ETH, 1 ether);
         UserAccountData memory userData = OZ.getUserAccountData(owner);
 
         //User BORROWS
