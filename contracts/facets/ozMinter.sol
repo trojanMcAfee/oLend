@@ -56,7 +56,7 @@ contract ozMinter is ozTrading {
         //     return;
         // }
 
-        account.depositInAave{value: isETH_ ? msg.value : 0}(amountIn_, isETH_);
+        account.depositInAave{value: isETH_ ? msg.value : 0}(amountIn_, tokenIn_);
 
     }
 
@@ -175,7 +175,11 @@ contract ozMinter is ozTrading {
 
     //************* */
     function _createUser() private returns(InternalAccount) {
-        InternalAccount account = new InternalAccount(address(s.relayer));
+        InternalAccount account = new InternalAccount(
+            address(s.relayer),
+            address(s.aaveGW),
+            address(s.aavePool)
+        );
         s.internalAccounts[msg.sender] = account;
         return account;
     }

@@ -77,12 +77,14 @@ struct AppStorage {
     mapping(address user => InternalAccount account) internalAccounts;
     ozRelayer relayer;
     mapping(address token => bool isAuth) authTokens;
+    address ETH;
 }
 
 struct SysConfig {
     address OZ; 
     address relayer;
     address[] authTokens;
+    address ETH;
 }
 
 struct AaveConfig {
