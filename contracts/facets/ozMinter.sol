@@ -20,7 +20,7 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {InternalAccount} from "../InternalAccount.sol";
-import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+// import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
@@ -34,7 +34,7 @@ contract ozMinter is ozTrading {
 
     using SafeERC20 for IERC20;
     using Address for address;
-    using FixedPointMathLib for uint;
+    // using FixedPointMathLib for uint;
     using HelpersLib for address;
 
     event NewAccountCreated(address account);
@@ -47,7 +47,7 @@ contract ozMinter is ozTrading {
         uint msgValue;
         InternalAccount account = s.internalAccounts[msg.sender];
 
-        if (address(s.internalAccounts[msg.sender]) == address(0)) {
+        if (address(account) == address(0)) {
             account = _createUser();
             emit NewAccountCreated(address(account));
         }
@@ -64,27 +64,27 @@ contract ozMinter is ozTrading {
     }
 
 
-    function getUserAccountData(address user_) external view returns(UserAccountData memory userData) {
-        InternalAccount account = s.internalAccounts[user_];
+    // function getUserAccountData(address user_) external view returns(UserAccountData memory userData) {
+    //     InternalAccount account = s.internalAccounts[user_];
         
-        (
-            uint totalCollateralBase,
-            uint totalDebtBase,
-            uint availableBorrowsBase,
-            uint currentLiquidationThreshold,
-            uint ltv,
-            uint healthFactor
-        ) = s.aavePool.getUserAccountData(address(account));
+    //     (
+    //         uint totalCollateralBase,
+    //         uint totalDebtBase,
+    //         uint availableBorrowsBase,
+    //         uint currentLiquidationThreshold,
+    //         uint ltv,
+    //         uint healthFactor
+    //     ) = s.aavePool.getUserAccountData(address(account));
 
-        userData = UserAccountData(
-            totalCollateralBase,
-            totalDebtBase,
-            _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
-            currentLiquidationThreshold,
-            ltv,
-            healthFactor
-        );
-    }
+    //     userData = UserAccountData(
+    //         totalCollateralBase,
+    //         totalDebtBase,
+    //         _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
+    //         currentLiquidationThreshold,
+    //         ltv,
+    //         healthFactor
+    //     );
+    // }
 
 
 
@@ -201,9 +201,9 @@ contract ozMinter is ozTrading {
      *
      * availableBorrowsBase's is almost the same as PT value in assetRate. 
      */
-    function _applyDiscount(uint singleState_) private view returns(uint) {
-        return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
-    }
+    // function _applyDiscount(uint singleState_) private view returns(uint) {
+    //     return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
+    // }
 
 
 }

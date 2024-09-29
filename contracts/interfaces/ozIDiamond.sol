@@ -26,4 +26,5 @@ interface ozIDiamond {
 
     function getVariableBorrowAPY() external view returns(uint);
     function getVariableSupplyAPY() external view returns(uint);
+
 }

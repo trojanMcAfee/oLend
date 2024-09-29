@@ -33,19 +33,21 @@ contract CoreMethods is Setup {
         }
 
         //User LENDS 
-        vm.prank(user_);
         uint initUserBal = user_.balance;
-
+        vm.prank(user_);
 
         // vm.expectEmit();
+        // emit InternalAccount.FundsDelegated();
         OZ.lend{value: msgValue}(amountIn_, tokenIn_);
+        UserAccountData memory userData = OZ.getUserAccountData(user_);
+        console.log('intAcc2: ', userData.internalAccount);
+        // revert('here77');
 
         if (tokenIn_ == ETH) {
             assertTrue(user_.balance == initUserBal - 1 ether, 'custom -_lend: userBal  check');
         } else {
-            address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-            console.log('aUSDC bal intAcc: ', aUSDC.balanceOf(internalAccount));
-            assertTrue(aUSDC.balanceOf(internalAccount) == amountIn_, "custom - _lend: aUSDC check");
+            console.log('aUSDC bal intAc2: ', aUSDC.balanceOf(0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294));
+            assertTrue(aUSDC.balanceOf(userData.internalAccount) == amountIn_, "custom - _lend: aUSDC check");
         }
 
         //---------

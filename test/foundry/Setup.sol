@@ -6,7 +6,7 @@ pragma solidity 0.8.26;
 // import {StateVars} from "../../contracts/StateVars.sol";
 
 import {DiamondCutFacet} from "../../contracts/facets/DiamondCutFacet.sol";
-import {DiamondLoupeFacet} from "../../contracts/facets/DiamondLoupeFacet.sol";
+// import {DiamondLoupeFacet} from "../../contracts/facets/DiamondLoupeFacet.sol";
 import {OwnershipFacet} from "../../contracts/facets/OwnershipFacet.sol";
 import {ozMinter} from "../../contracts/facets/ozMinter.sol";
 import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
@@ -21,6 +21,7 @@ import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 import {ozOracle} from "../../contracts/facets/ozOracle.sol";
 import {ozIUSD} from "../../contracts/interfaces/ozIUSD.sol";
 import {AppStorageTest} from "./AppStorageTest.sol";
+import {ozLoupe} from "../../contracts/facets/ozLoupe.sol";
 
 import "forge-std/console.sol";
 
@@ -52,13 +53,14 @@ contract Setup is AppStorageTest {
     function _runDiamondSetup() private {
         //Deploy facets and init diamond config
         cut = new DiamondCutFacet();
-        loupe = new DiamondLoupeFacet();
+        // loupe = new DiamondLoupeFacet();
         ownership = new OwnershipFacet();
         minter = new ozMinter();
         ozDiamond = new Diamond(owner, address(cut));
         OZ = ozIDiamond(address(ozDiamond));
         initDiamond = new DiamondInit();
         oracle = new ozOracle();
+        loupe = new ozLoupe();
 
         //Deploys ozUSDtoken
         ozUSDimpl = new ozUSDtoken(address(OZ));
@@ -103,7 +105,7 @@ contract Setup is AppStorageTest {
 
         ERC20s memory tokens = ERC20s(
             address(aWETH), 
-            USDCaddr, 
+            address(USDC), 
             address(sUSDe), 
             USDTaddr, 
             address(ozUSDproxy), 
@@ -159,12 +161,12 @@ contract Setup is AppStorageTest {
         uint id_
     ) private view returns(IDiamondCut.FacetCut memory cut) {
         uint length;
-        if (id_ == 0) {
-            length = 5;
+        if (id_ == 0) { //ozLoupe
+            length = 6;
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
-            length = 4;
+            length = 3;
         } else if (id_ == 3) { // ozOracle
             length = 3;
         }
@@ -177,6 +179,7 @@ contract Setup is AppStorageTest {
             selectors[2] = loupe.facetAddresses.selector;
             selectors[3] = loupe.facetAddress.selector;
             selectors[4] = loupe.supportsInterface.selector;
+            selectors[5] = loupe.getUserAccountData.selector;
         } else if (id_ == 1) {
             selectors[0] = ownership.transferOwnership.selector;
             selectors[1] = ownership.owner.selector;
@@ -184,7 +187,7 @@ contract Setup is AppStorageTest {
             selectors[0] = minter.lend.selector;
             selectors[1] = minter.borrow.selector;
             selectors[2] = minter.performRedemption.selector;
-            selectors[3] = minter.getUserAccountData.selector;
+            // selectors[3] = minter.getUserAccountData.selector;
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
             selectors[1] = oracle.getVariableBorrowAPY.selector;
@@ -235,6 +238,7 @@ contract Setup is AppStorageTest {
         vm.label(address(sDAI), 'sDAI');
         vm.label(address(FRAX), 'FRAX');
         vm.label(second_owner, 'secondOwner');
+        vm.label(address(loupe), 'ozLoupe');
     }
 
 

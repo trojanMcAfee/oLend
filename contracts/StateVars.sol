@@ -13,7 +13,7 @@ import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfac
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 import {DiamondCutFacet} from "../contracts/facets/DiamondCutFacet.sol";
-import {DiamondLoupeFacet} from "../contracts/facets/DiamondLoupeFacet.sol";
+import {ozLoupe} from "../contracts/facets/ozLoupe.sol";
 import {OwnershipFacet} from "../contracts/facets/OwnershipFacet.sol";
 import {ozMinter} from "../contracts/facets/ozMinter.sol";
 import {Diamond} from "./Diamond.sol";
@@ -84,7 +84,7 @@ abstract contract StateVars is Test {
 
     //Diamond
     DiamondCutFacet cut;
-    DiamondLoupeFacet loupe;
+    ozLoupe loupe;
     OwnershipFacet ownership;
     Diamond ozDiamond;
     ozIDiamond OZ;

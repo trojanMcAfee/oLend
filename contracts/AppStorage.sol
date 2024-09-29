@@ -135,6 +135,7 @@ struct PendleConfig {
 }
 
 struct UserAccountData {
+    address internalAccount;
     uint totalCollateralBase;
     uint totalDebtBase;
     uint availableBorrowsBase;
