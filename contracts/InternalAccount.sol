@@ -20,7 +20,11 @@ contract InternalAccount {
     IPool aavePool;
     ICreditDelegationToken aaveVariableDebtUSDCDelegate;
 
-    event FundsDelegated(address internalAccount, address depositToken, uint amount);
+    event FundsDelegated(
+        address indexed internalAccount, 
+        address indexed depositToken, 
+        uint indexed amount
+    );
 
     constructor(
         address relayer_, 

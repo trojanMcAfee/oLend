@@ -20,16 +20,12 @@ contract CoreMethods is Setup {
     using PendlePYOracleLib for IPMarket;
 
     function _lend(address user_, address tokenIn_, uint amountIn_) internal {
-        // address tokenIn;
         uint msgValue;
 
         if (tokenIn_ == ETH) {
-            // tokenIn = tokenIn_;
             msgValue = amountIn_;
-
             assertTrue(amountIn_ == 1 ether, 'custom -_lend: user_ not enough balance');
         } else {
-            // tokenIn = address(USDC);
             msgValue = 0;
 
             vm.prank(user_);
@@ -40,6 +36,8 @@ contract CoreMethods is Setup {
         vm.prank(user_);
         uint initUserBal = user_.balance;
 
+
+        // vm.expectEmit();
         OZ.lend{value: msgValue}(amountIn_, tokenIn_);
 
         if (tokenIn_ == ETH) {
