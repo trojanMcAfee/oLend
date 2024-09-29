@@ -30,7 +30,7 @@ contract Setup is AppStorageTest {
     function setUp() public {
         vm.createSelectFork(vm.rpcUrl('ethereum'), currentBlock); //blockOwnerPT + 100 / currentBlock
         _dealTokens();
-        
+
         sUSDe.approve(address(pendleRouter), type(uint).max);
         YT.approve(address(pendleRouter), type(uint).max);
 
@@ -230,6 +230,7 @@ contract Setup is AppStorageTest {
         vm.label(address(USDe), 'USDe');
         vm.label(address(sDAI), 'sDAI');
         vm.label(address(FRAX), 'FRAX');
+        vm.label(second_owner, 'secondOwner');
     }
 
 

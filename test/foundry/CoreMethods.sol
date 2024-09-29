@@ -27,23 +27,28 @@ contract CoreMethods is Setup {
             tokenIn = ETH;
             msgValue = amountIn_;
 
-            assertTrue(amountIn_ == 1 ether, 'assert -_lend: user_ not enough balance');
+            assertTrue(amountIn_ == 1 ether, 'custom -_lend: user_ not enough balance');
         } else {
             tokenIn = address(USDC);
             msgValue = 0;
+
+            vm.prank(user_);
+            IERC20(tokenIn).approve(address(OZ), amountIn_);
         }
 
         //User LENDS 
         vm.prank(user_);
-        // uint amountIn = 1 ether;
-        // console.log('msgValue: ', msgValue);
-        // console.log('amountIn_: ', amountIn_);
-        // console.log('msg.value: ', msg.value);
         uint initUserBal = user_.balance;
 
-        OZ.lend{value: msgValue}(amountIn_, tokenIn, true);
+        OZ.lend{value: msgValue}(amountIn_, tokenIn, isETH_);
 
-        assertTrue(user_.balance == initUserBal - 1 ether, 'assert -_lend: userBal  check');
+        if (isETH_) {
+            assertTrue(user_.balance == initUserBal - 1 ether, 'custom -_lend: userBal  check');
+        } else {
+            address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
+            uint bal = aUSDC.balanceOf(internalAccount);
+            console.log('aUSDC bal intAcc: ', bal);
+        }
 
         //---------
         // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;

@@ -5,7 +5,8 @@ pragma solidity 0.8.26;
 import {IWrappedTokenGatewayV3} from "@aave/periphery-v3/contracts/misc/interfaces/IWrappedTokenGatewayV3.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
-import {IERC20} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+// import {IERC20} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {IERC20} from "./interfaces/IERC20.sol";
 // import {ozRelayer} from "./ozRelayer.sol";
 
 import "forge-std/console.sol";
@@ -25,6 +26,10 @@ contract InternalAccount {
         aavePool = IPool(aavePool_);
     }
 
+    function internalApprove(address tokenIn_, uint amountIn_) external {
+        IERC20(tokenIn_).approve(address(aavePool), amountIn_);
+    }
+
     function depositInAave(uint amountIn_, address tokenIn_) public payable { //<--- change depositInAave to depositAndDelegate
         
         // IWrappedTokenGatewayV3 aaveGW = IWrappedTokenGatewayV3(0x893411580e590D62dDBca8a703d61Cc4A8c7b2b9);
@@ -34,6 +39,7 @@ contract InternalAccount {
         if (tokenIn_ == ETH) {
             aaveGW.depositETH{value: msg.value}(address(aavePool), address(this), 0); //0 --> refCode
         } else {
+            IERC20(tokenIn_).approve(address(aavePool), amountIn_);
             aavePool.supply(tokenIn_, amountIn_, address(this), 0);
         }
 

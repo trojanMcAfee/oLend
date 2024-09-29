@@ -13,7 +13,7 @@ contract ozUSDTest is CoreMethods {
     }
 
     function test_lend_USDC() public {
-        _lend(owner, USDC.balanceOf(second_owner), false);
+        _lend(second_owner, USDC.balanceOf(second_owner), false);
     }
 
     function test_borrow_and_mint_ozUSD() public {

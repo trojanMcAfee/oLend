@@ -41,7 +41,7 @@ contract ozMinter is ozTrading {
 
     
     function lend(uint amountIn_, address tokenIn_, bool isETH_) external payable checkAavePool {      
-        require(amountIn_ == msg.value, 'put a custom error');
+        if (isETH_) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
         InternalAccount account = s.internalAccounts[msg.sender];
@@ -55,6 +55,12 @@ contract ozMinter is ozTrading {
             // account.depositInAave{value: msg.value}();
         //     return;
         // }
+
+        if (tokenIn_ != s.ETH) {
+            console.log('sender in lend - usdc: ', msg.sender);
+            IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
+            // account.internalApprove(tokenIn_, amountIn_);
+        }
 
         account.depositInAave{value: isETH_ ? msg.value : 0}(amountIn_, tokenIn_);
 

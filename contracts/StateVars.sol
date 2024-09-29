@@ -72,7 +72,7 @@ abstract contract StateVars is Test {
     IERC20 public constant aWETH = IERC20(0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8);
     address public constant USDCaddr = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     IERC20 public constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    address public constant aUSDCaddr = 0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c;
+    IERC20 public constant aUSDC = IERC20(0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c);
     address public constant USDTaddr = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
     IERC20 public constant wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
