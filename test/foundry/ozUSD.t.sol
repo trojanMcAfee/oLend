@@ -73,7 +73,7 @@ contract ozUSDTest is CoreMethods {
         console.log('');
 
         uint borrowingRate = OZ.getBorrowingRates(address(USDC));
-        console.log('borrowingRate aave usdc: ', borrowingRate);
+        console.log('borrowingRate aave usdc - apy: ', borrowingRate);
     }
 
 }

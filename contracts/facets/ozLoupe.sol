@@ -7,6 +7,7 @@ import {UserAccountData} from "../AppStorage.sol";
 import {DiamondLoupeFacet} from "./DiamondLoupeFacet.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 // import {DataTypes} from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
+import {HelpersLib} from "../libraries/HelpersLib.sol";
 
 import "forge-std/console.sol";
 
@@ -14,6 +15,7 @@ import "forge-std/console.sol";
 contract ozLoupe is State, DiamondLoupeFacet {
 
     using FixedPointMathLib for uint;
+    using HelpersLib for uint;
 
 
     function getUserAccountData(address user_) external view returns(UserAccountData memory userData) {
@@ -40,41 +42,15 @@ contract ozLoupe is State, DiamondLoupeFacet {
     }
 
 
+
+
     function getBorrowingRates(address token_) external view returns(uint) {
         uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
-        console.log('apy: ', computeAPY(uint(currentVariableBorrowRate)));
+        console.log('apr: ', uint(currentVariableBorrowRate) / 1e9);
 
-        return uint(currentVariableBorrowRate);
+        return uint(currentVariableBorrowRate / 1e9).computeAPY();
     }
 
-    function computeAPY(uint256 aprScaled) private pure returns (uint256) {
-        uint256 SCALING_FACTOR = 1e18;
-
-        uint256 x = aprScaled; // x_scaled
-        uint256 sum = SCALING_FACTOR; // T0
-        uint256 term = x; // T1
-        sum += term;
-
-        // Compute x^2 / 2!
-        term = (term * x) / SCALING_FACTOR; // x^2 scaled
-        term = term / 2;
-        sum += term;
-
-        // Compute x^3 / 3!
-        term = (term * x) / SCALING_FACTOR; // x^3 scaled
-        term = term / 3;
-        sum += term;
-
-        // Compute x^4 / 4!
-        term = (term * x) / SCALING_FACTOR; // x^4 scaled
-        term = term / 4;
-        sum += term;
-
-        // Additional terms can be added similarly if needed
-
-        uint256 apyScaled = sum - SCALING_FACTOR;
-        return apyScaled;
-    }
 
 
     /**
