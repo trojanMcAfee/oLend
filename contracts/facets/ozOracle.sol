@@ -15,6 +15,7 @@ contract ozOracle is State {
 
     using PendlePYOracleLib for IPMarket;
     using FixedPointMathLib for uint;
+    using ABDKMath64x64 for *;
 
     /**
      * Returns the quote in stable (USDC, USDe) of the PT with the 
@@ -29,51 +30,37 @@ contract ozOracle is State {
     }
 
     function getVariableBorrowAPY() external view returns(uint) {
-        //get PT's APY
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
-        // uint secsInDay = 86400;
         uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
-        // uint scalingFactor = 1e18;
 
-        console.log('');
-        console.log('ptPrice: ', ptPrice);
-        console.log('ytPrice: ', ytPrice);
-        console.log('s.sUSDeMarket.expiry(): ', s.sUSDeMarket.expiry());
-        console.log('block.timestamp: ', block.timestamp);
-        console.log('daysToExp ***: ', daysToExp);
-        console.log('');
-
-        uint ytScaled = ytPrice * 1e18;
+        uint ytScaled = ytPrice * s.SCALE;
         uint ratio = ytScaled / ptPrice;
-        uint base = 1e18 + ratio;
-        uint exponent = (365 * 1e18) / daysToExp;
-
-        //----------
-        // uint result = base ** (exponent / scalingFactor);
-        // uint x = result - scalingFactor;
-
-        // uint apy = ( (1 + ytPrice / ptPrice) ** (365 / daysToExp) ) - 1;
-        //----------
+        uint base = s.SCALE + ratio;
+        uint exponent = (365 * s.SCALE) / daysToExp;
 
         // Convert scaled values to ABDKMath64x64 format
-        int128 abdkBase = ABDKMath64x64.divu(base, 1e18); // base / 1e18
-        int128 abdkExponent = ABDKMath64x64.divu(exponent, 1e18); // exponent / 1e18
+        int128 abdkBase = base.divu(s.SCALE); 
+        int128 abdkExponent = exponent.divu(s.SCALE); 
 
         // Step 7: Compute natural logarithm of the base
-        int128 lnBase = ABDKMath64x64.ln(abdkBase);
+        // int128 lnBase = abdkBase.ln();
 
         // Step 8: Multiply exponent with ln(base)
-        int128 exponentLnBase = ABDKMath64x64.mul(abdkExponent, lnBase);
+        uint apy = abdkExponent
+            .mul(abdkBase.ln())
+            .exp()
+            .mulu(s.SCALE)
+            - s.SCALE;
 
         // Step 9: Compute the exponential
-        int128 abdkResult = ABDKMath64x64.exp(exponentLnBase);
+        // int128 abdkResult = exponentLnBase.exp();
 
         // Step 10: Convert the result back to uint256 and scale it
-        uint256 apyPlusOne = ABDKMath64x64.mulu(abdkResult, 1e18);
+        // uint256 apyPlusOne = abdkResult.mulu(s.SCALE);
 
         // Step 11: Subtract scalingFactor to get the APY
-        uint256 apy = apyPlusOne - 1e18;
+        // uint256 apy = apyPlusOne - s.SCALE;
         
         return apy;        
     }

@@ -80,6 +80,7 @@ struct AppStorage {
     ozRelayer relayer;
     mapping(address token => bool isAuth) authTokens;
     address ETH;
+    uint SCALE;
 }
 
 struct SysConfig {
