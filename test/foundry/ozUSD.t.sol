@@ -66,17 +66,20 @@ contract ozUSDTest is CoreMethods {
         console.log('intAcc: ', internalAccount);
 
         console.log('usdc debt intAcc - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
-        console.log('usdc debt oz - aave: ', aaveVariableDebtUSDC.balanceOf(address(0)));
         console.log('PT oz - pendle: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
         console.log('aweth intAcc: ', aWETH.balanceOf(internalAccount));
-        console.log('aweth oz: ', aWETH.balanceOf(address(OZ)));
         console.log('');
 
         uint borrowingRate = OZ.getBorrowingRates(address(USDC));
         console.log('borrowingRate aave usdc - apy: ', borrowingRate);
 
-        uint supplyRate = OZ.getSupplyRates(address(WETH));
-        console.log('supplyRate aave weth - apy: ', supplyRate);
+        (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(address(WETH));
+        console.log('supplyRate aave weth - apy: ', aaveSupplyAPY);
+        console.log('pendle fixed apy: ', pendleFixedAPY);
+        console.log('');
+
+        uint netAPY = OZ.getVariableSupplyAPY();
+        console.log('netAPY: ', netAPY);
     }
 
 }

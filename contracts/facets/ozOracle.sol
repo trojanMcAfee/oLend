@@ -61,8 +61,13 @@ contract ozOracle is State {
             - s.SCALE;        
     }
 
+    //getNetAPY
     function getVariableSupplyAPY() external view returns(uint) {
+        uint aaveBorrowAPY = getBorrowingRates(address(s.WETH));
+        (uint aaveSupplyAPY, uint pendleFixedAPY) = getSupplyRates(address(s.USDC));
+        uint netAPY = pendleFixedAPY + aaveSupplyAPY - aaveBorrowAPY;
 
+        return netAPY;
     }
 
 
