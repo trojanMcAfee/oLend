@@ -8,6 +8,7 @@ import {AppStorage} from "../AppStorage.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {State} from "../State.sol";
 import {ABDKMath64x64} from "../libraries/ABDKMath64x64.sol";
+import {HelpersLib} from "../libraries/HelpersLib.sol";
 
 import "forge-std/console.sol";
 
@@ -16,6 +17,7 @@ contract ozOracle is State {
     using PendlePYOracleLib for IPMarket;
     using FixedPointMathLib for uint;
     using ABDKMath64x64 for *;
+    using HelpersLib for uint;
 
     /**
      * Returns the quote in stable (USDC, USDe) of the PT with the 
@@ -29,7 +31,7 @@ contract ozOracle is State {
         quoteInStable = balancePTinAsset - discount;
     }
 
-    function getVariableBorrowAPY() external view returns(uint) {
+    function getVariableBorrowAPY() external view returns(uint apy) {
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
         uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
@@ -43,30 +45,41 @@ contract ozOracle is State {
         int128 abdkBase = base.divu(s.SCALE); 
         int128 abdkExponent = exponent.divu(s.SCALE); 
 
-        // Step 7: Compute natural logarithm of the base
-        // int128 lnBase = abdkBase.ln();
-
-        // Step 8: Multiply exponent with ln(base)
-        uint apy = abdkExponent
+        /**
+        - Compute natural logarithm of the base.
+        - Multiply exponent with ln(base).
+        - Compute the exponential.
+        - Convert the result back to uint256 and scale it.
+        - Subtract SCALE to get the APY.
+         */
+        apy = abdkExponent
             .mul(abdkBase.ln())
             .exp()
             .mulu(s.SCALE)
-            - s.SCALE;
-
-        // Step 9: Compute the exponential
-        // int128 abdkResult = exponentLnBase.exp();
-
-        // Step 10: Convert the result back to uint256 and scale it
-        // uint256 apyPlusOne = abdkResult.mulu(s.SCALE);
-
-        // Step 11: Subtract scalingFactor to get the APY
-        // uint256 apy = apyPlusOne - s.SCALE;
-        
-        return apy;        
+            - s.SCALE;        
     }
 
     function getVariableSupplyAPY() external view returns(uint) {
 
+    }
+
+
+    function getBorrowingRates(address token_) external view returns(uint) {
+        uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
+
+        return uint(currentVariableBorrowRate / 1e9).computeAPY();
+    }
+
+
+    function getSupplyRates(address token_) external view returns(uint) {
+        uint aaveSupplyAPY = (uint(
+            s.aavePool
+            .getReserveData(token_)
+            .currentLiquidityRate)
+            / 1e9)
+            .computeAPY();
+
+        return aaveSupplyAPY;
     }
 
 }

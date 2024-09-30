@@ -18,7 +18,7 @@ import "forge-std/console.sol";
 contract ozLoupe is State, DiamondLoupeFacet {
 
     using FixedPointMathLib for uint;
-    using HelpersLib for uint;
+    // using HelpersLib for uint;
     // using ABDKMath64x64 for int;
 
 
@@ -46,20 +46,6 @@ contract ozLoupe is State, DiamondLoupeFacet {
     }
 
 
-
-
-    function getBorrowingRates(address token_) external view returns(uint) {
-        uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
-
-        return uint(currentVariableBorrowRate / 1e9).computeAPY();
-    }
-
-
-    function getSupplyRates(address token_) external view returns(uint) {
-        uint128 currentSupplyRate = s.aavePool.getReserveData(token_).currentLiquidityRate;
-
-        return uint(currentSupplyRate / 1e9).computeAPY();
-    }
 
 
     /**

@@ -161,13 +161,13 @@ contract Setup is AppStorageTest {
     ) private view returns(IDiamondCut.FacetCut memory cut) {
         uint length;
         if (id_ == 0) { //ozLoupe
-            length = 8;
+            length = 6;
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
             length = 3;
         } else if (id_ == 3) { // ozOracle
-            length = 3;
+            length = 5;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -179,8 +179,6 @@ contract Setup is AppStorageTest {
             selectors[3] = loupe.facetAddress.selector;
             selectors[4] = loupe.supportsInterface.selector;
             selectors[5] = loupe.getUserAccountData.selector;
-            selectors[6] = loupe.getBorrowingRates.selector;
-            selectors[7] = loupe.getSupplyRates.selector;
         } else if (id_ == 1) {
             selectors[0] = ownership.transferOwnership.selector;
             selectors[1] = ownership.owner.selector;
@@ -192,6 +190,8 @@ contract Setup is AppStorageTest {
             selectors[0] = oracle.quotePT.selector;
             selectors[1] = oracle.getVariableBorrowAPY.selector;
             selectors[2] = oracle.getVariableSupplyAPY.selector;
+            selectors[3] = oracle.getBorrowingRates.selector;
+            selectors[4] = oracle.getSupplyRates.selector;
         }
        
 
