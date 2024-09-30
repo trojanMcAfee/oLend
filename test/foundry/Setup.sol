@@ -161,7 +161,7 @@ contract Setup is AppStorageTest {
     ) private view returns(IDiamondCut.FacetCut memory cut) {
         uint length;
         if (id_ == 0) { //ozLoupe
-            length = 7;
+            length = 8;
         } else if (id_ == 1) {
             length = 2;
         } else if (id_ == 2) { // ozMinter
@@ -180,6 +180,7 @@ contract Setup is AppStorageTest {
             selectors[4] = loupe.supportsInterface.selector;
             selectors[5] = loupe.getUserAccountData.selector;
             selectors[6] = loupe.getBorrowingRates.selector;
+            selectors[7] = loupe.getSupplyRates.selector;
         } else if (id_ == 1) {
             selectors[0] = ownership.transferOwnership.selector;
             selectors[1] = ownership.owner.selector;
