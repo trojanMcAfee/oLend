@@ -6,12 +6,12 @@ import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracl
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {AppStorage} from "../AppStorage.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+import {State} from "../State.sol";
+import {ABDKMath64x64} from "../libraries/ABDKMath64x64.sol";
 
 import "forge-std/console.sol";
 
-contract ozOracle {
-
-    AppStorage private s;
+contract ozOracle is State {
 
     using PendlePYOracleLib for IPMarket;
     using FixedPointMathLib for uint;
@@ -32,37 +32,50 @@ contract ozOracle {
         //get PT's APY
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
+        // uint secsInDay = 86400;
         uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
-        uint scalingFactor = 1e18;
+        // uint scalingFactor = 1e18;
 
-        console.logUint(1);
-        uint ytScaled = ytPrice * scalingFactor;
-        console.logUint(2);
-        uint division = ytScaled / ptPrice;
-        console.logUint(3);
-        uint base = scalingFactor + division;
-        console.logUint(4);
-        uint exponent = (365 * scalingFactor) / daysToExp;
-        console.logUint(5);
-        console.log('exponent: ', exponent);
-        console.log('base: ', base);
-        console.log('exponent / scalingFactor: ', exponent / scalingFactor);
-        uint result = base ** (exponent / scalingFactor);
-        console.logUint(6);
-        uint x = result - scalingFactor;
+        console.log('');
+        console.log('ptPrice: ', ptPrice);
+        console.log('ytPrice: ', ytPrice);
+        console.log('s.sUSDeMarket.expiry(): ', s.sUSDeMarket.expiry());
+        console.log('block.timestamp: ', block.timestamp);
+        console.log('daysToExp ***: ', daysToExp);
+        console.log('');
 
-        uint apy = ( (1 + ytPrice / ptPrice) ** (365 / daysToExp) ) - 1;
+        uint ytScaled = ytPrice * 1e18;
+        uint ratio = ytScaled / ptPrice;
+        uint base = 1e18 + ratio;
+        uint exponent = (365 * 1e18) / daysToExp;
+
+        //----------
+        // uint result = base ** (exponent / scalingFactor);
+        // uint x = result - scalingFactor;
+
+        // uint apy = ( (1 + ytPrice / ptPrice) ** (365 / daysToExp) ) - 1;
+        //----------
+
+        // Convert scaled values to ABDKMath64x64 format
+        int128 abdkBase = ABDKMath64x64.divu(base, 1e18); // base / 1e18
+        int128 abdkExponent = ABDKMath64x64.divu(exponent, 1e18); // exponent / 1e18
+
+        // Step 7: Compute natural logarithm of the base
+        int128 lnBase = ABDKMath64x64.ln(abdkBase);
+
+        // Step 8: Multiply exponent with ln(base)
+        int128 exponentLnBase = ABDKMath64x64.mul(abdkExponent, lnBase);
+
+        // Step 9: Compute the exponential
+        int128 abdkResult = ABDKMath64x64.exp(exponentLnBase);
+
+        // Step 10: Convert the result back to uint256 and scale it
+        uint256 apyPlusOne = ABDKMath64x64.mulu(abdkResult, 1e18);
+
+        // Step 11: Subtract scalingFactor to get the APY
+        uint256 apy = apyPlusOne - 1e18;
         
-        // console.log('ptPrice: ', ptPrice);
-        // console.log('ytPrice: ', ytPrice);
-        // console.log('daysToExp: ', daysToExp);
-        // console.log('apy in getVariableBorrowAPY: ', apy);
-        // console.log('scaled apy: ', x);
-
         return apy;        
-
-        //get Aave's APY
-        //substract both and the discount to get the net APY 
     }
 
     function getVariableSupplyAPY() external view returns(uint) {
