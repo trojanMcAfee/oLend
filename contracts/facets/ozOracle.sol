@@ -53,11 +53,11 @@ contract ozOracle {
 
         uint apy = ( (1 + ytPrice / ptPrice) ** (365 / daysToExp) ) - 1;
         
-        console.log('ptPrice: ', ptPrice);
-        console.log('ytPrice: ', ytPrice);
-        console.log('daysToExp: ', daysToExp);
-        console.log('apy in getVariableBorrowAPY: ', apy);
-        console.log('scaled apy: ', x);
+        // console.log('ptPrice: ', ptPrice);
+        // console.log('ytPrice: ', ytPrice);
+        // console.log('daysToExp: ', daysToExp);
+        // console.log('apy in getVariableBorrowAPY: ', apy);
+        // console.log('scaled apy: ', x);
 
         return apy;        
 

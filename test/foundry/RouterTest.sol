@@ -306,27 +306,11 @@ contract RouterTest is Setup {
     }
 
     function test_fixedAPY() public view {
-        OZ.getVariableBorrowAPY();
+        console.log('fixed apy - pendle: ', OZ.getVariableBorrowAPY());
     }
 
-    function test_accounting() public {
-        uint oneYear = 31560000; //secs
-        vm.warp(block.timestamp + oneYear);
-    }
     
 
-    function test_z() public {
-        uint256[5][5] memory arr;
-        uint[5] memory param = [uint(1),uint(2),uint(0),uint(0),uint(0)];
-        arr[0] = param;
-        console.log(arr[0][1]);
-    }
-
-    function foo(uint256 param) public pure returns (uint256[5][5] memory) {
-        uint256[5][5] memory arr;
-        arr[0][0] = param;
-        return arr;
-    }
 
     function test_curvePool() public {
         deal(address(FRAX), owner, 10_000 * 1e18);
