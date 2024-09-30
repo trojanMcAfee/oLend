@@ -31,7 +31,9 @@ contract ozOracle is State {
         quoteInStable = balancePTinAsset - discount;
     }
 
-    function getVariableBorrowAPY() external view returns(uint apy) {
+    function getVariableBorrowAPY() external view returns(uint apy) {}
+
+    function _calculatePendleFixedAPY() private view returns(uint) {
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
         uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
@@ -52,7 +54,7 @@ contract ozOracle is State {
         - Convert the result back to uint256 and scale it.
         - Subtract SCALE to get the APY.
          */
-        apy = abdkExponent
+        return abdkExponent
             .mul(abdkBase.ln())
             .exp()
             .mulu(s.SCALE)
@@ -64,22 +66,25 @@ contract ozOracle is State {
     }
 
 
-    function getBorrowingRates(address token_) external view returns(uint) {
+    function getBorrowingRates(address token_) public view returns(uint) {
         uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
-
         return uint(currentVariableBorrowRate / 1e9).computeAPY();
     }
 
 
-    function getSupplyRates(address token_) external view returns(uint) {
-        uint aaveSupplyAPY = (uint(
+    function getSupplyRates(address token_) public view returns(uint, uint) {
+        uint aaveSupplyAPY = _calculateAaveLendAPY(token_);
+        uint pendleFixedAPY = _calculatePendleFixedAPY();
+        return (aaveSupplyAPY, pendleFixedAPY);
+    }
+
+    function _calculateAaveLendAPY(address token_) private view returns(uint) {
+        return (uint(
             s.aavePool
             .getReserveData(token_)
             .currentLiquidityRate)
             / 1e9)
             .computeAPY();
-
-        return aaveSupplyAPY;
     }
 
 }

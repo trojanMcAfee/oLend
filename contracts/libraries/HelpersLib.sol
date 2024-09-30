@@ -9,17 +9,19 @@ import {ABDKMath64x64} from "./ABDKMath64x64.sol";
 
 library HelpersLib {
 
+    using ABDKMath64x64 for *;
+
     function computeAPY(uint aprScaled) internal pure returns (uint) {
         // Convert APR from scaled integer (1e18) to 64.64 fixed-point format
-        int128 apr64x64 = ABDKMath64x64.divu(aprScaled, 1e18);
+        int128 apr64x64 = aprScaled.divu(1e18);
 
         // Compute e^(apr) - 1 using the ABDKMath64x64 library
-        int128 expApr = ABDKMath64x64.exp(apr64x64);
-        int128 one = ABDKMath64x64.fromInt(1);
-        int128 apy64x64 = ABDKMath64x64.sub(expApr, one);
+        int128 expApr = apr64x64.exp();
+        int128 one = (1).fromInt();
+        int128 apy64x64 = expApr.sub(one);
 
         // Convert APY back to scaled integer (1e18)
-        uint256 apyScaled = ABDKMath64x64.mulu(apy64x64, 1e18);
+        uint256 apyScaled = apy64x64.mulu(1e18);
 
         return apyScaled;
     }
