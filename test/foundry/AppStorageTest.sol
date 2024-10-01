@@ -68,4 +68,16 @@ contract AppStorageTest is StateVars {
             tokenOut = address(sUSDe);
         }
     }
+
+    function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
+        uint borrowAPY = OZ.getBorrowingRates(token_);
+        
+        vm.warp(block.timestamp + amountTime_); 
+
+        vm.mockCall(
+            address(aaveVariableDebtUSDC), 
+            abi.encodeWithSelector(aaveVariableDebtUSDC.balanceOf.selector, intAcc_), 
+            returnData
+        );
+    }
 }

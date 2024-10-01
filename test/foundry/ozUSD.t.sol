@@ -60,11 +60,10 @@ contract ozUSDTest is CoreMethods {
 
     //------------
     function test_do_my_accounting() public {
-        address testToken = address(WETH);
+        address testToken = address(USDC);
         address intOwner = _borrow_and_mint_ozUSD(testToken);
 
         address internalAccount = OZ.getUserAccountData(intOwner).internalAccount;
-        console.log('intAcc: ', internalAccount);
 
         console.log('usdc debt intAcc - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
         console.log('PT oz - pendle: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
