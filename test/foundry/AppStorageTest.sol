@@ -91,7 +91,11 @@ contract AppStorageTest is StateVars {
 
         uint debtBalance = _calculateInterests(debtToken, intAcc_, borrowAPYformatted);
         console.log('debtBalance: ', debtBalance);
+        console.log('');
 
+        (uint supplyAPYnotFormatted,) = OZ.getSupplyRates(token_, false);
+        console.log('supplyAPYnotFormatted: ', supplyAPYnotFormatted);
+        
         uint supplyBalance = _calculateInterests(aToken, intAcc_, supplyAPYformatted); 
         console.log('supplyBalance: ', supplyBalance);
 
@@ -110,7 +114,12 @@ contract AppStorageTest is StateVars {
     function _calculateInterests(address interestToken_, address intAcc_, uint formattedAPY_) internal view returns(uint) {
         uint FORMAT = 1e6; //due to being USDC with 6 decimals
         uint principal = IERC20(interestToken_).balanceOf(intAcc_);
+        console.log('principal: ', principal);
         uint gainedInterests = formattedAPY_.mulDivDown(principal, 100) / FORMAT;
+        
+        console.log('gainedInterests: ', gainedInterests);
+        console.log('formattedAPY_: ', formattedAPY_);
+
         return principal + gainedInterests;
     }
 }
