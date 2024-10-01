@@ -5,10 +5,15 @@ import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Tokens} from "../../contracts/AppStorage.sol";
 import {StateVars} from "../../contracts/StateVars.sol";
+import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 // import {IERC20} from "../../contracts/interfaces/IERC20.sol";
+
+import "forge-std/console.sol";
 
 
 contract AppStorageTest is StateVars {
+
+    using FixedPointMathLib for uint;
 
     //EmptySwap means no swap aggregator is involved
     SwapData public emptySwap; 
@@ -71,25 +76,30 @@ contract AppStorageTest is StateVars {
 
     function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
         uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
-        IERC20 debtToken;
+        address debtToken;
+        uint FORMAT = 1e6; //due to being USDC with 6 decimals
 
         if (token_ == address(USDC)) {
-            debtToken = aaveVariableDebtUSDC;
+            debtToken = address(aaveVariableDebtUSDC);
         }
 
-        uint debtBalance = debtToken.balanceOf(intAcc_);
-        uint gainedInterests = borrowAPYformatted.mulDivDown(debtBalance, 100);
-        uint totalDebt = debtBalance + gainedInterests
+        uint debtBalance = IERC20(debtToken).balanceOf(intAcc_);
+        uint gainedInterests = borrowAPYformatted.mulDivDown(debtBalance, 100) / FORMAT;
+        uint totalDebt = debtBalance + gainedInterests;
+        
+        console.log('');
+        console.log('debtBalance: ', debtBalance);
+        console.log('gainedInterests: ', gainedInterests);
         console.log('totalDebt ****: ', totalDebt);
 
         revert('here89');
         
         vm.warp(block.timestamp + amountTime_); 
 
-        vm.mockCall(
-            address(aaveVariableDebtUSDC), 
-            abi.encodeWithSelector(aaveVariableDebtUSDC.balanceOf.selector, intAcc_), 
-            returnData
-        );
+        // vm.mockCall(
+        //     address(aaveVariableDebtUSDC), 
+        //     abi.encodeWithSelector(aaveVariableDebtUSDC.balanceOf.selector, intAcc_), 
+        //     returnData
+        // );
     }
 }

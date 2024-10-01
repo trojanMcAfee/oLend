@@ -64,7 +64,7 @@ contract ozOracle is State {
 
     
     function getNetAPY(address token_) external view returns(uint) {
-        uint aaveBorrowAPY = getBorrowingRates(token_);
+        uint aaveBorrowAPY = getBorrowingRates(token_, false);
         (uint aaveSupplyAPY, uint pendleFixedAPY) = getSupplyRates(token_);
         uint netAPY = pendleFixedAPY + aaveSupplyAPY - aaveBorrowAPY;
 
@@ -72,9 +72,16 @@ contract ozOracle is State {
     }
 
 
+    /**
+     formatted_ is for formatting the returned rate into a 100% scale and with 6 decimals, in order to
+     match a 6-decimals token (USDC), when calculating amount of generated debt.
+     *
+     If false, rate is returned at a 1e18 scale and not formatted to 100%. Meaning that you'd have to multiply
+     the final output by 100 (after dividing by 1e18) in order to get a % APY. 
+     */
     function getBorrowingRates(address token_, bool formatted_) public view returns(uint) { 
         uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
-        uint DECIMALS = token_ == address(s.USDC) && formatted_ ? 1e10 : 1
+        uint DECIMALS = token_ == address(s.USDC) && formatted_ ? 1e10 : 1;
         return (uint(currentVariableBorrowRate / 1e9).computeAPY()) / DECIMALS;
     }
 

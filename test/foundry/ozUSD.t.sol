@@ -70,9 +70,9 @@ contract ozUSDTest is CoreMethods {
         console.log('aweth intAcc: ', aWETH.balanceOf(internalAccount));
         console.log('');
 
-        _advanceInTime(1 year, internalAccount, testToken); //<---- run this to see if debt was properly calc
+        _advanceInTime(365 days, internalAccount, testToken);
 
-        uint borrowingRate = OZ.getBorrowingRates(testToken);
+        uint borrowingRate = OZ.getBorrowingRates(testToken, false);
         console.log('borrowingRate aave lentToken - apy: ', borrowingRate);
 
         (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(testToken);
