@@ -65,7 +65,7 @@ contract ozOracle is State {
     
     function getNetAPY(address token_) external view returns(uint) {
         uint aaveBorrowAPY = getBorrowingRates(token_, false);
-        (uint aaveSupplyAPY, uint pendleFixedAPY) = getSupplyRates(token_);
+        (uint aaveSupplyAPY, uint pendleFixedAPY) = getSupplyRates(token_, false);
         uint netAPY = pendleFixedAPY + aaveSupplyAPY - aaveBorrowAPY;
 
         return netAPY;
@@ -86,19 +86,22 @@ contract ozOracle is State {
     }
 
 
-    function getSupplyRates(address token_) public view returns(uint, uint) {
-        uint aaveSupplyAPY = _calculateAaveLendAPY(token_);
+    function getSupplyRates(address token_, bool formatted_) public view returns(uint, uint) {
+        uint aaveSupplyAPY = _calculateAaveLendAPY(token_, formatted_);
         uint pendleFixedAPY = _calculatePendleFixedAPY();
         return (aaveSupplyAPY, pendleFixedAPY);
     }
 
-    function _calculateAaveLendAPY(address token_) private view returns(uint) {
+    function _calculateAaveLendAPY(address token_, bool formatted_) private view returns(uint) {
+        uint DECIMALS = token_ == address(s.USDC) && formatted_ ? 1e10 : 1;
+        
         return (uint(
             s.aavePool
             .getReserveData(token_)
             .currentLiquidityRate)
             / 1e9)
-            .computeAPY();
+            .computeAPY()
+            / DECIMALS;
     }
 
 }

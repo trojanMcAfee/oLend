@@ -72,10 +72,12 @@ contract ozUSDTest is CoreMethods {
 
         _advanceInTime(365 days, internalAccount, testToken);
 
+        console.log('usdc debt intAcc - aave - post time: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
+
         uint borrowingRate = OZ.getBorrowingRates(testToken, false);
         console.log('borrowingRate aave lentToken - apy: ', borrowingRate);
 
-        (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(testToken);
+        (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(testToken, false);
         console.log('supplyRate aave weth - apy: ', aaveSupplyAPY);
         console.log('pendle fixed apy: ', pendleFixedAPY);
         console.log('');
