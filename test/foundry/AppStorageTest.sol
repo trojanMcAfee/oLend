@@ -70,7 +70,19 @@ contract AppStorageTest is StateVars {
     }
 
     function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
-        uint borrowAPY = OZ.getBorrowingRates(token_);
+        uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
+        IERC20 debtToken;
+
+        if (token_ == address(USDC)) {
+            debtToken = aaveVariableDebtUSDC;
+        }
+
+        uint debtBalance = debtToken.balanceOf(intAcc_);
+        uint gainedInterests = borrowAPYformatted.mulDivDown(debtBalance, 100);
+        uint totalDebt = debtBalance + gainedInterests
+        console.log('totalDebt ****: ', totalDebt);
+
+        revert('here89');
         
         vm.warp(block.timestamp + amountTime_); 
 

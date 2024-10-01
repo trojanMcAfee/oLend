@@ -72,9 +72,10 @@ contract ozOracle is State {
     }
 
 
-    function getBorrowingRates(address token_) public view returns(uint) { 
+    function getBorrowingRates(address token_, bool formatted_) public view returns(uint) { 
         uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
-        return uint(currentVariableBorrowRate / 1e9).computeAPY();
+        uint DECIMALS = token_ == address(s.USDC) && formatted_ ? 1e10 : 1
+        return (uint(currentVariableBorrowRate / 1e9).computeAPY()) / DECIMALS;
     }
 
 
