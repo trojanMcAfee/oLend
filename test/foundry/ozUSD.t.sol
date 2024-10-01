@@ -60,7 +60,7 @@ contract ozUSDTest is CoreMethods {
 
     //------------
     function test_do_my_accounting() public {
-        address testToken = address(USDC);
+        address testToken = address(WETH);
         address intOwner = _borrow_and_mint_ozUSD(testToken);
 
         address internalAccount = OZ.getUserAccountData(intOwner).internalAccount;

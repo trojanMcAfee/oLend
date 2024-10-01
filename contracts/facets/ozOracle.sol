@@ -75,10 +75,11 @@ contract ozOracle is State {
     function getBorrowingRates(address token_) public view returns(uint) {
         console.logUint(1);
         uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
+        // console.log('currentVariableBorrowRate: ', uint(currentVariableBorrowRate));
         console.logUint(2);
-        uint DECIMALS = token_ == address(s.USDC) ? 1e9 : 1;
+        // uint DECIMALS = token_ == address(s.USDC) ? 1e9 : 1;
         console.logUint(3);
-        uint x = uint(currentVariableBorrowRate / DECIMALS).computeAPY();
+        uint x = uint(currentVariableBorrowRate / 1e9).computeAPY();
         console.logUint(4);
         return x;
     }
@@ -91,13 +92,13 @@ contract ozOracle is State {
     }
 
     function _calculateAaveLendAPY(address token_) private view returns(uint) {
-        uint DECIMALS = token_ == address(s.USDC) ? 1e9 : 1;
+        // uint DECIMALS = token_ == address(s.USDC) ? 1e9 : 1;
 
         return (uint(
             s.aavePool
             .getReserveData(token_)
             .currentLiquidityRate)
-            / DECIMALS)
+            / 1e9)
             .computeAPY();
     }
 
