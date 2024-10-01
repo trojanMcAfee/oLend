@@ -12,6 +12,7 @@ import {HelpersLib} from "../libraries/HelpersLib.sol";
 
 import "forge-std/console.sol";
 
+
 contract ozOracle is State {
 
     using PendlePYOracleLib for IPMarket;
@@ -61,10 +62,10 @@ contract ozOracle is State {
             - s.SCALE;        
     }
 
-    //getNetAPY
-    function getVariableSupplyAPY() external view returns(uint) {
-        uint aaveBorrowAPY = getBorrowingRates(address(s.WETH));
-        (uint aaveSupplyAPY, uint pendleFixedAPY) = getSupplyRates(address(s.USDC));
+    
+    function getNetAPY(address token_) external view returns(uint) {
+        uint aaveBorrowAPY = getBorrowingRates(token_);
+        (uint aaveSupplyAPY, uint pendleFixedAPY) = getSupplyRates(token_);
         uint netAPY = pendleFixedAPY + aaveSupplyAPY - aaveBorrowAPY;
 
         return netAPY;
@@ -72,8 +73,14 @@ contract ozOracle is State {
 
 
     function getBorrowingRates(address token_) public view returns(uint) {
+        console.logUint(1);
         uint128 currentVariableBorrowRate = s.aavePool.getReserveData(token_).currentVariableBorrowRate;
-        return uint(currentVariableBorrowRate / 1e9).computeAPY();
+        console.logUint(2);
+        uint DECIMALS = token_ == address(s.USDC) ? 1e9 : 1;
+        console.logUint(3);
+        uint x = uint(currentVariableBorrowRate / DECIMALS).computeAPY();
+        console.logUint(4);
+        return x;
     }
 
 
@@ -84,11 +91,13 @@ contract ozOracle is State {
     }
 
     function _calculateAaveLendAPY(address token_) private view returns(uint) {
+        uint DECIMALS = token_ == address(s.USDC) ? 1e9 : 1;
+
         return (uint(
             s.aavePool
             .getReserveData(token_)
             .currentLiquidityRate)
-            / 1e9)
+            / DECIMALS)
             .computeAPY();
     }
 

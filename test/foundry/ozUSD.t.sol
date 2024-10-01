@@ -18,51 +18,52 @@ contract ozUSDTest is CoreMethods {
     }
 
     function test_borrow_and_mint_ozUSD() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
     }
 
     function test_redeem_ozUSD_for_sDAI() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.sDAI);
     }
 
     function test_redeem_ozUSD_for_FRAX() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.FRAX);
     }
 
     function test_redeem_ozUSD_for_USDC() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.USDC);
     }
 
     function test_redeem_ozUSD_for_WETH() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.WETH);
     }
 
     function test_redeem_ozUSD_for_WBTC() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.WBTC);
     }
 
     function test_redeem_ozUSD_for_sUSDe() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.sUSDe);
     }
 
     
     function test_redeem_ozUSD_for_USDe() public {
-        _borrow_and_mint_ozUSD();
+        _borrow_and_mint_ozUSD(ETH);
         _redeem_ozUSD(Tokens.USDe);
     }
 
 
     //------------
     function test_do_my_accounting() public {
-        _borrow_and_mint_ozUSD();
+        address testToken = address(USDC);
+        address intOwner = _borrow_and_mint_ozUSD(testToken);
 
-        address internalAccount = OZ.getUserAccountData(owner).internalAccount;
+        address internalAccount = OZ.getUserAccountData(intOwner).internalAccount;
         console.log('intAcc: ', internalAccount);
 
         console.log('usdc debt intAcc - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
@@ -70,15 +71,15 @@ contract ozUSDTest is CoreMethods {
         console.log('aweth intAcc: ', aWETH.balanceOf(internalAccount));
         console.log('');
 
-        uint borrowingRate = OZ.getBorrowingRates(address(USDC));
-        console.log('borrowingRate aave usdc - apy: ', borrowingRate);
+        uint borrowingRate = OZ.getBorrowingRates(testToken);
+        console.log('borrowingRate aave lentToken - apy: ', borrowingRate);
 
-        (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(address(WETH));
+        (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(testToken);
         console.log('supplyRate aave weth - apy: ', aaveSupplyAPY);
         console.log('pendle fixed apy: ', pendleFixedAPY);
         console.log('');
 
-        uint netAPY = OZ.getVariableSupplyAPY();
+        uint netAPY = OZ.getNetAPY(testToken);
         console.log('netAPY: ', netAPY);
     }
 

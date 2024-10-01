@@ -35,9 +35,10 @@ import {console} from "../lib/forge-std/src/Test.sol";
 //move this contracto test/foundry
 abstract contract StateVars is Test {
 
-    uint currentBlock = 20665666; //20665666 - 20779705 (recent)
-    address owner = makeAddr('owner');
-    address second_owner = makeAddr('second_owner');
+    uint public immutable currentBlock = 20665666; //20665666 - 20779705 (recent)
+    address public immutable owner = makeAddr('owner');
+    address public immutable second_owner = makeAddr('second_owner');
+    address public immutable thirdOwner = makeAddr('thirdOwner');
 
     //Pendle
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);

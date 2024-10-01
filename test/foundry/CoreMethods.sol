@@ -42,15 +42,11 @@ contract CoreMethods is Setup {
 
         if (tokenIn_ == ETH) {
             assertTrue(user_.balance == initUserBal - 1 ether, 'custom -_lend: userBal  check');
-        } else {
+        } else if (tokenIn_ == address(USDC)) {
             assertTrue(aUSDC.balanceOf(userData.internalAccount) == amountIn_, "custom - _lend: aUSDC check");
+        } else if (tokenIn_ == address(WETH)) {
+            assertTrue(aWETH.balanceOf(userData.internalAccount) == amountIn_, "custom - _lend: aWETH check");
         }
-
-        //---------
-        // address internalAccount = 0xa38D17ef017A314cCD72b8F199C0e108EF7Ca04c;
-        // (uint totalCollateralBase,,uint256 availableBorrowsBase,,,) = aavePool.getUserAccountData(internalAccount);
-        // console.log('eth value of eth lent: ', totalCollateralBase);
-   
     }
 
 
@@ -82,19 +78,32 @@ contract CoreMethods is Setup {
     }
 
 
-    function _borrow_and_mint_ozUSD() internal {
+    function _borrow_and_mint_ozUSD(address lentToken_) internal returns(address intOwner) {
         //User LENDS 
         assertTrue(ozUSD.balanceOf(owner) == 0, 'custom - _borrow_and_mint_ozUSD: not 0');
+        intOwner;
+        uint amountIn;
+        
+        if (lentToken_ == ETH) {
+            intOwner = owner;
+            amountIn = 1 ether;
+        } else if (lentToken_ == address(USDC)) {
+            intOwner = second_owner;
+            amountIn = 1000 * 1e6;
+        } else if (lentToken_ == address(WETH)) {
+            intOwner = thirdOwner;
+            amountIn = 1 ether;
+        }
 
-        _lend(owner, ETH, 1 ether);
-        UserAccountData memory userData = OZ.getUserAccountData(owner);
+        _lend(intOwner, lentToken_, amountIn);
+        UserAccountData memory userData = OZ.getUserAccountData(intOwner);
 
         //User BORROWS
-        vm.startPrank(owner);
-        OZ.borrow(userData.availableBorrowsBase, owner);
+        vm.startPrank(intOwner);
+        OZ.borrow(userData.availableBorrowsBase, intOwner);
         vm.stopPrank();
 
-        uint balanceOwnerOzUSD = ozUSD.balanceOf(owner);
+        uint balanceOwnerOzUSD = ozUSD.balanceOf(intOwner);
         assertTrue(balanceOwnerOzUSD > 0, '_borrow_and_mint_ozUSD: bal ozUSD is 0');
     }
 

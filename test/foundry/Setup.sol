@@ -47,6 +47,7 @@ contract Setup is AppStorageTest {
     function _dealTokens() private {
         deal(address(sUSDe), address(this), 1_000 * 1e18);
         deal(address(USDC), second_owner, 10_000 * 1e6);
+        deal(address(WETH), thirdOwner, 100 ether);
         payable(owner).transfer(100 * 1 ether);
     }
 
@@ -135,9 +136,10 @@ contract Setup is AppStorageTest {
             address(curvePool_FRAXUSDe)
         );
 
-        address[] memory authTokens = new address[](2);
+        address[] memory authTokens = new address[](3);
         authTokens[0] = address(USDC);
         authTokens[1] = ETH;
+        authTokens[2] = address(WETH); 
 
         SysConfig memory sys = SysConfig(address(OZ), address(relayer), authTokens, ETH);
 
@@ -189,7 +191,7 @@ contract Setup is AppStorageTest {
         } else if (id_ == 3) {
             selectors[0] = oracle.quotePT.selector;
             selectors[1] = oracle.getVariableBorrowAPY.selector;
-            selectors[2] = oracle.getVariableSupplyAPY.selector;
+            selectors[2] = oracle.getNetAPY.selector;
             selectors[3] = oracle.getBorrowingRates.selector;
             selectors[4] = oracle.getSupplyRates.selector;
         }
@@ -239,6 +241,7 @@ contract Setup is AppStorageTest {
         vm.label(address(FRAX), 'FRAX');
         vm.label(second_owner, 'secondOwner');
         vm.label(address(loupe), 'ozLoupe');
+        vm.label(address(WETH), 'WETH');
     }
 
 

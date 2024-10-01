@@ -59,31 +59,7 @@ contract ozMinter is ozTrading {
         }
 
         account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
-
     }
-
-
-    // function getUserAccountData(address user_) external view returns(UserAccountData memory userData) {
-    //     InternalAccount account = s.internalAccounts[user_];
-        
-    //     (
-    //         uint totalCollateralBase,
-    //         uint totalDebtBase,
-    //         uint availableBorrowsBase,
-    //         uint currentLiquidationThreshold,
-    //         uint ltv,
-    //         uint healthFactor
-    //     ) = s.aavePool.getUserAccountData(address(account));
-
-    //     userData = UserAccountData(
-    //         totalCollateralBase,
-    //         totalDebtBase,
-    //         _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
-    //         currentLiquidationThreshold,
-    //         ltv,
-    //         healthFactor
-    //     );
-    // }
 
 
 

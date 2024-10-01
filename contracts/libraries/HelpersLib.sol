@@ -6,22 +6,30 @@ import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {ABDKMath64x64} from "./ABDKMath64x64.sol";
 
+import "forge-std/console.sol";
+
 
 library HelpersLib {
 
     using ABDKMath64x64 for *;
 
     function computeAPY(uint aprScaled) internal pure returns (uint) {
+        console.log('aprScaled: ', aprScaled);
         // Convert APR from scaled integer (1e18) to 64.64 fixed-point format
         int128 apr64x64 = aprScaled.divu(1e18);
+        console.logUint(11);
 
         // Compute e^(apr) - 1 using the ABDKMath64x64 library
         int128 expApr = apr64x64.exp();
+        console.logUint(12);
         int128 one = (1).fromInt();
+        console.logUint(13);
         int128 apy64x64 = expApr.sub(one);
+        console.logUint(14);
 
         // Convert APY back to scaled integer (1e18)
         uint256 apyScaled = apy64x64.mulu(1e18);
+        console.logUint(15);
 
         return apyScaled;
     }
