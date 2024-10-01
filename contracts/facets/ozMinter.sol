@@ -65,8 +65,7 @@ contract ozMinter is ozTrading {
 
     function borrow(uint amount_, address receiver_) external {
         InternalAccount internalAccount = s.internalAccounts[msg.sender];
-        uint revertedAmount = s.relayer.borrowInternal(amount_, receiver_, address(internalAccount));
-        console.log('revertedAmount - in borrow(): ', revertedAmount);
+        s.relayer.borrowInternal(amount_, receiver_, address(internalAccount));
 
         uint minTokenOut = 0;
 
@@ -75,7 +74,7 @@ contract ozMinter is ozTrading {
             address(s.USDC), 
             address(s.sUSDe), 
             address(this), 
-            revertedAmount, 
+            amount_, 
             minTokenOut
         );
       
@@ -98,9 +97,6 @@ contract ozMinter is ozTrading {
 
         uint internalAccountDebtUSDC = s.aaveVariableDebtUSDC.balanceOf(address(internalAccount));
         s.ozUSD.mint(receiver_, internalAccountDebtUSDC);
-
-        // uint discountedPT = _calculateDiscountPT();
-        // s.openOrders.push(discountedPT);
     }
     
 

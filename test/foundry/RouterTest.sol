@@ -51,13 +51,13 @@ contract RouterTest is Setup {
         console.log("netPtOut: ", netPtOut);
         console.log('tokenIn: ', sUSDeBalance);
         
-        // console.log('');
-        // sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
+        console.log('');
+        sUSDe_PT_26SEP.approve(address(pendleRouter), type(uint).max);
 
-        // (uint256 netTokenOut,,) = pendleRouter.swapExactPtForToken(
-        //     address(this), address(sUSDeMarket), netPtOut, createTokenOutputStruct(address(sUSDe), 0), emptyLimit
-        // );
-        // console.log('netTokenOut: ', netTokenOut);
+        (uint256 netTokenOut,,) = pendleRouter.swapExactPtForToken(
+            address(this), address(sUSDeMarket), netPtOut, createTokenOutputStruct(address(sUSDe), 0), emptyLimit
+        );
+        console.log('netTokenOut: ', netTokenOut);
 
     }
 

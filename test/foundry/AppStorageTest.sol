@@ -96,6 +96,16 @@ contract AppStorageTest is StateVars {
         //PENDLE FIXED APY
         console.log('pendleFixedAPY: ', pendleFixedAPY);
 
+        //----------
+        //- the output of this would be sUSDe worth the fixed APY more than the USDe or USDC worth of the sUSDe initially used to buy the PT.
+        //- so if initially i used 100 USDe/USDC to buy 90 sUSDe to then swap for 95 PT, at the end of the maturity, those
+        // 95 PT will be worth 102 USDe/USDC worth of sUSDe
+        //- code this ^ below
+        (uint256 netTokenOut,,) = pendleRouter.swapExactPtForToken(
+            address(this), address(sUSDeMarket), netPtOut, createTokenOutputStruct(address(sUSDe), 0), emptyLimit
+        );
+        //---------- <------------
+
         revert('here55');
         
         vm.warp(block.timestamp + amountTime_); 
