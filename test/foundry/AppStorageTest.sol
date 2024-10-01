@@ -76,7 +76,7 @@ contract AppStorageTest is StateVars {
 
     function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
         uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
-        (uint supplyAPYformatted,) = OZ.getSupplyRates(token_, true);
+        (uint supplyAPYformatted, uint pendleFixedAPY) = OZ.getSupplyRates(token_, true);
         address debtToken;
         address aToken;
 
@@ -85,41 +85,42 @@ contract AppStorageTest is StateVars {
             aToken = address(aUSDC);
         }
 
-        // uint debtBalance = IERC20(debtToken).balanceOf(intAcc_);
-        // uint gainedInterests = borrowAPYformatted.mulDivDown(debtBalance, 100) / FORMAT;
-        // uint totalDebt = debtBalance + gainedInterests;
+        //BORROWING
+        uint monthlyBorrowingInterests = _calculateInterests(debtToken, intAcc_, borrowAPYformatted) / 12;
+        uint debtBalance = IERC20(debtToken).balanceOf(intAcc_) + monthlyBorrowingInterests;
 
-        uint debtBalance = _calculateInterests(debtToken, intAcc_, borrowAPYformatted);
-        console.log('debtBalance: ', debtBalance);
-        console.log('');
+        //LENDING
+        uint monthlyLendingInterests = _calculateInterests(aToken, intAcc_, supplyAPYformatted) / 12; 
+        uint supplyBalance = IERC20(aToken).balanceOf(intAcc_) + monthlyLendingInterests;
 
-        (uint supplyAPYnotFormatted,) = OZ.getSupplyRates(token_, false);
-        console.log('supplyAPYnotFormatted: ', supplyAPYnotFormatted);
-        
-        uint supplyBalance = _calculateInterests(aToken, intAcc_, supplyAPYformatted); 
-        console.log('supplyBalance: ', supplyBalance);
+        //PENDLE FIXED APY
+        console.log('pendleFixedAPY: ', pendleFixedAPY);
 
-        revert('here44');
+        revert('here55');
         
         vm.warp(block.timestamp + amountTime_); 
 
+        //Mocks borrowing interest accrual
         vm.mockCall(
-            address(aaveVariableDebtUSDC), 
-            abi.encodeWithSelector(aaveVariableDebtUSDC.balanceOf.selector, intAcc_), 
+            debtToken, 
+            abi.encodeWithSelector(IERC20(debtToken).balanceOf.selector, intAcc_), 
             abi.encode(debtBalance)
+        );
+
+        //Mocks lending interest accrual
+        vm.mockCall(
+            aToken, 
+            abi.encodeWithSelector(IERC20(aToken).balanceOf.selector, intAcc_), 
+            abi.encode(supplyBalance)
         );
     }
 
-    //calculates the interests of supply/borrow and adds it to the principal
+    //calculates the anual interests of supply/borrow
     function _calculateInterests(address interestToken_, address intAcc_, uint formattedAPY_) internal view returns(uint) {
         uint FORMAT = 1e6; //due to being USDC with 6 decimals
         uint principal = IERC20(interestToken_).balanceOf(intAcc_);
-        console.log('principal: ', principal);
         uint gainedInterests = formattedAPY_.mulDivDown(principal, 100) / FORMAT;
-        
-        console.log('gainedInterests: ', gainedInterests);
-        console.log('formattedAPY_: ', formattedAPY_);
 
-        return principal + gainedInterests;
+        return gainedInterests;
     }
 }

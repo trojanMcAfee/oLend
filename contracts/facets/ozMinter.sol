@@ -66,6 +66,7 @@ contract ozMinter is ozTrading {
     function borrow(uint amount_, address receiver_) external {
         InternalAccount internalAccount = s.internalAccounts[msg.sender];
         uint revertedAmount = s.relayer.borrowInternal(amount_, receiver_, address(internalAccount));
+        console.log('revertedAmount - in borrow(): ', revertedAmount);
 
         uint minTokenOut = 0;
 
@@ -82,6 +83,7 @@ contract ozMinter is ozTrading {
         s.sUSDe.approve(address(s.pendleRouter), sUSDeOut);
 
         uint minPTout = 0;
+        console.log('sUSDeOut being swapped for PT - in borrow(): ', sUSDeOut);
       
         (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
             address(this), 
@@ -91,6 +93,8 @@ contract ozMinter is ozTrading {
             address(s.sUSDe).createTokenInputStruct(sUSDeOut, s.emptySwap), 
             s.emptyLimit
         );
+
+        console.log('netPtOut after PT swap: ', netPtOut);
 
         uint internalAccountDebtUSDC = s.aaveVariableDebtUSDC.balanceOf(address(internalAccount));
         s.ozUSD.mint(receiver_, internalAccountDebtUSDC);

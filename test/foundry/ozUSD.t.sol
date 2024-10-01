@@ -4,6 +4,7 @@ pragma solidity 0.8.26;
 
 import {CoreMethods} from "./CoreMethods.sol";
 import {Tokens} from "../../contracts/AppStorage.sol";
+import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 
 import "forge-std/console.sol";
 
@@ -61,18 +62,22 @@ contract ozUSDTest is CoreMethods {
     //------------
     function test_do_my_accounting() public {
         address testToken = address(USDC);
-        address intOwner = _borrow_and_mint_ozUSD(testToken);
+        IERC20 aToken = testToken == address(USDC) ? aUSDC : aWETH;
 
+        address intOwner = _borrow_and_mint_ozUSD(testToken);
         address internalAccount = OZ.getUserAccountData(intOwner).internalAccount;
 
         console.log('usdc debt intAcc - aave: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
         console.log('PT oz - pendle: ', sUSDe_PT_26SEP.balanceOf(address(OZ)));
-        console.log('aweth intAcc: ', aWETH.balanceOf(internalAccount));
+        console.log('aToken intAcc: ', aToken.balanceOf(internalAccount));
         console.log('');
 
         _advanceInTime(365 days, internalAccount, testToken);
 
         console.log('usdc debt intAcc - aave - post time: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
+        console.log('aToken intAcc - aave - post time: ', aToken.balanceOf(internalAccount));
+
+        revert('here87');
 
         uint borrowingRate = OZ.getBorrowingRates(testToken, false);
         console.log('borrowingRate aave lentToken - apy: ', borrowingRate);

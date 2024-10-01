@@ -100,6 +100,7 @@ contract CoreMethods is Setup {
 
         //User BORROWS
         vm.startPrank(intOwner);
+        console.log('userData.availableBorrowsBase - amount being borrowed ****: ', userData.availableBorrowsBase);
         OZ.borrow(userData.availableBorrowsBase, intOwner);
         vm.stopPrank();
 
