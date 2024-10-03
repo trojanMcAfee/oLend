@@ -25,6 +25,14 @@ contract RouterTest is Setup {
    
     
     function test_router() public { 
+        uint32 duration = 15;
+        uint ptToSyRate = sUSDeMarket.getPtToSyRate(duration);
+        uint ptToAssetRate = sUSDeMarket.getPtToAssetRate(duration);
+
+        console.log('ptToSyRate: ', ptToSyRate);
+        console.log('ptToAssetRate: ', ptToAssetRate);
+        console.log('');    
+
         (IStandardizedYield SY, IPPrincipalToken PT,) = sUSDeMarket.readTokens();
 
         console.log('SY: ', address(SY));
@@ -325,6 +333,7 @@ contract RouterTest is Setup {
         console.log('amountOut: ', amountOut);
         console.log('USDC bal owner: ', USDC.balanceOf(owner));  
     }
+
 
     function test_curveRouter() public {
 

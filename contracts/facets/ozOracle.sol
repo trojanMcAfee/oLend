@@ -34,10 +34,11 @@ contract ozOracle is State {
 
     function getVariableBorrowAPY() external view returns(uint apy) {}
 
-    function _calculatePendleFixedAPY() private view returns(uint) {
+    function _calculatePendleFixedAPY(bool formatted_) private view returns(uint) {
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);
         uint daysToExp = (s.sUSDeMarket.expiry() - block.timestamp) / 86400;
+        uint DECIMALS = formatted_ ? 1e10 : 1;
 
         uint ytScaled = ytPrice * s.SCALE;
         uint ratio = ytScaled / ptPrice;
@@ -55,11 +56,12 @@ contract ozOracle is State {
         - Convert the result back to uint256 and scale it.
         - Subtract SCALE to get the APY.
          */
-        return abdkExponent
+        return (abdkExponent
             .mul(abdkBase.ln())
             .exp()
             .mulu(s.SCALE)
-            - s.SCALE;        
+            - s.SCALE)
+            / DECIMALS;
     }
 
     
@@ -88,7 +90,7 @@ contract ozOracle is State {
 
     function getSupplyRates(address token_, bool formatted_) public view returns(uint, uint) {
         uint aaveSupplyAPY = _calculateAaveLendAPY(token_, formatted_);
-        uint pendleFixedAPY = _calculatePendleFixedAPY();
+        uint pendleFixedAPY = _calculatePendleFixedAPY(formatted_); 
         return (aaveSupplyAPY, pendleFixedAPY);
     }
 

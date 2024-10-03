@@ -6,6 +6,7 @@ import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Tokens} from "../../contracts/AppStorage.sol";
 import {StateVars} from "../../contracts/StateVars.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 // import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 
 import "forge-std/console.sol";
@@ -76,7 +77,7 @@ contract AppStorageTest is StateVars {
 
     function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
         uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
-        (uint supplyAPYformatted, uint pendleFixedAPY) = OZ.getSupplyRates(token_, true);
+        (uint supplyAPYformatted, uint pendleFixedAPYformatted) = OZ.getSupplyRates(token_, true);
         address debtToken;
         address aToken;
 
@@ -86,29 +87,39 @@ contract AppStorageTest is StateVars {
         }
 
         //BORROWING
-        uint monthlyBorrowingInterests = _calculateInterests(debtToken, intAcc_, borrowAPYformatted) / 12;
-        uint debtBalance = IERC20(debtToken).balanceOf(intAcc_) + monthlyBorrowingInterests;
+        uint debtBalance = 
+            IERC20(debtToken).balanceOf(intAcc_) + (_calculateInterests(debtToken, intAcc_, borrowAPYformatted) / 12);
 
         //LENDING
-        uint monthlyLendingInterests = _calculateInterests(aToken, intAcc_, supplyAPYformatted) / 12; 
-        uint supplyBalance = IERC20(aToken).balanceOf(intAcc_) + monthlyLendingInterests;
+        uint supplyBalance = IERC20(aToken).balanceOf(intAcc_) + (_calculateInterests(aToken, intAcc_, supplyAPYformatted) / 12);
 
         //PENDLE FIXED APY
-        console.log('pendleFixedAPY: ', pendleFixedAPY);
+        uint ptBalanceOZ = sUSDe_PT_26SEP.balanceOf(address(OZ));
+        vm.startPrank(address(OZ));
+        sUSDe_PT_26SEP.approve(address(pendleRouter), ptBalanceOZ);
 
-        //----------
-        //- the output of this would be sUSDe worth the fixed APY more than the USDe or USDC worth of the sUSDe initially used to buy the PT.
-        //- so if initially i used 100 USDe/USDC to buy 90 sUSDe to then swap for 95 PT, at the end of the maturity, those
-        // 95 PT will be worth 102 USDe/USDC worth of sUSDe
-        //- code this ^ below
-        (uint256 netTokenOut,,) = pendleRouter.swapExactPtForToken(
-            address(this), address(sUSDeMarket), netPtOut, createTokenOutputStruct(address(sUSDe), 0), emptyLimit
+        (uint256 amountOutsUSDe,,) = pendleRouter.swapExactPtForToken(
+            address(OZ), //receiver - this should be internalAccount
+            address(sUSDeMarket), 
+            ptBalanceOZ, 
+            createTokenOutputStruct(address(sUSDe), 0), 
+            emptyLimit
         );
-        //---------- <------------
 
-        revert('here55');
+        uint amountOutUSDC = _swapUni(
+            address(sUSDe), 
+            address(USDC), 
+            address(OZ), 
+            amountOutsUSDe, 
+            0
+        );
+
+        // console.log('interests on pendle fixed apy: ', _calculateInterests(address(USDC), address(OZ), pendleFixedAPYformatted));
+        uint postPendleBalance = amountOutUSDC + (_calculateInterests(address(USDC), address(OZ), pendleFixedAPYformatted) / 12);
+
+        vm.stopPrank();
         
-        vm.warp(block.timestamp + amountTime_); 
+        // vm.warp(block.timestamp + amountTime_); 
 
         //Mocks borrowing interest accrual
         vm.mockCall(
@@ -123,14 +134,47 @@ contract AppStorageTest is StateVars {
             abi.encodeWithSelector(IERC20(aToken).balanceOf.selector, intAcc_), 
             abi.encode(supplyBalance)
         );
+
+        //Mocks pendle's fixed APY accrual
+        vm.mockCall(
+            address(USDC), 
+            abi.encodeWithSelector(USDC.balanceOf.selector, address(OZ)), 
+            abi.encode(postPendleBalance)
+        );
     }
 
+
     //calculates the anual interests of supply/borrow
-    function _calculateInterests(address interestToken_, address intAcc_, uint formattedAPY_) internal view returns(uint) {
+    function _calculateInterests(address interestToken_, address user_, uint formattedAPY_) internal view returns(uint) {
         uint FORMAT = 1e6; //due to being USDC with 6 decimals
-        uint principal = IERC20(interestToken_).balanceOf(intAcc_);
+        uint principal = IERC20(interestToken_).balanceOf(user_);
         uint gainedInterests = formattedAPY_.mulDivDown(principal, 100) / FORMAT;
 
         return gainedInterests;
+    }
+
+
+    function _swapUni(
+        address tokenIn_,
+        address tokenOut_,
+        address receiver_,
+        uint amountIn_, 
+        uint minAmountOut_
+    ) internal returns(uint) {
+        ISwapRouter swapRouterUni = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+        // IERC20(tokenIn_).safeApprove(address(swapRouterUni), amountIn_); //<--- not working dont know why
+        IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
+        uint24 poolFee = 500;
+
+        ISwapRouter.ExactInputParams memory params =
+            ISwapRouter.ExactInputParams({
+                path: abi.encodePacked(tokenIn_, poolFee, address(USDT), poolFee, tokenOut_), //500 -> 0.05
+                recipient: receiver_,
+                deadline: block.timestamp,
+                amountIn: amountIn_,
+                amountOutMinimum: minAmountOut_
+            });
+
+        return swapRouterUni.exactInput(params);
     }
 }

@@ -84,6 +84,7 @@ contract ozMinter is ozTrading {
         uint minPTout = 0;
         console.log('sUSDeOut being swapped for PT - in borrow(): ', sUSDeOut);
       
+        //the PT out should go to the internalAccount instead of OZ (modify this)
         (uint256 netPtOut,,) = s.pendleRouter.swapExactTokenForPt(
             address(this), 
             address(s.sUSDeMarket), 

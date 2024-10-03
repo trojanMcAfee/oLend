@@ -76,6 +76,7 @@ contract ozUSDTest is CoreMethods {
 
         console.log('usdc debt intAcc - aave - post time: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
         console.log('aToken intAcc - aave - post time: ', aToken.balanceOf(internalAccount));
+        console.log('usdc bal - pendle fixed apy: ', USDC.balanceOf(address(OZ)));
 
         revert('here87');
 
