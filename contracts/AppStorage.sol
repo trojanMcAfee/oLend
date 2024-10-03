@@ -81,6 +81,7 @@ struct AppStorage {
     mapping(address token => bool isAuth) authTokens;
     address ETH;
     uint SCALE;
+    mapping(address intAccount => UserAccountData userData) usersAccountData;
 }
 
 struct SysConfig {

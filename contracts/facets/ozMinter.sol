@@ -58,6 +58,8 @@ contract ozMinter is ozTrading {
             msgValue = msg.value;
         }
 
+        _setUserAccountData(address(account));
+
         // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
         // s.relayer.buyPT(amountIn_, address(account), tokenIn_);
         account.buyPT(amountIn_, address(account), tokenIn_);
@@ -188,6 +190,13 @@ contract ozMinter is ozTrading {
         );
         s.internalAccounts[msg.sender] = account;
         return account;
+    }
+
+    function _setUserAccountData(address intAcc_, uint amountIn_) private {
+        s.usersAccountData[intAcc_].totalCollateralBase += amountIn_;
+
+        //setting the lent funds in UserAccountData.
+        //then determine when pendle APY is used instead of aave, and vice versa --->
     }
 
 

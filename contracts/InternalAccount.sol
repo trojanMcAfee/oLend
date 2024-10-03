@@ -96,8 +96,6 @@ contract InternalAccount {
             emptyLimit
         );
 
-        console.log('amountOutPT: ', amountOutPT);
-
         return amountOutPT;
     }
 
