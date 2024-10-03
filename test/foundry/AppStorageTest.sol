@@ -25,6 +25,13 @@ contract AppStorageTest is StateVars {
     // DefaultApprox means no off-chain preparation is involved, more gas consuming (~ 180k gas)
     ApproxParams public defaultApprox = ApproxParams(0, type(uint256).max, 0, 256, 1e14);
 
+
+    struct APYs {
+        uint borrowAPYformatted;
+        uint supplyAPYformatted;
+        uint pendleFixedAPYformatted;
+    }
+
     /// @notice create a simple TokenInput struct without using any aggregators. For more info please refer to
     /// IPAllActionTypeV3.sol
     function createTokenInputStruct(address tokenIn, uint256 netTokenIn) internal view returns (TokenInput memory) {
@@ -75,11 +82,6 @@ contract AppStorageTest is StateVars {
         }
     }
 
-    struct APYs {
-        uint borrowAPYformatted;
-        uint supplyAPYformatted;
-        uint pendleFixedAPYformatted;
-    }
 
     function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
         uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
@@ -99,38 +101,6 @@ contract AppStorageTest is StateVars {
             uint supplyBalance, 
             uint postPendleBalance
         ) = _calculateMoneyBalances(debtToken, aToken, intAcc_, apys);
-
-        // //BORROWING
-        // uint debtBalance = 
-        //     IERC20(debtToken).balanceOf(intAcc_) + (_calculateInterests(debtToken, intAcc_, borrowAPYformatted) / 12);
-
-        // //LENDING
-        // uint supplyBalance = IERC20(aToken).balanceOf(intAcc_) + (_calculateInterests(aToken, intAcc_, supplyAPYformatted) / 12);
-
-        // //PENDLE FIXED APY
-        // uint ptBalanceOZ = sUSDe_PT_26SEP.balanceOf(address(OZ));
-        // vm.startPrank(address(OZ));
-        // sUSDe_PT_26SEP.approve(address(pendleRouter), ptBalanceOZ);
-
-        // (uint256 amountOutsUSDe,,) = pendleRouter.swapExactPtForToken(
-        //     address(OZ), //receiver - this should be internalAccount
-        //     address(sUSDeMarket), 
-        //     ptBalanceOZ, 
-        //     createTokenOutputStruct(address(sUSDe), 0), 
-        //     emptyLimit
-        // );
-
-        // uint amountOutUSDC = _swapUni(
-        //     address(sUSDe), 
-        //     address(USDC), 
-        //     address(OZ), 
-        //     amountOutsUSDe, 
-        //     0
-        // );
-
-        // uint postPendleBalance = amountOutUSDC + (_calculateInterests(address(USDC), address(OZ), pendleFixedAPYformatted) / 12);
-
-        // vm.stopPrank();
         
         // vm.warp(block.timestamp + amountTime_); 
 
