@@ -24,6 +24,7 @@ contract ozOracle is State {
      * Returns the quote in stable (USDC, USDe) of the PT with the 
      * discount already applied to it
      */
+     //NOT USED
     function quotePT() external view returns(uint quoteInStable) { 
         uint balancePT = s.pendlePT.balanceOf(address(this));
         uint ptToAssetRate = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);

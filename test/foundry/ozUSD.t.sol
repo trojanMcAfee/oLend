@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 
 import {CoreMethods} from "./CoreMethods.sol";
-import {Tokens} from "../../contracts/AppStorage.sol";
+import {Tokens, UserAccountData} from "../../contracts/AppStorage.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
 
 import "forge-std/console.sol";
@@ -11,10 +11,11 @@ import "forge-std/console.sol";
 contract ozUSDTest is CoreMethods {
 
     function test_lend_ETH() public {
-        _lend(owner, ETH, 1 ether);
+        _lend(owner, ETH, 1 ether);    
     }
 
     function test_lend_USDC() public {
+        console.log('usdc bal 2nd owner: ', USDC.balanceOf(second_owner));
         _lend(second_owner, address(USDC), USDC.balanceOf(second_owner));
     }
 

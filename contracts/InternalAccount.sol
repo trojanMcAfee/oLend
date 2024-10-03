@@ -54,4 +54,9 @@ contract InternalAccount {
         emit FundsDelegated(address(this), tokenIn_, amountIn_);
     }
 
+
+    function buyPT(uint amountIn_, address internalAccount_) external payable returns(uint) {
+
+    }
+
 }

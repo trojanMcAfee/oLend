@@ -38,8 +38,33 @@ contract ozMinter is ozTrading {
 
     event NewAccountCreated(address account);
 
-    
+
     function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+        if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
+        if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
+
+        uint msgValue;
+        InternalAccount account = s.internalAccounts[msg.sender];
+
+        if (address(account) == address(0)) {
+            account = _createUser();
+            emit NewAccountCreated(address(account));
+        }
+
+        if (tokenIn_ != s.ETH) {
+            IERC20(tokenIn_).transferFrom(msg.sender, address(account), amountIn_);
+            msgValue = 0;
+        } else {
+            msgValue = msg.value;
+        }
+
+        // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
+        // account.buyPT(amountIn_, address(account));
+        s.relayer.buyPT(amountIn_, address(account), tokenIn_);
+    }
+
+    
+    function lend2(uint amountIn_, address tokenIn_) external payable checkAavePool {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 

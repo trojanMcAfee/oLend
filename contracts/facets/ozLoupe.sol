@@ -32,6 +32,9 @@ contract ozLoupe is State, DiamondLoupeFacet {
             uint healthFactor
         ) = s.aavePool.getUserAccountData(account);
 
+        console.log('totalCollateralBase: ', totalCollateralBase);
+        console.log('availableBorrowsBase: ', availableBorrowsBase);
+
         userData = UserAccountData(
             account,
             totalCollateralBase,
