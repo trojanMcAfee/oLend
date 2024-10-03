@@ -59,8 +59,8 @@ contract ozMinter is ozTrading {
         }
 
         // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
-        // account.buyPT(amountIn_, address(account));
-        s.relayer.buyPT(amountIn_, address(account), tokenIn_);
+        // s.relayer.buyPT(amountIn_, address(account), tokenIn_);
+        account.buyPT(amountIn_, address(account), tokenIn_);
     }
 
     
