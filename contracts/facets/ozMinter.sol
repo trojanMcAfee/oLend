@@ -17,6 +17,7 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
 import {IPActionSwapPTV3} from "@pendle/core-v2/contracts/interfaces/IPActionSwapPTV3.sol";
 import {TokenOutput, LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {DataTypes} from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {InternalAccount} from "../InternalAccount.sol";
@@ -58,7 +59,7 @@ contract ozMinter is ozTrading {
             msgValue = msg.value;
         }
 
-        _setUserAccountData(address(account));
+        _setUserAccountData(tokenIn_, address(account), amountIn_);
 
         // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
         // s.relayer.buyPT(amountIn_, address(account), tokenIn_);
@@ -192,8 +193,12 @@ contract ozMinter is ozTrading {
         return account;
     }
 
-    function _setUserAccountData(address intAcc_, uint amountIn_) private {
-        s.usersAccountData[intAcc_].totalCollateralBase += amountIn_;
+    function _setUserAccountData(address lentToken_, address intAcc_, uint collateralIn_) private {
+        s.usersAccountData[intAcc_].totalCollateralBase += collateralIn_;
+
+        uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
+        s.usersAccountData[intAcc_].ltv = uint16(aaveReserveConfig);
+        s.usersAccountData[intAcc_].currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
 
         //setting the lent funds in UserAccountData.
         //then determine when pendle APY is used instead of aave, and vice versa --->

@@ -142,7 +142,7 @@ struct UserAccountData {
     uint totalDebtBase;
     uint availableBorrowsBase;
     uint currentLiquidationThreshold;
-    uint ltv;
+    uint16 ltv;
     uint healthFactor;
 }
 

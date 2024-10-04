@@ -41,7 +41,7 @@ contract ozLoupe is State, DiamondLoupeFacet {
             totalDebtBase,
             _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
             currentLiquidationThreshold,
-            ltv,
+            uint16(ltv),
             healthFactor
         );
     }

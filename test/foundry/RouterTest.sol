@@ -13,6 +13,7 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";   
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";      
 import {IPool, DataTypes} from "@aave/core-v3/contracts/interfaces/IPool.sol";
+// import {DataTypes} from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -335,25 +336,28 @@ contract RouterTest is Setup {
     }
 
 
-    function test_curveRouter() public {
+    function test_aave() public {
+        DataTypes.ReserveData memory reserveData = aavePool.getReserveData(address(USDC));
+        uint reserveConfig = reserveData.configuration.data;
+        console.log('reserveConfig: ', reserveConfig);
 
-        address[11] memory route = [
-            address(sDAI),
-            address(curvePool_sDAIFRAX),
-            address(FRAX),
-            address(0),
-            address(0),
-            address(0),
-            address(0),
-            address(0),
-            address(0),
-            address(0),
-            address(0)
-        ];
+        uint16 ltv = uint16(reserveConfig >> 241);
+        console.log('ltv: ', uint(ltv));
 
-        // uint[5][5] memory swap_params = [
+        console.log('');
+        bytes32 reserve_bytes = bytes32(reserveConfig);
+        bytes2 ltv_bytes = bytes2(reserve_bytes);
 
-        // ];
+        console.log('ltv_bytes: ', uint16(ltv_bytes));
+
+        console.log('');
+        console.log('ltv_3', uint16(reserveConfig));
+        console.log('');
+
+        uint16 bits16to31 = uint16(reserveConfig >> 16);
+        console.log('liq threshold', bits16to31);
+
+        
     }
 
 
