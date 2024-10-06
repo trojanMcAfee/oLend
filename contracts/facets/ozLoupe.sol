@@ -21,6 +21,11 @@ contract ozLoupe is State, DiamondLoupeFacet {
 
 
     function getUserAccountData(address user_) external view returns(UserAccountData memory userData) {
+        return s.usersAccountData[user_];
+    }
+
+
+    function getUserAccountData2(address user_) external view returns(UserAccountData memory userData) {
         address account = address(s.internalAccounts[user_]);
         
         (

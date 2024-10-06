@@ -14,7 +14,13 @@ contract SupplyTest is CoreMethods {
 
         UserAccountData memory userData = OZ.getUserAccountData(second_owner);
 
-        // console.log(userData);
+        console.log('internalAccount: ', userData.internalAccount);
+        console.log('totalCollateralBase: ', userData.totalCollateralBase);
+        console.log('totalDebtBase: ', userData.totalDebtBase);
+        console.log('availableBorrowsBase: ', userData.availableBorrowsBase);
+        console.log('currentLiquidationThreshold: ', userData.currentLiquidationThreshold);
+        console.log('ltv: ', uint(userData.ltv));
+        console.log('healthFactor: ', userData.healthFactor);
     }
 
 }

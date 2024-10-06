@@ -40,7 +40,7 @@ contract ozMinter is ozTrading {
     event NewAccountCreated(address account);
 
 
-    function lend2(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
@@ -59,7 +59,7 @@ contract ozMinter is ozTrading {
             msgValue = msg.value;
         }
 
-        _setUserAccountData(tokenIn_, address(account), amountIn_);
+        _setUserAccountData(tokenIn_, msg.sender, address(account), amountIn_);
 
         // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
         // s.relayer.buyPT(amountIn_, address(account), tokenIn_);
@@ -67,7 +67,7 @@ contract ozMinter is ozTrading {
     }
 
     
-    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+    function lend2(uint amountIn_, address tokenIn_) external payable checkAavePool {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
@@ -193,16 +193,25 @@ contract ozMinter is ozTrading {
         return account;
     }
 
-    function _setUserAccountData(address lentToken_, address intAcc_, uint collateralIn_) private {
-        UserAccountData memory userData = s.usersAccountData[intAcc_];
+    function _setUserAccountData(
+        address lentToken_, 
+        address user_, 
+        address intAcc_, 
+        uint collateralIn_
+    ) private {
+        UserAccountData storage userData = s.usersAccountData[user_];
         uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
         
+        // console.log('--- in _setUserAccountData ---');
+        // console.log('intAcc_: ', intAcc_);
+
         userData.internalAccount = intAcc_;
+        // console.log('userData.internalAccount2: ', s.usersAccountData[intAcc_].internalAccount);
+        // console.log('');
         userData.totalCollateralBase += collateralIn_;
         userData.ltv = uint16(aaveReserveConfig);
         userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
         userData.healthFactor = type(uint).max;
-
         
     }
 
