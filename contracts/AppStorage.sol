@@ -75,8 +75,8 @@ struct AppStorage {
 
     //System config
     address OZ;
-    uint[] openOrders;
-    mapping(address user => InternalAccount account) internalAccounts;
+    uint[] openOrders; //not used
+    mapping(address user => InternalAccount account) internalAccounts; //not used
     ozRelayer relayer;
     mapping(address token => bool isAuth) authTokens;
     address ETH;
@@ -84,6 +84,8 @@ struct AppStorage {
     mapping(address user => UserAccountData userData) usersAccountData;
     uint8 oracleRisk; //not used so far
     uint reserveConfig;
+
+    mapping(Model model => Params params) interestRateModels;
 }
 
 struct SysConfig {
@@ -92,6 +94,7 @@ struct SysConfig {
     address[] authTokens;
     address ETH;
     uint8 oracleRisk;
+    Params stableModel;
 }
 
 struct AaveConfig {
@@ -181,4 +184,14 @@ struct CrvSwapConfig {
     address[11] route;
     uint[5][5] swap_params;
     address[5] pools;
+}
+
+//interest rate models
+enum Model {
+    STABLE
+}
+
+struct Params {
+    uint16 ltv;
+    uint16 liqTreshold;
 }

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 
-import {UserAccountData, BalancerSwapConfig, Tokens, CrvSwapConfig} from "../AppStorage.sol";
+import {UserAccountData, BalancerSwapConfig, Tokens, CrvSwapConfig, Model} from "../AppStorage.sol";
 import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 // import {LimitOrderData} from "@pendle/core-v2/contracts/interfaces/IPAllActionTypeV3.sol";
 // import {LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
@@ -212,12 +212,20 @@ contract ozMinter is ozTrading {
         uint collateralIn_
     ) private {
         UserAccountData storage userData = s.usersAccountData[user_];
-        uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
+
+        if (lentToken_ == address(s.USDC)) {
+            // userData.ltv = uint16(aaveReserveConfig);
+            // userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
+
+            userData.ltv = s.interestRateModels[Model.STABLE].ltv;
+            userData.currentLiquidationThreshold = s.interestRateModels[Model.STABLE].liqTreshold;
+        }
+        // uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
     
         userData.internalAccount = intAcc_;
         userData.totalCollateralBase += collateralIn_;
-        userData.ltv = uint16(aaveReserveConfig);
-        userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
+        // userData.ltv = uint16(aaveReserveConfig);
+        // userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
         userData.healthFactor = type(uint).max;
         
         //Refactor this for gas ops since it's reading from storage constantly

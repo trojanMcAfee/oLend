@@ -24,7 +24,8 @@ import {
     SysConfig, 
     BalancerConfig, 
     CurveConfig,
-    CrvSwapConfig
+    CrvSwapConfig,
+    Model
 } from "../AppStorage.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
@@ -131,7 +132,8 @@ contract DiamondInit is ozTrading {
             s.authTokens[sys_.authTokens[i]] = true;
         }
 
-
+        //Interest rate models
+        s.interestRateModels[Model.STABLE] = sys_.stableModel;
 
 
         // add your own state variables 

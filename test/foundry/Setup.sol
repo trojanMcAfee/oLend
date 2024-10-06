@@ -13,7 +13,15 @@ import {DiamondInit} from "../../contracts/upgradeInitializers/DiamondInit.sol";
 import {IDiamondCut} from "../../contracts/interfaces/IDiamondCut.sol";
 import {ozIDiamond} from "../../contracts/interfaces/ozIDiamond.sol";
 import {Diamond} from "../../contracts/Diamond.sol";
-import {AaveConfig, ERC20s, PendleConfig, SysConfig, BalancerConfig, CurveConfig} from "../../contracts/AppStorage.sol";
+import {
+    AaveConfig, 
+    ERC20s, 
+    PendleConfig, 
+    SysConfig, 
+    BalancerConfig, 
+    CurveConfig, 
+    Params
+} from "../../contracts/AppStorage.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {ozUSDtoken} from "../../contracts/ozUSDtoken.sol";
 import {ozRelayer} from "../../contracts/ozRelayer.sol";
@@ -141,7 +149,16 @@ contract Setup is AppStorageTest {
         authTokens[1] = ETH;
         authTokens[2] = address(WETH); 
 
-        SysConfig memory sys = SysConfig(address(OZ), address(relayer), authTokens, ETH, oracleRisk);
+        Params memory stableModel = Params(uint16(7500), uint16(7800));
+
+        SysConfig memory sys = SysConfig(
+            address(OZ), 
+            address(relayer), 
+            authTokens, 
+            ETH, 
+            oracleRisk,
+            stableModel
+        );
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 

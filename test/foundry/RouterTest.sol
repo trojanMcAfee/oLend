@@ -393,15 +393,11 @@ contract RouterTest is CoreMethods {
 
 
     function test_bit() public {
-        uint16 ltv = 7500;
-        uint16 liq = 7800;
+        // uint16 ltv = 7500;
+        // uint16 liq = 7800;
         
-        
-        uint joint = uint(abi.encodePacked(ltv, liq));
-        console.log(joint);
-
-        //experimenting with joining nums to create reserveConfig from AppStorage.sol <--------
-
+        // uint joint = uint(abi.encodePacked(ltv, liq));
+        // console.log(joint);
     }
 
 
