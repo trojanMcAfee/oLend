@@ -141,7 +141,7 @@ contract Setup is AppStorageTest {
         authTokens[1] = ETH;
         authTokens[2] = address(WETH); 
 
-        SysConfig memory sys = SysConfig(address(OZ), address(relayer), authTokens, ETH);
+        SysConfig memory sys = SysConfig(address(OZ), address(relayer), authTokens, ETH, oracleRisk);
 
         bytes memory initData = abi.encodeWithSelector(
             initDiamond.init.selector, 

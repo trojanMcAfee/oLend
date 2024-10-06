@@ -82,6 +82,7 @@ struct AppStorage {
     address ETH;
     uint SCALE;
     mapping(address user => UserAccountData userData) usersAccountData;
+    uint8 oracleRisk;
 }
 
 struct SysConfig {
@@ -89,6 +90,7 @@ struct SysConfig {
     address relayer;
     address[] authTokens;
     address ETH;
+    uint8 oracleRisk;
 }
 
 struct AaveConfig {

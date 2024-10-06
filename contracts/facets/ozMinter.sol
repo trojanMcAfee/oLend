@@ -38,6 +38,12 @@ contract ozMinter is ozTrading {
     using HelpersLib for address;
 
     event NewAccountCreated(address account);
+    event NewAccountDataState(
+        uint totalCollateralBase,
+        uint16 ltv,
+        uint currentLiquidationThreshold,
+        uint healthFactor
+    );
 
 
     function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
@@ -207,18 +213,20 @@ contract ozMinter is ozTrading {
     ) private {
         UserAccountData storage userData = s.usersAccountData[user_];
         uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
-        
-        // console.log('--- in _setUserAccountData ---');
-        // console.log('intAcc_: ', intAcc_);
-
+    
         userData.internalAccount = intAcc_;
-        // console.log('userData.internalAccount2: ', s.usersAccountData[intAcc_].internalAccount);
-        // console.log('');
         userData.totalCollateralBase += collateralIn_;
         userData.ltv = uint16(aaveReserveConfig);
         userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
         userData.healthFactor = type(uint).max;
         
+        //Refactor this for gas ops since it's reading from storage constantly
+        emit NewAccountDataState(
+            userData.totalCollateralBase,
+            userData.ltv,
+            userData.currentLiquidationThreshold,
+            userData.healthFactor
+        );
     }
 
 

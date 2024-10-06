@@ -101,6 +101,7 @@ abstract contract StateVars is Test {
     
     //System
     ozRelayer relayer;
+    uint8 oracleRisk = 1; //0.01%
 
     //For testing purposes only
     address ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;

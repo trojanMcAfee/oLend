@@ -9,8 +9,28 @@ import "forge-std/console.sol";
 
 contract SupplyTest is CoreMethods {
 
+    event NewAccountDataState(
+        uint totalCollateralBase,
+        uint16 ltv,
+        uint currentLiquidationThreshold,
+        uint healthFactor
+    );
+
     function test_supply_USDC() public {
-        _lend(second_owner, address(USDC), USDC.balanceOf(second_owner));
+        uint amountIn = USDC.balanceOf(second_owner);
+        
+        vm.startPrank(second_owner);
+        USDC.approve(address(OZ), amountIn);
+
+        vm.expectEmit(false, false, false, true);
+        emit NewAccountDataState(
+            amountIn,
+            uint16(7500),
+            7800,
+            type(uint).max
+        );
+
+        OZ.lend(amountIn, address(USDC));
 
         UserAccountData memory userData = OZ.getUserAccountData(second_owner);
 
