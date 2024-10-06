@@ -134,6 +134,7 @@ contract DiamondInit is ozTrading {
 
         //Interest rate models
         s.interestRateModels[Model.STABLE] = sys_.stableModel;
+        s.ozTokens[address(s.USDC)] = IERC20(sys_.ozTokens[0]);
 
 
         // add your own state variables 

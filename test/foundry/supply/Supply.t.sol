@@ -32,15 +32,19 @@ contract SupplyTest is CoreMethods {
 
         OZ.lend(amountIn, address(USDC));
 
-        UserAccountData memory userData = OZ.getUserAccountData(second_owner);
+        console.log('ozUSDC bal 2nd owner: ', ozUSDC.balanceOf(second_owner));
 
-        console.log('internalAccount: ', userData.internalAccount);
-        console.log('totalCollateralBase: ', userData.totalCollateralBase);
-        console.log('totalDebtBase: ', userData.totalDebtBase);
-        console.log('availableBorrowsBase: ', userData.availableBorrowsBase);
-        console.log('currentLiquidationThreshold: ', userData.currentLiquidationThreshold);
-        console.log('ltv: ', uint(userData.ltv));
-        console.log('healthFactor: ', userData.healthFactor);
+
+
+        // UserAccountData memory userData = OZ.getUserAccountData(second_owner);
+
+        // console.log('internalAccount: ', userData.internalAccount);
+        // console.log('totalCollateralBase: ', userData.totalCollateralBase);
+        // console.log('totalDebtBase: ', userData.totalDebtBase);
+        // console.log('availableBorrowsBase: ', userData.availableBorrowsBase);
+        // console.log('currentLiquidationThreshold: ', userData.currentLiquidationThreshold);
+        // console.log('ltv: ', uint(userData.ltv));
+        // console.log('healthFactor: ', userData.healthFactor);
     }
 
 }

@@ -73,9 +73,11 @@ contract ozMinter is ozTrading {
 
         _setUserAccountData(tokenIn_, msg.sender, address(account), amountIn_);
 
+        account.buyPT(amountIn_, address(account), tokenIn_);
+        s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
+
         // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
         // s.relayer.buyPT(amountIn_, address(account), tokenIn_);
-        account.buyPT(amountIn_, address(account), tokenIn_);
     }
 
     
@@ -214,18 +216,12 @@ contract ozMinter is ozTrading {
         UserAccountData storage userData = s.usersAccountData[user_];
 
         if (lentToken_ == address(s.USDC)) {
-            // userData.ltv = uint16(aaveReserveConfig);
-            // userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
-
             userData.ltv = s.interestRateModels[Model.STABLE].ltv;
             userData.currentLiquidationThreshold = s.interestRateModels[Model.STABLE].liqTreshold;
         }
-        // uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
     
         userData.internalAccount = intAcc_;
         userData.totalCollateralBase += collateralIn_;
-        // userData.ltv = uint16(aaveReserveConfig);
-        // userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
         userData.healthFactor = type(uint).max;
         
         //Refactor this for gas ops since it's reading from storage constantly

@@ -30,6 +30,7 @@ import {ozOracle} from "../../contracts/facets/ozOracle.sol";
 import {ozIUSD} from "../../contracts/interfaces/ozIUSD.sol";
 import {AppStorageTest} from "./AppStorageTest.sol";
 import {ozLoupe} from "../../contracts/facets/ozLoupe.sol";
+import {ozUSDCtoken} from "../../contracts/ozTokens/ozUSDCtoken.sol";
 
 import "forge-std/console.sol";
 
@@ -151,13 +152,19 @@ contract Setup is AppStorageTest {
 
         Params memory stableModel = Params(uint16(7500), uint16(7800));
 
+        //Create ozTokens
+        ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC');
+        ozUSDC = IERC20(address(ozToken));
+        IERC20[1] memory ozTokens = [ozUSDC];
+
         SysConfig memory sys = SysConfig(
             address(OZ), 
             address(relayer), 
             authTokens, 
             ETH, 
             oracleRisk,
-            stableModel
+            stableModel,
+            ozTokens
         );
 
         bytes memory initData = abi.encodeWithSelector(

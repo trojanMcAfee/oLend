@@ -86,6 +86,7 @@ struct AppStorage {
     uint reserveConfig;
 
     mapping(Model model => Params params) interestRateModels;
+    mapping(address stablecoin => IERC20 ozToken) ozTokens;
 }
 
 struct SysConfig {
@@ -95,6 +96,7 @@ struct SysConfig {
     address ETH;
     uint8 oracleRisk;
     Params stableModel;
+    IERC20[1] ozTokens;
 }
 
 struct AaveConfig {

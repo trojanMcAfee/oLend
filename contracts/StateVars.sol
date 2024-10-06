@@ -84,6 +84,9 @@ abstract contract StateVars is Test {
     IERC20 public constant FRAX = IERC20(0x853d955aCEf822Db058eb8505911ED77F175b99e);
     IERC20 public constant WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
+    //ozTokens
+    IERC20 ozUSDC;
+
     //Diamond
     DiamondCutFacet cut;
     ozLoupe loupe;
