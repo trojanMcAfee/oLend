@@ -35,6 +35,11 @@ contract ozOracle is State {
 
     function getVariableBorrowAPY() external view returns(uint apy) {}
 
+    function getInternalSupplyRate() external view returns(uint) {
+        uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
+        return ptPrice;
+    }
+
     function _calculatePendleFixedAPY(bool formatted_) private view returns(uint) {
         uint ptPrice = s.sUSDeMarket.getPtToAssetRate(s.twapDuration);
         uint ytPrice = s.sUSDeMarket.getYtToAssetRate(s.twapDuration);

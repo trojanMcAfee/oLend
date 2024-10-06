@@ -28,5 +28,5 @@ interface ozIDiamond {
 
     function getVariableBorrowAPY() external view returns(uint);
     function getNetAPY(address token) external view returns(uint);
-
+    function getInternalSupplyRate() external view returns(uint);
 }

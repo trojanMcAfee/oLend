@@ -153,7 +153,7 @@ contract Setup is AppStorageTest {
         Params memory stableModel = Params(uint16(7500), uint16(7800));
 
         //Create ozTokens
-        ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC');
+        ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC', address(OZ));
         ozUSDC = IERC20(address(ozToken));
         IERC20[1] memory ozTokens = [ozUSDC];
 
@@ -193,7 +193,7 @@ contract Setup is AppStorageTest {
         } else if (id_ == 2) { // ozMinter
             length = 3;
         } else if (id_ == 3) { // ozOracle
-            length = 5;
+            length = 6;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -218,6 +218,7 @@ contract Setup is AppStorageTest {
             selectors[2] = oracle.getNetAPY.selector;
             selectors[3] = oracle.getBorrowingRates.selector;
             selectors[4] = oracle.getSupplyRates.selector;
+            selectors[5] = oracle.getInternalSupplyRate.selector;
         }
        
 
