@@ -45,10 +45,16 @@ contract ozMinter is ozTrading {
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
         uint msgValue;
-        InternalAccount account = s.internalAccounts[msg.sender];
+        InternalAccount account = InternalAccount(s.usersAccountData[msg.sender].internalAccount);
 
         if (address(account) == address(0)) {
-            account = _createUser();
+            account = new InternalAccount(
+                address(s.relayer),
+                s.ETH,
+                address(s.aaveGW),
+                address(s.aavePool),
+                address(s.aaveVariableDebtUSDCDelegate)
+            );
             emit NewAccountCreated(address(account));
         }
 
@@ -189,7 +195,7 @@ contract ozMinter is ozTrading {
             address(s.aavePool),
             address(s.aaveVariableDebtUSDCDelegate)
         );
-        s.internalAccounts[msg.sender] = account;
+        // s.internalAccounts[msg.sender] = account;
         return account;
     }
 
