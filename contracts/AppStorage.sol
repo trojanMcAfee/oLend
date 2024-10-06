@@ -82,7 +82,8 @@ struct AppStorage {
     address ETH;
     uint SCALE;
     mapping(address user => UserAccountData userData) usersAccountData;
-    uint8 oracleRisk;
+    uint8 oracleRisk; //not used so far
+    uint reserveConfig;
 }
 
 struct SysConfig {
