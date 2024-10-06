@@ -8,18 +8,20 @@ import {IPPrincipalToken} from "@pendle/core-v2/contracts/interfaces/IPPrincipal
 import {Setup} from "./Setup.sol";
 // import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
+import {UserAccountData} from "../../contracts/AppStorage.sol";
 import {stdStorage, StdStorage} from "forge-std/Test.sol";  
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";   
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";   
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";      
 import {IPool, DataTypes} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 // import {DataTypes} from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
+import {CoreMethods} from "./CoreMethods.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
 
 
-contract RouterTest is Setup { 
+contract RouterTest is CoreMethods { 
 
     using stdStorage for StdStorage;
     using PendlePYOracleLib for *;
@@ -350,12 +352,43 @@ contract RouterTest is Setup {
 
         console.log('ltv_bytes: ', uint16(ltv_bytes));
 
-        console.log('');
         console.log('ltv_3', uint16(reserveConfig));
-        console.log('');
 
         uint16 bits16to31 = uint16(reserveConfig >> 16);
         console.log('liq threshold', bits16to31);
+
+        console.log('');
+        console.log('USDC amountIn: ', USDC.balanceOf(second_owner));
+        _lend(second_owner, address(USDC), USDC.balanceOf(second_owner));
+
+        UserAccountData memory userData = OZ.getUserAccountData(second_owner);
+        address internalAccount = userData.internalAccount;
+
+        console.log('internalAccount: ', userData.internalAccount);
+        console.log('totalCollateralBase: ', userData.totalCollateralBase);
+        console.log('totalDebtBase: ', userData.totalDebtBase);
+        console.log('availableBorrowsBase: ', userData.availableBorrowsBase);
+        console.log('currentLiquidationThreshold: ', userData.currentLiquidationThreshold);
+        console.log('ltv: ', uint(userData.ltv));
+        console.log('healthFactor: ', userData.healthFactor);
+        
+        console.log('');
+
+        (
+            uint totalCollateralBase,
+            uint totalDebtBase,
+            uint availableBorrowsBase, 
+            uint currentLiquidationThreshold,
+            uint ltv2,
+            uint healthFactor
+        ) = aavePool.getUserAccountData(internalAccount);
+
+        console.log('totalCollateralBase: ', totalCollateralBase);
+        console.log('totalDebtBase: ', totalDebtBase);
+        console.log('availableBorrowsBase: ', availableBorrowsBase);
+        console.log('currentLiquidationThreshold: ', currentLiquidationThreshold);
+        console.log('ltv: ', ltv2);
+        console.log('healthFactor: ', healthFactor);
 
         
     }

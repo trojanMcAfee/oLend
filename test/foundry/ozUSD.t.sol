@@ -15,7 +15,6 @@ contract ozUSDTest is CoreMethods {
     }
 
     function test_lend_USDC() public {
-        console.log('usdc bal 2nd owner: ', USDC.balanceOf(second_owner));
         _lend(second_owner, address(USDC), USDC.balanceOf(second_owner));
     }
 

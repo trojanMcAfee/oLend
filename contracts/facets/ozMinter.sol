@@ -40,7 +40,7 @@ contract ozMinter is ozTrading {
     event NewAccountCreated(address account);
 
 
-    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+    function lend2(uint amountIn_, address tokenIn_) external payable checkAavePool {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
@@ -67,7 +67,7 @@ contract ozMinter is ozTrading {
     }
 
     
-    function lend2(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
@@ -194,14 +194,16 @@ contract ozMinter is ozTrading {
     }
 
     function _setUserAccountData(address lentToken_, address intAcc_, uint collateralIn_) private {
-        s.usersAccountData[intAcc_].totalCollateralBase += collateralIn_;
-
+        UserAccountData memory userData = s.usersAccountData[intAcc_];
         uint aaveReserveConfig = s.aavePool.getReserveData(lentToken_).configuration.data;
-        s.usersAccountData[intAcc_].ltv = uint16(aaveReserveConfig);
-        s.usersAccountData[intAcc_].currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
+        
+        userData.internalAccount = intAcc_;
+        userData.totalCollateralBase += collateralIn_;
+        userData.ltv = uint16(aaveReserveConfig);
+        userData.currentLiquidationThreshold = uint16(aaveReserveConfig >> 16);
+        userData.healthFactor = type(uint).max;
 
-        //setting the lent funds in UserAccountData.
-        //then determine when pendle APY is used instead of aave, and vice versa --->
+        
     }
 
 

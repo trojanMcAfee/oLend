@@ -39,7 +39,8 @@ contract ozLoupe is State, DiamondLoupeFacet {
             account,
             totalCollateralBase,
             totalDebtBase,
-            _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
+            // _applyDiscount(availableBorrowsBase), //apply this to the ones that need to be applied
+            availableBorrowsBase, 
             currentLiquidationThreshold,
             uint16(ltv),
             healthFactor
