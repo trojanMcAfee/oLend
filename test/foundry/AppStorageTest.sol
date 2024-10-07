@@ -32,6 +32,8 @@ contract AppStorageTest is StateVars {
         uint pendleFixedAPYformatted;
     }
 
+    // mapping(Model model => Params params) interestRateModels;
+
     /// @notice create a simple TokenInput struct without using any aggregators. For more info please refer to
     /// IPAllActionTypeV3.sol
     function createTokenInputStruct(address tokenIn, uint256 netTokenIn) internal view returns (TokenInput memory) {

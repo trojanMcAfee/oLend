@@ -56,7 +56,7 @@ contract Setup is AppStorageTest {
 
 
     //********* */
-
+    
     function _dealTokens() private {
         deal(address(sUSDe), address(this), 1_000 * 1e18);
         deal(address(USDC), second_owner, 10_000 * 1e6);
@@ -154,7 +154,7 @@ contract Setup is AppStorageTest {
         authTokens[1] = ETH;
         authTokens[2] = address(WETH); 
 
-        Params memory stableModel = Params(uint16(7500), uint16(7800));
+        Params memory stableModel = Params(ltvStable, liqThresholdStable);
 
         //Create ozTokens
         ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC', address(OZ));

@@ -46,7 +46,7 @@ contract ozMinter is ozTrading {
     );
 
 
-    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool {      
+    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool returns(uint) {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
@@ -73,8 +73,10 @@ contract ozMinter is ozTrading {
 
         _setUserAccountData(tokenIn_, msg.sender, address(account), amountIn_);
 
-        account.buyPT(amountIn_, address(account), tokenIn_);
+        uint amountOut = account.buyPT(amountIn_, address(account), tokenIn_);
         s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
+
+        return amountOut;
 
         // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
         // s.relayer.buyPT(amountIn_, address(account), tokenIn_);

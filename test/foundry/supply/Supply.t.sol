@@ -17,23 +17,31 @@ contract SupplyTest is CoreMethods {
     );
 
     function test_supply_USDC() public {
+        //Pre-conditions
         uint amountIn = USDC.balanceOf(second_owner);
+        uint balanceOzUSDC = ozUSDC.balanceOf(second_owner);
+
+        assertTrue(amountIn > 0, 'custom: amountIn 0');
+        assertTrue(balanceOzUSDC == 0, 'custom: balanceOzUSDC not 0');
         
+        //Actions
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
 
         vm.expectEmit(false, false, false, true);
         emit NewAccountDataState(
             amountIn,
-            uint16(7500),
-            7800,
+            ltvStable,
+            liqThresholdStable,
             type(uint).max
         );
 
-        OZ.lend(amountIn, address(USDC));
+        uint amountOutPT = OZ.lend(amountIn, address(USDC));
 
-        console.log('ozUSDC bal 2nd owner: ', ozUSDC.balanceOf(second_owner));
-
+        //Post-conditions
+        assertTrue(ozUSDC.balanceOf(second_owner) == amountIn, 'custom: ozUSDC bal no match');
+        assertTrue(USDC.balanceOf(second_owner) == 0, 'custom: USDC bal not 0');
+        assertTrue(amountOutPT > 0, 'custom: amountOutPT is 0');
 
 
         // UserAccountData memory userData = OZ.getUserAccountData(second_owner);

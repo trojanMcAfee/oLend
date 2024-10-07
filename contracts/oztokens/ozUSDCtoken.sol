@@ -29,7 +29,6 @@ contract ozUSDCtoken is ERC20 {
 
         OZ = ozIDiamond(oz_);
         lastRebaseTime = block.timestamp;
-        // previousRatePT = OZ.getInternalSupplyRate();
     }
 
 

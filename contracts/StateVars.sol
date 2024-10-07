@@ -108,4 +108,8 @@ abstract contract StateVars is Test {
 
     //For testing purposes only
     address ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+    //Interest Rate models
+    uint16 ltvStable = 7500;
+    uint16 liqThresholdStable = 7800;
 }
