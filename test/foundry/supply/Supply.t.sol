@@ -65,17 +65,37 @@ contract SupplyTest is CoreMethods {
         OZ.lend(amountIn, address(USDC));
         vm.stopPrank();
 
-        uint balanceOwnerOzUSDC = ozUSDC.balanceOf(second_owner);
-        console.log('balanceOwnerOzUSDC - pre rebase: ', balanceOwnerOzUSDC);
-        console.log('amountIn: ', amountIn);
+        uint balanceOwnerOzUSDC_preRebase = ozUSDC.balanceOf(second_owner);
+        assertTrue(balanceOwnerOzUSDC_preRebase == amountIn, 'custom: ozUSDC and amountIn diff');
+        console.log('balanceOwnerOzUSDC - pre rebase: ', balanceOwnerOzUSDC_preRebase);
+
+        uint supplyRate_preRebase = OZ.getInternalSupplyRate();
 
         //Actions
         _advanceInTime(24 hours);
         ozUSDC.rebase();
 
+
         //Post-conditions
-        balanceOwnerOzUSDC = ozUSDC.balanceOf(second_owner);
-        console.log('balanceOwnerOzUSDC - post rebase: ', balanceOwnerOzUSDC);
+        uint supplyRate_postRebase = OZ.getInternalSupplyRate();
+
+        // supplyRate_preRebase --- 100%
+        //         diff ------- x
+
+        uint rateGrowth = ((supplyRate_postRebase - supplyRate_preRebase) * 100) * 1e18 / supplyRate_preRebase;
+        console.log('rateGrowth ****: ', rateGrowth);
+        console.log('supplyRate_postRebase: ', supplyRate_postRebase);
+        console.log('supplyRate_preRebase: ', supplyRate_preRebase);
+        console.log('');
+
+        uint balanceOwnerOzUSDC_postRebase = ozUSDC.balanceOf(second_owner);
+        uint balanceGrowth = ((balanceOwnerOzUSDC_postRebase - balanceOwnerOzUSDC_preRebase) * 100) * 1e18 / balanceOwnerOzUSDC_preRebase;
+        console.log('balanceGrowth: ', balanceGrowth);
+
+        assertTrue(balanceGrowth / 1e10 == rateGrowth / 1e10, 'custom: balance and rate diff');
+        assertTrue(rateGrowth > balanceGrowth, 'custom: balance higher than rate');
+        assertTrue(balanceOwnerOzUSDC_postRebase > balanceOwnerOzUSDC_preRebase, 'custom: no gain rebase');
+        console.log('balanceOwnerOzUSDC - post rebase: ', balanceOwnerOzUSDC_postRebase);
 
 
     
