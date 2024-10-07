@@ -89,31 +89,16 @@ contract AppStorageTest is StateVars {
         vm.warp(block.timestamp + amountTime_);
 
         (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
-        // uint oneYear = 31536000;
-
         uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
         uint ptPrice = OZ.getInternalSupplyRate();
-        uint increasedPT = ptPrice + growthRateTime.mulDivDown(ptPrice, 100);
-
-        console.log('increasedPT: ', increasedPT);
-        console.log('original PT: ', ptPrice);
-        console.log('growthRateTime: ', growthRateTime); //good
-        console.log('pendleFixedAPY: ', pendleFixedAPY);
-        console.log('net growth PT: ', growthRateTime.mulDivDown(ptPrice, 100));
-
-        console.log('');
         uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
         uint netTotal = ptPrice + netGrowth;
-        console.log('netTotal: ', netTotal);
-        
-        revert('here99');
-
-        // ptPrice --- 100% 
-        //     x ----- growthRateTime
-
-        // pendleFixedAPY --- oneYear
-        //      x        ------ amountTime_
-
+    
+        vm.mockCall(
+            address(OZ),
+            abi.encodeWithSelector(OZ.getInternalSupplyRate.selector),
+            abi.encode(netTotal)
+        );    
     }
 
 

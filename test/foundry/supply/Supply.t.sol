@@ -61,7 +61,11 @@ contract SupplyTest is CoreMethods {
         OZ.lend(amountIn, address(USDC));
         vm.stopPrank();
 
+        console.log('pre time: ', OZ.getInternalSupplyRate());
+
         _advanceInTime(24 hours);
+
+        console.log('post time: ', OZ.getInternalSupplyRate());
 
 
     }
