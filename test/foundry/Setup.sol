@@ -31,11 +31,15 @@ import {ozIUSD} from "../../contracts/interfaces/ozIUSD.sol";
 import {AppStorageTest} from "./AppStorageTest.sol";
 import {ozLoupe} from "../../contracts/facets/ozLoupe.sol";
 import {ozUSDCtoken} from "../../contracts/ozTokens/ozUSDCtoken.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 import "forge-std/console.sol";
 
 
 contract Setup is AppStorageTest {
+
+    using Address for address;
+
 
     function setUp() public {
         vm.createSelectFork(vm.rpcUrl('ethereum'), currentBlock); //blockOwnerPT + 100 / currentBlock
@@ -178,6 +182,8 @@ contract Setup is AppStorageTest {
         );
         vm.prank(owner);
         OZ.diamondCut(cuts, address(initDiamond), initData);
+
+        address(ozUSDC).functionCall(abi.encodeWithSignature('setInitialRate()'));
     }
 
 
