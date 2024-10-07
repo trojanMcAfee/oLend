@@ -72,7 +72,7 @@ contract ozUSDTest is CoreMethods {
         console.log('aToken intAcc: ', aToken.balanceOf(internalAccount));
         console.log('');
 
-        _advanceInTime(365 days, internalAccount, testToken);
+        _advanceInTime2(365 days, internalAccount, testToken);
 
         console.log('usdc debt intAcc - aave - post time: ', aaveVariableDebtUSDC.balanceOf(internalAccount));
         console.log('aToken intAcc - aave - post time: ', aToken.balanceOf(internalAccount));

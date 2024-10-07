@@ -54,11 +54,14 @@ contract SupplyTest is CoreMethods {
 
 
     function test_supply_and_rebase_USDC() public {
-        // vm.startPrank(second_owner);
-        // USDC.approve(address(OZ), amountIn);
-      
-        // uint amountOutPT = OZ.lend(amountIn, address(USDC));
-        // vm.stopPrank();
+        uint amountIn = USDC.balanceOf(second_owner);
+
+        vm.startPrank(second_owner);
+        USDC.approve(address(OZ), amountIn);
+        OZ.lend(amountIn, address(USDC));
+        vm.stopPrank();
+
+        _advanceInTime(24 hours);
 
 
     }

@@ -85,7 +85,39 @@ contract AppStorageTest is StateVars {
     }
 
 
-    function _advanceInTime(uint amountTime_, address intAcc_, address token_) internal {
+    function _advanceInTime(uint amountTime_) internal {
+        vm.warp(block.timestamp + amountTime_);
+
+        (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
+        // uint oneYear = 31536000;
+
+        uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
+        uint ptPrice = OZ.getInternalSupplyRate();
+        uint increasedPT = ptPrice + growthRateTime.mulDivDown(ptPrice, 100);
+
+        console.log('increasedPT: ', increasedPT);
+        console.log('original PT: ', ptPrice);
+        console.log('growthRateTime: ', growthRateTime); //good
+        console.log('pendleFixedAPY: ', pendleFixedAPY);
+        console.log('net growth PT: ', growthRateTime.mulDivDown(ptPrice, 100));
+
+        console.log('');
+        uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
+        uint netTotal = ptPrice + netGrowth;
+        console.log('netTotal: ', netTotal);
+        
+        revert('here99');
+
+        // ptPrice --- 100% 
+        //     x ----- growthRateTime
+
+        // pendleFixedAPY --- oneYear
+        //      x        ------ amountTime_
+
+    }
+
+
+    function _advanceInTime2(uint amountTime_, address intAcc_, address token_) internal {
         uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
         (uint supplyAPYformatted, uint pendleFixedAPYformatted) = OZ.getSupplyRates(token_, true);
         address debtToken;
