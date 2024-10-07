@@ -67,7 +67,6 @@ contract SupplyTest is CoreMethods {
 
         uint balanceOwnerOzUSDC_preRebase = ozUSDC.balanceOf(second_owner);
         assertTrue(balanceOwnerOzUSDC_preRebase == amountIn, 'custom: ozUSDC and amountIn diff');
-        console.log('balanceOwnerOzUSDC - pre rebase: ', balanceOwnerOzUSDC_preRebase);
 
         uint supplyRate_preRebase = OZ.getInternalSupplyRate();
 
@@ -75,32 +74,28 @@ contract SupplyTest is CoreMethods {
         _advanceInTime(24 hours);
         ozUSDC.rebase();
 
-
         //Post-conditions
         uint supplyRate_postRebase = OZ.getInternalSupplyRate();
 
-        // supplyRate_preRebase --- 100%
-        //         diff ------- x
-
         uint rateGrowth = ((supplyRate_postRebase - supplyRate_preRebase) * 100) * 1e18 / supplyRate_preRebase;
-        console.log('rateGrowth ****: ', rateGrowth);
-        console.log('supplyRate_postRebase: ', supplyRate_postRebase);
-        console.log('supplyRate_preRebase: ', supplyRate_preRebase);
-        console.log('');
-
         uint balanceOwnerOzUSDC_postRebase = ozUSDC.balanceOf(second_owner);
         uint balanceGrowth = ((balanceOwnerOzUSDC_postRebase - balanceOwnerOzUSDC_preRebase) * 100) * 1e18 / balanceOwnerOzUSDC_preRebase;
-        console.log('balanceGrowth: ', balanceGrowth);
 
         assertTrue(balanceGrowth / 1e10 == rateGrowth / 1e10, 'custom: balance and rate diff');
-        assertTrue(rateGrowth > balanceGrowth, 'custom: balance higher than rate');
         assertTrue(balanceOwnerOzUSDC_postRebase > balanceOwnerOzUSDC_preRebase, 'custom: no gain rebase');
-        console.log('balanceOwnerOzUSDC - post rebase: ', balanceOwnerOzUSDC_postRebase);
+        
+        /**
+         * This check proves that the protocol is solvent by giving less to users, in balances, in
+         * comparison to the actual growth rate of the backing asset (PT). 
+         */
+        assertTrue(rateGrowth > balanceGrowth, 'custom: balance higher than rate');
+    }
 
 
-    
+    function test_supply_rebase_redemption_USDC() public {
 
 
+        //<---- continue here ***
     }
 
 }

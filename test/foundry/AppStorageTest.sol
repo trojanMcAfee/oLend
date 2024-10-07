@@ -93,13 +93,6 @@ contract AppStorageTest is StateVars {
         uint ptPrice = OZ.getInternalSupplyRate();
         uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
         uint netTotal = ptPrice + netGrowth;
-
-        console.log('');
-        console.log('growthRateTime: ', growthRateTime);
-        console.log('netGrowth: ', netGrowth);
-        console.log('netTotal: ', netTotal);
-        console.log('ptPrice original: ', ptPrice);
-        console.log('');
     
         vm.mockCall(
             address(OZ),

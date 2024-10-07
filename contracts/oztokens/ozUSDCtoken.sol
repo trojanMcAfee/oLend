@@ -43,14 +43,6 @@ contract ozUSDCtoken is ERC20 {
 
     function balanceOf(address account_) public view override returns(uint) {
         uint underlyingBalance = super.balanceOf(account_);
-
-        console.log('');
-        console.log('--- in balanceOf ---');
-        console.log('underlyingBalance: ', underlyingBalance);
-        console.log('scalingFactor: ', scalingFactor);
-        console.log('sum: ', (underlyingBalance * scalingFactor) / 1e18);
-        console.log('');
-
         return (underlyingBalance * scalingFactor) / 1e18;
     }
 
@@ -60,21 +52,11 @@ contract ozUSDCtoken is ERC20 {
         uint currentRatePT = OZ.getInternalSupplyRate();
         if (currentRatePT < previousRatePT) revert OZError04();
 
-        console.log('');
-        console.log('--- in rebase ---');
-        console.log('currentRatePT: ', currentRatePT);
-        console.log('previousRatePT: ', previousRatePT);
-
         uint growthRate = ((currentRatePT - previousRatePT) * 1e18) / previousRatePT;
         scalingFactor = (scalingFactor * (1e18 + growthRate)) / 1e18;
 
         previousRatePT = currentRatePT;
         lastRebaseTime = block.timestamp;
-
-        
-        console.log('scalingFactor: ', scalingFactor);
-        console.log('growthRate: ', growthRate);
-        console.log('');
 
         emit Rebase(scalingFactor, lastRebaseTime);
     }
