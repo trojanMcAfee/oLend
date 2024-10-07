@@ -7,6 +7,10 @@ import {UserAccountData} from "../../../contracts/AppStorage.sol";
 
 import "forge-std/console.sol";
 
+interface MyRebase {
+    function rebase() external;
+}
+
 contract SupplyTest is CoreMethods {
 
     event NewAccountDataState(
@@ -54,18 +58,29 @@ contract SupplyTest is CoreMethods {
 
 
     function test_supply_and_rebase_USDC() public {
+        //Pre-conditions
         uint amountIn = USDC.balanceOf(second_owner);
+        assertTrue(amountIn > 0, 'custom: amountIn is 0');
 
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
         OZ.lend(amountIn, address(USDC));
         vm.stopPrank();
 
-        console.log('pre time: ', OZ.getInternalSupplyRate());
+        uint balanceOwnerOzUSDC = ozUSDC.balanceOf(second_owner);
+        console.log('balanceOwnerOzUSDC - pre rebase: ', balanceOwnerOzUSDC);
+        console.log('amountIn: ', amountIn);
 
+        //Actions
         _advanceInTime(24 hours);
+        MyRebase(address(ozUSDC)).rebase();
 
-        console.log('post time: ', OZ.getInternalSupplyRate());
+        //Post-conditions
+        balanceOwnerOzUSDC = ozUSDC.balanceOf(second_owner);
+        console.log('balanceOwnerOzUSDC - post rebase: ', balanceOwnerOzUSDC);
+
+
+    
 
 
     }
