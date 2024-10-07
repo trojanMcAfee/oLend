@@ -13,6 +13,7 @@ import {IPool} from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import {IERC4626} from "../lib/forge-std/src/interfaces/IERC4626.sol";
 import {IPool as IPoolBal, IVault, IAsset} from "./interfaces/IBalancer.sol";
 import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "./interfaces/ICurve.sol";
+import {ozIERC20} from "./interfaces/ozIERC20.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 
 
@@ -86,7 +87,7 @@ struct AppStorage {
     uint reserveConfig;
 
     mapping(Model model => Params params) interestRateModels;
-    mapping(address stablecoin => IERC20 ozToken) ozTokens;
+    mapping(address stablecoin => ozIERC20 ozToken) ozTokens;
 }
 
 struct SysConfig {
@@ -96,7 +97,7 @@ struct SysConfig {
     address ETH;
     uint8 oracleRisk;
     Params stableModel;
-    IERC20[1] ozTokens;
+    ozIERC20[1] ozTokens;
 }
 
 struct AaveConfig {

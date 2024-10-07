@@ -26,6 +26,7 @@ import {ozOracle} from "../contracts/facets/ozOracle.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol"; 
 import {IPool as IPoolBal, IVault} from "../contracts/interfaces/IBalancer.sol";  
 import {ozIUSD} from "../contracts/interfaces/ozIUSD.sol";   
+import {ozIERC20} from "../contracts/interfaces/ozIERC20.sol";   
 import {ICrvRouter, ICrvAddressProvider, IPoolCrv} from "../contracts/interfaces/ICurve.sol";   
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
@@ -85,7 +86,7 @@ abstract contract StateVars is Test {
     IERC20 public constant WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
     //ozTokens
-    IERC20 ozUSDC;
+    ozIERC20 ozUSDC;
 
     //Diamond
     DiamondCutFacet cut;

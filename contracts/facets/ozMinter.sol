@@ -205,7 +205,6 @@ contract ozMinter is ozTrading {
             address(s.aavePool),
             address(s.aaveVariableDebtUSDCDelegate)
         );
-        // s.internalAccounts[msg.sender] = account;
         return account;
     }
 

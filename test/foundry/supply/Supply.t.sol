@@ -7,9 +7,7 @@ import {UserAccountData} from "../../../contracts/AppStorage.sol";
 
 import "forge-std/console.sol";
 
-interface MyRebase {
-    function rebase() external;
-}
+
 
 contract SupplyTest is CoreMethods {
 
@@ -73,7 +71,7 @@ contract SupplyTest is CoreMethods {
 
         //Actions
         _advanceInTime(24 hours);
-        MyRebase(address(ozUSDC)).rebase();
+        ozUSDC.rebase();
 
         //Post-conditions
         balanceOwnerOzUSDC = ozUSDC.balanceOf(second_owner);

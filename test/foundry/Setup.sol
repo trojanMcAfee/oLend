@@ -26,6 +26,7 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 import {ozUSDtoken} from "../../contracts/ozUSDtoken.sol";
 import {ozRelayer} from "../../contracts/ozRelayer.sol";
 import {IERC20} from "../../contracts/interfaces/IERC20.sol";
+import {ozIERC20} from "../../contracts/interfaces/ozIERC20.sol";
 import {ozOracle} from "../../contracts/facets/ozOracle.sol";
 import {ozIUSD} from "../../contracts/interfaces/ozIUSD.sol";
 import {AppStorageTest} from "./AppStorageTest.sol";
@@ -158,8 +159,8 @@ contract Setup is AppStorageTest {
 
         //Create ozTokens
         ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC', address(OZ));
-        ozUSDC = IERC20(address(ozToken));
-        IERC20[1] memory ozTokens = [ozUSDC];
+        ozUSDC = ozIERC20(address(ozToken));
+        ozIERC20[1] memory ozTokens = [ozUSDC];
 
         SysConfig memory sys = SysConfig(
             address(OZ), 
