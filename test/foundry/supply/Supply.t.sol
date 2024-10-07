@@ -16,6 +16,10 @@ contract SupplyTest is CoreMethods {
         uint healthFactor
     );
 
+
+    /**
+     * Tests that 
+     */
     function test_supply_USDC() public {
         //Pre-conditions
         uint amountIn = USDC.balanceOf(second_owner);
@@ -37,22 +41,26 @@ contract SupplyTest is CoreMethods {
         );
 
         uint amountOutPT = OZ.lend(amountIn, address(USDC));
+        vm.stopPrank();
 
         //Post-conditions
+        address intAcc = OZ.getUserAccountData(second_owner).internalAccount;
+
         assertTrue(ozUSDC.balanceOf(second_owner) == amountIn, 'custom: ozUSDC bal no match');
         assertTrue(USDC.balanceOf(second_owner) == 0, 'custom: USDC bal not 0');
         assertTrue(amountOutPT > 0, 'custom: amountOutPT is 0');
+        assertTrue(amountOutPT == sUSDe_PT_26SEP.balanceOf(intAcc), 'custom: PTs dont match');
+    }
 
 
-        // UserAccountData memory userData = OZ.getUserAccountData(second_owner);
+    function test_supply_and_rebase_USDC() public {
+        // vm.startPrank(second_owner);
+        // USDC.approve(address(OZ), amountIn);
+      
+        // uint amountOutPT = OZ.lend(amountIn, address(USDC));
+        // vm.stopPrank();
 
-        // console.log('internalAccount: ', userData.internalAccount);
-        // console.log('totalCollateralBase: ', userData.totalCollateralBase);
-        // console.log('totalDebtBase: ', userData.totalDebtBase);
-        // console.log('availableBorrowsBase: ', userData.availableBorrowsBase);
-        // console.log('currentLiquidationThreshold: ', userData.currentLiquidationThreshold);
-        // console.log('ltv: ', uint(userData.ltv));
-        // console.log('healthFactor: ', userData.healthFactor);
+
     }
 
 }
