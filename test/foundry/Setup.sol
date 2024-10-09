@@ -200,7 +200,7 @@ contract Setup is AppStorageTest {
         } else if (id_ == 2) { // ozMinter
             length = 3;
         } else if (id_ == 3) { // ozOracle
-            length = 6;
+            length = 7;
         }
 
         bytes4[] memory selectors = new bytes4[](length);
@@ -226,6 +226,7 @@ contract Setup is AppStorageTest {
             selectors[3] = oracle.getBorrowingRates.selector;
             selectors[4] = oracle.getSupplyRates.selector;
             selectors[5] = oracle.getInternalSupplyRate.selector;
+            selectors[6] = oracle.getExchangeRate.selector;
         }
        
 

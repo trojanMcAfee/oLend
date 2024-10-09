@@ -245,7 +245,12 @@ contract ozMinter is ozTrading {
 
     function _setExchangeRate(uint amountPT, uint amountTokenIn_) private {
         s.ozUSDCtoPTrate = amountPT.mulDivDown(1e18, amountTokenIn_ * 1e12);
+        
+        console.log('--- in _setExchangeRate() ---');
         console.log('s.ozUSDCtoPTrate: ', s.ozUSDCtoPTrate);
+        console.log('amountPT: ', amountPT);
+        console.log('amountTokenIn_: ', amountTokenIn_);
+        console.log('');
     }
 
 

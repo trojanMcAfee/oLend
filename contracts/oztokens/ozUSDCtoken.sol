@@ -80,16 +80,26 @@ contract ozUSDCtoken is ERC20 {
 
         uint amountInPT = amountIn_.mulDivDown(ptPrice, 1e12);
 
-        console.log('amountIn: ', amountIn_);
+        console.log('--- in redeem() ---');
+        console.log('amountIn - ozUSDC: ', amountIn_);
         console.log('ptPrice: ', ptPrice);
         console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
         console.log('amountInPT: ', amountInPT);
         console.log('pt bal - intAcc: ', sUSDe_PT_26SEP.balanceOf(address(account)));
 
+        uint ozUSDCtoPTrate = OZ.getExchangeRate();
+        console.log('ozUSDCtoPTrate: ', ozUSDCtoPTrate);
+
+        // amountIn * 1e12
 
         revert('here');
 
-        uint ozUSDCtoPTrate = OZ.getExchangeRate();
+
+        // 1 ozUSDC --- ozUSDCtoPTrate
+        // amountIn_ ---- x
+
+        // amountIn_.mulDivDown(OZ.getExchangeRate());
+
 
         account.sellPT(amountIn_, address(account), tokenOut_);
 

@@ -114,8 +114,8 @@ contract ozOracle is State {
 
 
     //Get the rate between ozUSDC and PT (sUSDe-PT)
-    // function getExchangeRate() external view returns(uint) {
-    //     return s.ozUSDCtoPTrate;
-    // }
+    function getExchangeRate() external view returns(uint) {
+        return s.ozUSDCtoPTrate;
+    }
 
 }
