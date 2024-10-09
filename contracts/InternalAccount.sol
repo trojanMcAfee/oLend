@@ -11,6 +11,7 @@ import {IERC20} from "./interfaces/IERC20.sol";
 import {IPAllActionV3, SwapData, LimitOrderData, ApproxParams} from "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import {HelpersLib} from "./libraries/HelpersLib.sol";
+import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
 
 import "forge-std/console.sol";
 
@@ -18,6 +19,7 @@ import "forge-std/console.sol";
 contract InternalAccount {
 
     using HelpersLib for address;
+    using PendlePYOracleLib for IPMarket;
 
     address public relayer;
     address ETH;
@@ -70,15 +72,19 @@ contract InternalAccount {
     }
 
 
-    function buyPT(uint amountIn_, address intAccount_, address tokenIn_) external returns(uint) {        
+    function buyPT(uint amountIn_, address intAcc_, address tokenIn_) external returns(uint) {        
         uint sUSDeOut;
         uint minTokenOut = 0;
+
+        console.log('');
+        console.log('--- in buyPT() ---');
+        console.log('amountIn_ - usdc: ', amountIn_);
         
         if (tokenIn_ == address(USDC)) {
             sUSDeOut = _swapUni(
                 address(USDC), 
                 address(sUSDe), 
-                intAccount_, 
+                intAcc_, 
                 amountIn_, 
                 minTokenOut
             );
@@ -88,7 +94,7 @@ contract InternalAccount {
         uint minPTout = 0;
 
         (uint amountOutPT,,) = pendleRouter.swapExactTokenForPt(
-            intAccount_, 
+            intAcc_, 
             address(sUSDeMarket), 
             minPTout, 
             defaultApprox, //check StructGen.sol for a more gas-efficient impl of this
@@ -96,7 +102,26 @@ contract InternalAccount {
             emptyLimit
         );
 
+        console.log('amountOutPT: ', amountOutPT);
+        uint32 duration = 15;
+        console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(duration));
+        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(duration));
+        console.log('');
+
         return amountOutPT;
+    }
+
+    
+    function sellPT(uint amountInPT_, address intAcc_, address tokenOut_) external returns(uint) {
+        
+        // pendleRouter.swapExactPtForToken(
+        //     receiver, 
+        //     market, 
+        //     exactPtIn, 
+        //     output, 
+        //     limit
+        // );
+
     }
 
 

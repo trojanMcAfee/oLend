@@ -4,7 +4,12 @@ pragma solidity 0.8.26;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
+import {IERC20} from "../interfaces/IERC20.sol";
 import {OZError03, OZError04} from "../OZErrors.sol";
+import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
+import {InternalAccount} from "../InternalAccount.sol";
+import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
+import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 
 import "forge-std/console.sol";
 
@@ -16,6 +21,9 @@ contract ozUSDCtoken is ERC20 {
     uint lastRebaseTime;
     uint rebaseInterval = 24 hours;
     uint previousRatePT;
+
+    using PendlePYOracleLib for IPMarket;
+    using FixedPointMathLib for uint;
 
     event Rebase(uint indexed newScalingFactor, uint indexed rebaseTime);
 
@@ -47,9 +55,43 @@ contract ozUSDCtoken is ERC20 {
     }
 
 
-    function redeem(uint amountIn_, address owner_, address receiver_) external returns(uint) {
+    function redeem(
+        uint amountIn_, 
+        address owner_, 
+        address receiver_,
+        address tokenOut_
+    ) external returns(uint) {
+        console.log('');
+        IPMarket sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
+        IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+        IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
+
         uint underlyingAmount = (amountIn_ * 1e18) / scalingFactor;
         _burn(owner_, underlyingAmount);
+
+        InternalAccount account = InternalAccount(OZ.getUserAccountData(owner_).internalAccount);
+        
+        uint32 twapDuration = 15;
+        uint ptPrice = sUSDeMarket.getPtToAssetRate(twapDuration);
+        ptPrice = tokenOut_ == address(USDC) ? ptPrice / 1e12 : ptPrice;
+
+        // 1 ozUSDC --- ptPrice
+        // amountIn --- x 
+
+        uint amountInPT = amountIn_.mulDivDown(ptPrice, 1e12);
+
+        console.log('amountIn: ', amountIn_);
+        console.log('ptPrice: ', ptPrice);
+        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
+        console.log('amountInPT: ', amountInPT);
+        console.log('pt bal - intAcc: ', sUSDe_PT_26SEP.balanceOf(address(account)));
+
+
+        revert('here');
+
+        uint ozUSDCtoPTrate = OZ.getExchangeRate();
+
+        account.sellPT(amountIn_, address(account), tokenOut_);
 
     }
 

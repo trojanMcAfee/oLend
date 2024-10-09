@@ -24,6 +24,7 @@ import {InternalAccount} from "../InternalAccount.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
+import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import "../OZErrors.sol";
 
 import "forge-std/console.sol";
@@ -34,7 +35,7 @@ contract ozMinter is ozTrading {
 
     using SafeERC20 for IERC20;
     using Address for address;
-    // using FixedPointMathLib for uint;
+    using FixedPointMathLib for uint;
     using HelpersLib for address;
 
     event NewAccountCreated(address account);
@@ -76,6 +77,12 @@ contract ozMinter is ozTrading {
 
         uint amountOut = account.buyPT(amountIn_, address(account), tokenIn_);
         s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
+
+        _setExchangeRate(amountOut, amountIn_);
+
+        // console.log('--- in lend() ---');
+        // console.log('amountIn_: ', amountIn_);
+        // console.log('amountOut - PT: ', amountOut);
 
         return amountOut;
 
@@ -233,6 +240,12 @@ contract ozMinter is ozTrading {
             userData.currentLiquidationThreshold,
             userData.healthFactor
         );
+    }
+
+
+    function _setExchangeRate(uint amountPT, uint amountTokenIn_) private {
+        s.ozUSDCtoPTrate = amountPT.mulDivDown(1e18, amountTokenIn_ * 1e12);
+        console.log('s.ozUSDCtoPTrate: ', s.ozUSDCtoPTrate);
     }
 
 

@@ -87,7 +87,10 @@ struct AppStorage {
     uint reserveConfig;
 
     mapping(Model model => Params params) interestRateModels;
+
+    //ozTokens
     mapping(address stablecoin => ozIERC20 ozToken) ozTokens;
+    uint ozUSDCtoPTrate;
 }
 
 struct SysConfig {
