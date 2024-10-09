@@ -46,6 +46,7 @@ contract ozMinter is ozTrading {
     );
 
 
+    //mints ozTokens (ozUSDC)
     function lend(uint amountIn_, address tokenIn_) external payable checkAavePool returns(uint) {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
@@ -147,7 +148,7 @@ contract ozMinter is ozTrading {
 
 
 
-
+    //redeems ozUSD
     function performRedemption(
         uint amount_, //it should be s.pendlePT.balanceOf(address(this)) from below
         uint minAmountOut_,

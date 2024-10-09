@@ -93,9 +93,20 @@ contract SupplyTest is CoreMethods {
 
 
     function test_supply_rebase_redemption_USDC() public {
+        //Pre-conditions
+        test_supply_and_rebase_USDC();
+
+        uint balancePreRedeemOzUSDC = ozUSDC.balanceOf(second_owner);
+        console.log('balancePreRedeemOzUSDC: ', balancePreRedeemOzUSDC);
+
+        vm.startPrank(second_owner);
+        ozUSDC.approve(address(ozUSDC), balancePreRedeemOzUSDC);
+        ozUSDC.redeem(balancePreRedeemOzUSDC, second_owner, second_owner);
+        
+        uint balancePostRedeemOzUSDC = ozUSDC.balanceOf(second_owner);
+        console.log('balancePostRedeemOzUSDC: ', balancePostRedeemOzUSDC);
 
 
-        //<---- continue here ***
     }
 
 }

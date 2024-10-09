@@ -37,7 +37,7 @@ contract ozUSDCtoken is ERC20 {
         previousRatePT = OZ.getInternalSupplyRate();
     }
 
-    function mint(address account_, uint amount_) external {
+    function mint(address account_, uint amount_) external { //put an onlyAuth mod 
         _mint(account_, amount_);
     }
 
@@ -46,6 +46,16 @@ contract ozUSDCtoken is ERC20 {
         return (underlyingBalance * scalingFactor) / 1e18;
     }
 
+
+    function redeem(uint amountIn_, address owner_, address receiver_) external returns(uint) {
+        uint underlyingAmount = (amountIn_ * 1e18) / scalingFactor;
+        _burn(owner_, underlyingAmount);
+
+    }
+
+
+
+    //this should be managed in a way from OZ (pref ozMinter)
     function rebase() public {
         if (block.timestamp < lastRebaseTime + rebaseInterval) revert OZError03();
 

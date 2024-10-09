@@ -7,4 +7,5 @@ import {IERC20} from "./IERC20.sol";
 
 interface ozIERC20 is IERC20 {
     function rebase() external;
+    function redeem(uint amountIn_, address owner_, address receiver_) external returns(uint);
 }
