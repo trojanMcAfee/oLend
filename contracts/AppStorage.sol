@@ -86,7 +86,10 @@ struct AppStorage {
     uint8 oracleRisk; //not used so far
     uint reserveConfig;
 
+    //Lending
     mapping(Model model => Params params) interestRateModels;
+    mapping(address sender => uint amountPT) lendingOps;
+    // mapping(address sender => uint rate) ozToPtRates;
 
     //ozTokens
     mapping(address stablecoin => ozIERC20 ozToken) ozTokens;

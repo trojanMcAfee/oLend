@@ -20,7 +20,7 @@ contract SupplyTest is CoreMethods {
 
 
     /**
-     * Tests that 
+     * Tests that user can lend/supply USDC and mint ozUSDC. 
      */
     function test_supply_USDC() public {
         //Pre-conditions

@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+// import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {OZError03, OZError04} from "../OZErrors.sol";
@@ -10,11 +10,12 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+import {ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
 import "forge-std/console.sol";
+//do a custom ERC4626 from solmate and balanceOf *****
 
-
-contract ozUSDCtoken is ERC20 {
+contract ozUSDCtoken is ERC4626 {
 
     ozIDiamond OZ;
     uint scalingFactor = 1e18;
@@ -31,8 +32,9 @@ contract ozUSDCtoken is ERC20 {
     constructor(
         string memory name_, 
         string memory symbol_,
-        address oz_
-    ) ERC20(name_, symbol_) {
+        address oz_,
+        IERC20 underlying_
+    ) ERC4626(underlying_) {
         require(oz_ != address(0), 'ozUSDCtoken: oz_ is zero');
 
         OZ = ozIDiamond(oz_);
@@ -46,11 +48,12 @@ contract ozUSDCtoken is ERC20 {
     }
 
     function mint(address account_, uint amount_) external { //put an onlyAuth mod 
-        _mint(account_, amount_);
+        // _mint(account_, amount_);
+        deposit(amount_, account_);
     }
 
-    function balanceOf(address account_) public view override returns(uint) {
-        uint underlyingBalance = super.balanceOf(account_);
+    function balanceOf(address account) public view override(IERC20) returns(uint256) {
+        uint underlyingBalance = super.balanceOf(account);
         return (underlyingBalance * scalingFactor) / 1e18;
     }
 

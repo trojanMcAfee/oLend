@@ -78,7 +78,8 @@ contract ozMinter is ozTrading {
         uint amountOut = account.buyPT(amountIn_, address(account), tokenIn_);
         s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
 
-        _setExchangeRate(amountOut, amountIn_);
+        _setInternalRate(amountOut, amountIn_); //perhaps this is not needed
+        s.lendingOps[msg.sender] += amountOut;
 
         // console.log('--- in lend() ---');
         // console.log('amountIn_: ', amountIn_);
@@ -243,10 +244,10 @@ contract ozMinter is ozTrading {
     }
 
 
-    function _setExchangeRate(uint amountPT, uint amountTokenIn_) private {
+    function _setInternalRate(uint amountPT, uint amountTokenIn_) private {
         s.ozUSDCtoPTrate = amountPT.mulDivDown(1e18, amountTokenIn_ * 1e12);
-        
-        console.log('--- in _setExchangeRate() ---');
+
+        console.log('--- in _setInternalRate() ---');
         console.log('s.ozUSDCtoPTrate: ', s.ozUSDCtoPTrate);
         console.log('amountPT: ', amountPT);
         console.log('amountTokenIn_: ', amountTokenIn_);

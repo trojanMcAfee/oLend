@@ -158,7 +158,7 @@ contract Setup is AppStorageTest {
         Params memory stableModel = Params(ltvStable, liqThresholdStable);
 
         //Create ozTokens
-        ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC', address(OZ));
+        ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC', address(OZ), USDC);
         ozUSDC = ozIERC20(address(ozToken));
         ozIERC20[1] memory ozTokens = [ozUSDC];
 
