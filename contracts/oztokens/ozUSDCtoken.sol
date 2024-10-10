@@ -5,13 +5,16 @@ pragma solidity 0.8.26;
 // import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC20} from "../ERC20.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
-import {IERC20} from "../interfaces/IERC20.sol";
+// import {IERC20} from "../interfaces/IERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
 import {OZError03, OZError04} from "../OZErrors.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {ERC4626} from "../ERC4626.sol";
+// import {ERC4626} from "solady/src/tokens/ERC4626.sol";
+// import {ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
 import "forge-std/console.sol";
 
@@ -50,10 +53,12 @@ contract ozUSDCtoken is ERC4626 {
 
     function mint(address account_, uint amount_) external { //put an onlyAuth mod 
         // _mint(account_, amount_);
-        deposit(amount_, account_);
+        uint shares = deposit(amount_, account_);
+        console.log('shares *****: ', shares);
+        // revert('here2');
     }
 
-    function balanceOf(address account) public view override(ERC20, IERC20) returns(uint256) {
+    function balanceOf(address account) public view override returns(uint256) {
         uint underlyingBalance = super.balanceOf(account);
         return (underlyingBalance * scalingFactor) / 1e18;
     }
@@ -125,6 +130,12 @@ contract ozUSDCtoken is ERC4626 {
         lastRebaseTime = block.timestamp;
 
         emit Rebase(scalingFactor, lastRebaseTime);
+    }
+
+
+    //track this with a variable instead of address(this)
+    function totalAssets() public view override returns (uint256) {
+        return asset.balanceOf(address(this));
     }
 
 }

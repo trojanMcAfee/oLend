@@ -14,6 +14,7 @@
     "@aave/periphery-v3": "^2.5.2",
     "@pendle/core-v2": "^5.0.4",
     "@uniswap/v3-periphery": "^1.4.4",
+    "solady": "^0.0.253",
     "solmate": "^6.2.0"
   },
   "devDependencies": {
