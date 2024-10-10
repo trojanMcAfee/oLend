@@ -76,9 +76,9 @@ contract InternalAccount {
         uint sUSDeOut;
         uint minTokenOut = 0;
 
-        console.log('');
-        console.log('--- in buyPT() ---');
-        console.log('amountIn_ - usdc: ', amountIn_);
+        // console.log('');
+        // console.log('--- in buyPT() ---');
+        // console.log('amountIn_ - usdc: ', amountIn_);
         
         if (tokenIn_ == address(USDC)) {
             sUSDeOut = _swapUni(

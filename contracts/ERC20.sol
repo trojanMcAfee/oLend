@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
+import "forge-std/console.sol";
+
 /// @notice Modern and gas efficient ERC20 + EIP-2612 implementation.
 /// @author Solmate (https://github.com/transmissions11/solmate/blob/main/src/tokens/ERC20.sol)
 /// @author Modified from Uniswap (https://github.com/Uniswap/uniswap-v2-core/blob/master/contracts/UniswapV2ERC20.sol)
@@ -192,6 +194,12 @@ abstract contract ERC20 {
         unchecked {
             balances[to] += amount;
         }
+
+        console.log('');
+        console.log('--- in _mint - erc20 ---');
+        console.log('to: ', to);
+        console.log('amount: ', amount);
+        console.log('balances[to] += amount: ', balances[to]);
 
         emit Transfer(address(0), to, amount);
     }

@@ -62,12 +62,22 @@ contract ozUSDCtoken is ERC4626 {
 
     //put an onlyAuth mod
     function deposit(uint256 assets, address receiver) public override returns (uint256 shares) {
+        require((shares = previewDeposit(assets)) != 0, "ZERO_SHARES");
+
         _totalAssets += assets;
-        return super.deposit(assets, receiver);
+
+        _mint(receiver, shares);
+
+        emit Deposit(msg.sender, receiver, assets, shares);
     }
 
     function balanceOf(address account) public view override returns(uint256) {
         uint underlyingBalance = super.balanceOf(account);
+
+        console.log('account: ', account);
+        console.log('underlyingBalance in balanceOf: ', underlyingBalance);
+
+
         return (underlyingBalance * scalingFactor) / 1e18;
     }
 
@@ -85,6 +95,11 @@ contract ozUSDCtoken is ERC4626 {
 
         uint underlyingAmount = (amountIn_ * 1e18) / scalingFactor;
         _burn(owner_, underlyingAmount);
+
+        console.log('with underlyingAmount ****: ', convertToShares(underlyingAmount));
+        console.log('with amountIn_: ', convertToShares(amountIn_));
+
+        revert('here77');
 
         InternalAccount account = InternalAccount(OZ.getUserAccountData(owner_).internalAccount);
         

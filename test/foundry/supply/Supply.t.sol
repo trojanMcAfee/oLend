@@ -42,7 +42,13 @@ contract SupplyTest is CoreMethods {
             type(uint).max
         );
 
-        uint amountOutPT = OZ.lend(amountIn, address(USDC), msg.sender);
+        uint amountOutPT = OZ.lend(amountIn, address(USDC), second_owner);
+        console.log('');
+        console.log('-- in test_supply_USDC -');
+        console.log('ozUSDC.balanceOf(second_owner) in test - after lend() ^^^^: ', ozUSDC.balanceOf(second_owner));
+        console.log('ozUSDC address in test: ', address(ozUSDC));
+        console.log('second_owner - test: ', second_owner);
+        console.log('');
         vm.stopPrank();
 
         //Post-conditions
@@ -66,6 +72,8 @@ contract SupplyTest is CoreMethods {
         vm.stopPrank();
 
         uint balanceOwnerOzUSDC_preRebase = ozUSDC.balanceOf(second_owner);
+        console.log('balanceOwnerOzUSDC_preRebase: ', balanceOwnerOzUSDC_preRebase);
+        console.log('amountIn: ', amountIn);
         assertTrue(balanceOwnerOzUSDC_preRebase == amountIn, 'custom: ozUSDC and amountIn diff');
 
         uint supplyRate_preRebase = OZ.getInternalSupplyRate();

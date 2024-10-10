@@ -86,11 +86,12 @@ contract ozMinter is ozTrading {
         // uint shares = abi.decode(data, (uint));
 
         console.log('shares in lend(): ', shares);
+        console.log('receiver_ in lend() - 2nd owner: ', receiver_);
+        console.log('ozUSDC bal - owner ******: ', s.ozTokens[tokenIn_].balanceOf(receiver_));
+        console.log('ozUSDC address in minter: ', address(s.ozTokens[tokenIn_]));
 
-        revert('here4');
-
-        _setInternalRate(amountOut, amountIn_); //perhaps this is not needed
-        s.lendingOps[msg.sender] += amountOut;
+        // _setInternalRate(amountOut, amountIn_); //perhaps this is not needed
+        // s.lendingOps[msg.sender] += amountOut;
 
         // console.log('--- in lend() ---');
         // console.log('amountIn_: ', amountIn_);
