@@ -89,15 +89,20 @@ contract ozUSDCtoken is ERC4626 {
         address tokenOut_
     ) external returns(uint) {
         console.log('');
+
         IPMarket sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
         IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
         IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
 
-        uint underlyingAmount = (amountIn_ * 1e18) / scalingFactor;
-        _burn(owner_, underlyingAmount);
+        uint underlyingAmount = (amountIn_ * 1e18) / scalingFactor; //maybe this has to be a mulDivDown/Up
 
-        console.log('with underlyingAmount ****: ', convertToShares(underlyingAmount));
-        console.log('with amountIn_: ', convertToShares(amountIn_));
+        console.log('--- in redeem() - ozUSDCtoken ---');
+        console.log('underlyingAmount: ', underlyingAmount);
+        console.log('amountIn_: ', amountIn_);
+        console.log('convertToShares with underlyingAmount ****: ', convertToShares(underlyingAmount));
+        console.log('convertToShares with amountIn_: ', convertToShares(amountIn_));
+
+        _burn(owner_, underlyingAmount);
 
         revert('here77');
 

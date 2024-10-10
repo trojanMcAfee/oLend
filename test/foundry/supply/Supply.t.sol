@@ -103,7 +103,7 @@ contract SupplyTest is CoreMethods {
         console.log('supply - pre redeem: ', ozUSDC.totalSupply());
 
         vm.startPrank(second_owner);
-        ozUSDC.approve(address(ozUSDC), balancePreRedeemOzUSDC);
+        ozUSDC.approve(address(ozUSDC), balancePreRedeemOzUSDC);console.log('supply before redeem ^^^^^^^^^^^^^^: ', ozUSDC.totalSupply());
         ozUSDC.redeem(balancePreRedeemOzUSDC, second_owner, second_owner, address(USDC));
         
         uint balancePostRedeemOzUSDC = ozUSDC.balanceOf(second_owner);

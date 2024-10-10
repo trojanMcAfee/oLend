@@ -189,23 +189,31 @@ abstract contract ERC20 {
     function _mint(address to, uint256 amount) internal virtual {
         totalSupply += amount;
 
+        console.log('');
+        console.log('--- in _mint ---');
+        console.log('totalSupply: ', totalSupply);
+        console.log('amount: ', amount);
+        console.log('');
+
         // Cannot overflow because the sum of all user
         // balances can't exceed the max uint256 value.
         unchecked {
             balances[to] += amount;
         }
 
-        console.log('');
-        console.log('--- in _mint - erc20 ---');
-        console.log('to: ', to);
-        console.log('amount: ', amount);
-        console.log('balances[to] += amount: ', balances[to]);
-
         emit Transfer(address(0), to, amount);
     }
 
     function _burn(address from, uint256 amount) internal virtual {
+        console.log('');
+        console.log('--- in _burn ---');
+        console.log('balances[from] - pre op: ', balances[from]);
+        console.log('amount: ', amount);
+
         balances[from] -= amount;
+
+        console.log('balances[from] - post op: ', balances[from]);
+        console.log('');
 
         // Cannot underflow because a user's balance
         // will never be larger than the total supply.
