@@ -43,12 +43,6 @@ contract SupplyTest is CoreMethods {
         );
 
         uint amountOutPT = OZ.lend(amountIn, address(USDC), second_owner);
-        console.log('');
-        console.log('-- in test_supply_USDC -');
-        console.log('ozUSDC.balanceOf(second_owner) in test - after lend() ^^^^: ', ozUSDC.balanceOf(second_owner));
-        console.log('ozUSDC address in test: ', address(ozUSDC));
-        console.log('second_owner - test: ', second_owner);
-        console.log('');
         vm.stopPrank();
 
         //Post-conditions
@@ -68,7 +62,7 @@ contract SupplyTest is CoreMethods {
 
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
-        OZ.lend(amountIn, address(USDC), msg.sender);
+        OZ.lend(amountIn, address(USDC), second_owner);
         vm.stopPrank();
 
         uint balanceOwnerOzUSDC_preRebase = ozUSDC.balanceOf(second_owner);
