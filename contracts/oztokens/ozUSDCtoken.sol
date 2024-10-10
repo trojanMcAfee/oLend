@@ -3,6 +3,7 @@ pragma solidity 0.8.26;
 
 
 // import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "../ERC20.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 import {OZError03, OZError04} from "../OZErrors.sol";
@@ -10,10 +11,10 @@ import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
-import {ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
+import {ERC4626} from "../ERC4626.sol";
 
 import "forge-std/console.sol";
-//do a custom ERC4626 from solmate and balanceOf *****
+
 
 contract ozUSDCtoken is ERC4626 {
 
@@ -33,8 +34,8 @@ contract ozUSDCtoken is ERC4626 {
         string memory name_, 
         string memory symbol_,
         address oz_,
-        IERC20 underlying_
-    ) ERC4626(underlying_) {
+        address underlying_
+    ) ERC4626(ERC20(underlying_), name_, symbol_) {
         require(oz_ != address(0), 'ozUSDCtoken: oz_ is zero');
 
         OZ = ozIDiamond(oz_);
@@ -52,7 +53,7 @@ contract ozUSDCtoken is ERC4626 {
         deposit(amount_, account_);
     }
 
-    function balanceOf(address account) public view override(IERC20) returns(uint256) {
+    function balanceOf(address account) public view override(ERC20, IERC20) returns(uint256) {
         uint underlyingBalance = super.balanceOf(account);
         return (underlyingBalance * scalingFactor) / 1e18;
     }
