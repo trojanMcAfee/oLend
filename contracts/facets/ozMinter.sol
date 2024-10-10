@@ -22,6 +22,7 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {ozIDiamond} from "../interfaces/ozIDiamond.sol";
 import {InternalAccount} from "../InternalAccount.sol";
 import {IVault, IAsset} from "../interfaces/IBalancer.sol";
+import {ozIERC20} from "../interfaces/ozIERC20.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
@@ -48,7 +49,7 @@ contract ozMinter is ozTrading {
 
 
     //mints ozTokens (ozUSDC)
-    function lend(uint amountIn_, address tokenIn_) external payable checkAavePool returns(uint) {      
+    function lend(uint amountIn_, address tokenIn_, address receiver_) external payable checkAavePool returns(uint) {      
         if (tokenIn_ == s.ETH) if (amountIn_ != msg.value) revert OZError02(amountIn_, msg.value);
         if (!s.authTokens[tokenIn_]) revert OZError01(tokenIn_);
 
@@ -76,7 +77,17 @@ contract ozMinter is ozTrading {
         _setUserAccountData(tokenIn_, msg.sender, address(account), amountIn_);
 
         uint amountOut = account.buyPT(amountIn_, address(account), tokenIn_);
-        s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
+        // s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
+        uint shares = s.ozTokens[tokenIn_].deposit(amountIn_, receiver_);
+        
+        // ozIERC20 ozToken = s.ozTokens[tokenIn_];
+        // bytes memory data = abi.encodeWithSelector(ozToken.deposit.selector, msg.sender, amountIn_);
+        // data = address(ozToken).functionDelegateCall(data);
+        // uint shares = abi.decode(data, (uint));
+
+        console.log('shares in lend(): ', shares);
+
+        revert('here4');
 
         _setInternalRate(amountOut, amountIn_); //perhaps this is not needed
         s.lendingOps[msg.sender] += amountOut;

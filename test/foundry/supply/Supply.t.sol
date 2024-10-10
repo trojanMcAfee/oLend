@@ -42,7 +42,7 @@ contract SupplyTest is CoreMethods {
             type(uint).max
         );
 
-        uint amountOutPT = OZ.lend(amountIn, address(USDC));
+        uint amountOutPT = OZ.lend(amountIn, address(USDC), msg.sender);
         vm.stopPrank();
 
         //Post-conditions
@@ -62,7 +62,7 @@ contract SupplyTest is CoreMethods {
 
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
-        OZ.lend(amountIn, address(USDC));
+        OZ.lend(amountIn, address(USDC), msg.sender);
         vm.stopPrank();
 
         uint balanceOwnerOzUSDC_preRebase = ozUSDC.balanceOf(second_owner);

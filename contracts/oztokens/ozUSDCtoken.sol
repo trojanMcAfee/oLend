@@ -27,6 +27,8 @@ contract ozUSDCtoken is ERC4626 {
     uint rebaseInterval = 24 hours;
     uint previousRatePT;
 
+    uint private _totalAssets;
+
     using PendlePYOracleLib for IPMarket;
     using FixedPointMathLib for uint;
 
@@ -51,11 +53,17 @@ contract ozUSDCtoken is ERC4626 {
         previousRatePT = OZ.getInternalSupplyRate();
     }
 
-    function mint(address account_, uint amount_) external { //put an onlyAuth mod 
-        // _mint(account_, amount_);
-        uint shares = deposit(amount_, account_);
-        console.log('shares *****: ', shares);
-        // revert('here2');
+    // function mint(address account_, uint amount_) external { //put an onlyAuth mod 
+    //     // _mint(account_, amount_);
+    //     uint shares = deposit(amount_, account_);
+    //     console.log('shares *****: ', shares);
+    //     // revert('here2');
+    // }
+
+    //put an onlyAuth mod
+    function deposit(uint256 assets, address receiver) public override returns (uint256 shares) {
+        _totalAssets += assets;
+        return super.deposit(assets, receiver);
     }
 
     function balanceOf(address account) public view override returns(uint256) {
@@ -133,9 +141,8 @@ contract ozUSDCtoken is ERC4626 {
     }
 
 
-    //track this with a variable instead of address(this)
     function totalAssets() public view override returns (uint256) {
-        return asset.balanceOf(address(this));
+        return _totalAssets;
     }
 
 }

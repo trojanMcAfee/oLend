@@ -36,7 +36,7 @@ contract CoreMethods is Setup {
         uint initUserBal = user_.balance;
         vm.prank(user_);
 
-        OZ.lend{value: msgValue}(amountIn_, tokenIn_);
+        OZ.lend{value: msgValue}(amountIn_, tokenIn_, msg.sender);
 
         UserAccountData memory userData = OZ.getUserAccountData(user_);
 

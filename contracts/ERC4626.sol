@@ -52,7 +52,6 @@ abstract contract ERC4626 is ERC20 {
         // Check for rounding error since we round down in previewDeposit.
         require((shares = previewDeposit(assets)) != 0, "ZERO_SHARES");
 
-        // Need to transfer before minting or ERC777s could reenter.
         console.log('');
         console.log('--- in deposit() ---');
         console.log('assets: ', assets);
@@ -60,11 +59,12 @@ abstract contract ERC4626 is ERC20 {
         console.log('asset - usdc: ', address(asset));
         console.log('balanceOf: ', asset.balanceOf(msg.sender));
 
-        asset.safeTransferFrom(msg.sender, address(this), assets);
-
-        console.log('2');
+        // Need to transfer before minting or ERC777s could reenter.
+        // asset.safeTransferFrom(msg.sender, address(this), assets);
 
         _mint(receiver, shares);
+
+        console.log('2');
 
         emit Deposit(msg.sender, receiver, assets, shares);
 
