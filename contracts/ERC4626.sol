@@ -8,6 +8,8 @@ import {IERC20} from "./interfaces/IERC20.sol";
 import {SafeTransferLib} from "./libraries/SafeTransferLib.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 
+import "forge-std/console.sol";
+
 /// @notice Minimal ERC4626 tokenized Vault implementation.
 /// @author Solmate (https://github.com/transmissions11/solmate/blob/main/src/mixins/ERC4626.sol)
 abstract contract ERC4626 is ERC20 {
@@ -51,7 +53,16 @@ abstract contract ERC4626 is ERC20 {
         require((shares = previewDeposit(assets)) != 0, "ZERO_SHARES");
 
         // Need to transfer before minting or ERC777s could reenter.
+        console.log('');
+        console.log('--- in deposit() ---');
+        console.log('assets: ', assets);
+        console.log('receiver: ', receiver);
+        console.log('asset - usdc: ', address(asset));
+        console.log('balanceOf: ', asset.balanceOf(msg.sender));
+
         asset.safeTransferFrom(msg.sender, address(this), assets);
+
+        console.log('2');
 
         _mint(receiver, shares);
 
