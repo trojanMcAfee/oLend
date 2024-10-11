@@ -16,4 +16,5 @@ interface ozIERC20 is IERC20 {
 
     //put an IERC4626 interfaces here instead (inherited)
     function deposit(uint256 assets, address receiver) external returns (uint256 shares);
+    function totalAssets() external view returns (uint256);
 }

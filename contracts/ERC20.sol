@@ -205,15 +205,15 @@ abstract contract ERC20 {
     }
 
     function _burn(address from, uint256 amount) internal virtual {
-        console.log('');
-        console.log('--- in _burn ---');
-        console.log('balances[from] - pre op: ', balances[from]);
-        console.log('amount: ', amount);
+        // console.log('');
+        // console.log('--- in _burn ---');
+        // console.log('balances[from] - pre op: ', balances[from]);
+        // console.log('amount: ', amount);
 
         balances[from] -= amount;
 
-        console.log('balances[from] - post op: ', balances[from]);
-        console.log('');
+        // console.log('balances[from] - post op: ', balances[from]);
+        // console.log('');
 
         // Cannot underflow because a user's balance
         // will never be larger than the total supply.

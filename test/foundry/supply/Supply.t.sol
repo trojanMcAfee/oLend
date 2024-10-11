@@ -55,9 +55,9 @@ contract SupplyTest is CoreMethods {
     }
 
 
-    function test_supply_and_rebase_USDC() public {
+    function test_supply_and_rebase_USDC() public returns(uint amountIn) {
         //Pre-conditions
-        uint amountIn = USDC.balanceOf(second_owner);
+        amountIn = USDC.balanceOf(second_owner);
         assertTrue(amountIn > 0, 'custom: amountIn is 0');
 
         vm.startPrank(second_owner);
@@ -96,20 +96,25 @@ contract SupplyTest is CoreMethods {
 
     function test_supply_rebase_redemption_ozUSDC_for_USDC() public {
         //Pre-conditions
-        test_supply_and_rebase_USDC();
+        uint amountIn = test_supply_and_rebase_USDC();
 
         uint balancePreRedeemOzUSDC = ozUSDC.balanceOf(second_owner);
         uint balancePreRedeemUSDC = USDC.balanceOf(second_owner);
         assertTrue(ozUSDC.totalSupply() > 0, 'custom: ozUSDC supply is 0');
+
+        uint assetsPreredeem = ozUSDC.totalAssets();
+        assertTrue(amountIn == assetsPreredeem, 'custom: totalAssets unequal');
 
         //Action
         vm.startPrank(second_owner);
         ozUSDC.redeem(balancePreRedeemOzUSDC, second_owner, second_owner, address(USDC));
         
         //Post-conditions
+        uint assetsPostredeem = ozUSDC.totalAssets();
         uint balancePostRedeemOzUSDC = ozUSDC.balanceOf(second_owner);
         uint balancePostRedeemUSDC = USDC.balanceOf(second_owner);
 
+        assertTrue(assetsPostredeem == 0, 'custom: assets not 0');
         assertTrue(balancePostRedeemOzUSDC == 0, 'custom: ozUSDC bal is not 0');
         assertTrue(balancePostRedeemUSDC > balancePreRedeemUSDC, 'custom: post-redeem balance not higher');
 

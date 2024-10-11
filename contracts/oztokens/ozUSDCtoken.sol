@@ -93,10 +93,6 @@ contract ozUSDCtoken is ERC4626 {
         address receiver_,
         address tokenOut_
     ) external returns(uint) {
-        console.log('');
-        console.log('--- in redeem() ---');
-        console.log('amountIn_: ', amountIn_);
-
         uint underlyingAmount = amountIn_.mulDivUp(1e18, scalingFactor);
         uint totalUserUnderlyingAmount = balanceOf(owner_).mulDivUp(1e18, scalingFactor);
 
@@ -110,6 +106,8 @@ contract ozUSDCtoken is ERC4626 {
         _burn(owner_, underlyingAmount);
 
         InternalAccount(intAcc).sellPT(amountInPT, tokenOut_, receiver_);
+
+        _totalAssets -= underlyingAmount;
     }
 
 
