@@ -30,6 +30,13 @@ abstract contract ozTrading is ozModifiers {
         IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
         uint24 poolFee = 500;
 
+        console.log('');
+        console.log('--- in swapUni ---');
+        console.log('tokenIn_: ', tokenIn_);
+        console.log('tokenOut_: ', tokenOut_);
+        console.log('block.timestamp: ', block.timestamp);
+        console.log('amountIn_: ', amountIn_);
+
         ISwapRouter.ExactInputParams memory params =
             ISwapRouter.ExactInputParams({
                 path: abi.encodePacked(tokenIn_, poolFee, address(s.USDT), poolFee, tokenOut_), //500 -> 0.05
@@ -38,6 +45,8 @@ abstract contract ozTrading is ozModifiers {
                 amountIn: amountIn_,
                 amountOutMinimum: minAmountOut_
             });
+
+        revert('here90');
 
         return swapRouterUni.exactInput(params);
     }

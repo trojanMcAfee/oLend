@@ -8,11 +8,12 @@ import {StateVars} from "../../contracts/StateVars.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 // import {IERC20} from "../../contracts/interfaces/IERC20.sol";
+import {HelpersTest} from "./helpers/HelpersTest.sol";
 
 import "forge-std/console.sol";
 
 
-contract AppStorageTest is StateVars {
+contract AppStorageTest is HelpersTest {
 
     using FixedPointMathLib for uint;
 
@@ -221,5 +222,12 @@ contract AppStorageTest is StateVars {
         vm.stopPrank();
 
         return (debtBalance, supplyBalance, postPendleBalance);
+    }
+
+
+    struct SwapUni {
+        address tokenIn;
+        address tokenInt;
+        address tokenOut;
     }
 }

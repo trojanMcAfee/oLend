@@ -30,6 +30,7 @@ import {ozIERC20} from "../contracts/interfaces/ozIERC20.sol";
 import {ICrvRouter, ICrvAddressProvider, IPoolCrv} from "../contracts/interfaces/ICurve.sol";   
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
+import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 import {console} from "../lib/forge-std/src/Test.sol";
 
@@ -67,6 +68,9 @@ abstract contract StateVars is Test {
     IPoolCrv curvePool_FRAXUSDC = IPoolCrv(0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2);
     IPoolCrv curvePool_USDCETHWBTC = IPoolCrv(0x7F86Bf177Dd4F3494b841a37e810A34dD56c829B);
     IPoolCrv curvePool_FRAXUSDe = IPoolCrv(0x5dc1BF6f1e983C0b21EfB003c105133736fA0743);
+
+    //Uniswap
+    ISwapRouter swapRouterUni = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
     //ERC20s
     IERC20 public constant USDe = IERC20(0x4c9EDD5852cd905f086C759E8383e09bff1E68B3);
