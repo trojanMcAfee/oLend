@@ -94,6 +94,10 @@ contract SupplyTest is CoreMethods {
     }
 
 
+    //test all token balances with mock calls, to see if it's profitable, since 
+    //by forking state, the final USDC is less than the initial amountIn pre-rebase,
+    //and this flow is going through a supply rebase, so the final output should be more
+    //than the original
     function test_supply_rebase_redemption_ozUSDC_for_USDC() public {
         //Pre-conditions
         uint amountIn = test_supply_and_rebase_USDC();
