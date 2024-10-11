@@ -4,7 +4,7 @@ pragma solidity 0.8.26;
 
 import {PendlePYOracleLib} from "@pendle/core-v2/contracts/oracles/PendlePYOracleLib.sol";
 import {IPMarket} from "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
-import {AppStorage} from "../AppStorage.sol";
+import {AppStorage, UserAccountData} from "../AppStorage.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {State} from "../State.sol";
 import {ABDKMath64x64} from "../libraries/ABDKMath64x64.sol";
@@ -114,8 +114,15 @@ contract ozOracle is State {
 
 
     //Get the rate between ozUSDC and PT (sUSDe-PT)
+    //not used
     function getExchangeRate() external view returns(uint) {
         return s.ozUSDCtoPTrate;
+    }
+
+    //not used
+    function getBalancePT(address user_) external view returns(uint) {
+        address intAcc = s.usersAccountData[user_].internalAccount;
+        return s.intAccBalancePT[intAcc];
     }
 
 }

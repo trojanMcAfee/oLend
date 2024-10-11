@@ -77,6 +77,8 @@ contract ozMinter is ozTrading {
         _setUserAccountData(tokenIn_, msg.sender, address(account), amountIn_);
 
         uint amountOut = account.buyPT(amountIn_, address(account), tokenIn_);
+        s.intAccBalancePT[address(account)] += amountOut;
+
         // s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
         uint shares = s.ozTokens[tokenIn_].deposit(amountIn_, receiver_);
         

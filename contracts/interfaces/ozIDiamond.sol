@@ -32,4 +32,5 @@ interface ozIDiamond {
     function getInternalSupplyRate() external view returns(uint);
 
     function getExchangeRate() external view returns(uint);
+    function getBalancePT(address owner_) external view returns(uint);
 }

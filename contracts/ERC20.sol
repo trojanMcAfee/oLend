@@ -189,11 +189,11 @@ abstract contract ERC20 {
     function _mint(address to, uint256 amount) internal virtual {
         totalSupply += amount;
 
-        console.log('');
-        console.log('--- in _mint ---');
-        console.log('totalSupply: ', totalSupply);
-        console.log('amount: ', amount);
-        console.log('');
+        // console.log('');
+        // console.log('--- in _mint ---');
+        // console.log('totalSupply: ', totalSupply);
+        // console.log('amount: ', amount);
+        // console.log('');
 
         // Cannot overflow because the sum of all user
         // balances can't exceed the max uint256 value.

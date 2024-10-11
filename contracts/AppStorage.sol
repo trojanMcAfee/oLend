@@ -85,6 +85,7 @@ struct AppStorage {
     mapping(address user => UserAccountData userData) usersAccountData;
     uint8 oracleRisk; //not used so far
     uint reserveConfig;
+    mapping(address internalAccount => uint balancePT) intAccBalancePT;
 
     //Lending
     mapping(Model model => Params params) interestRateModels;

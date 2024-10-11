@@ -29,6 +29,12 @@ contract ozUSDCtoken is ERC4626 {
 
     uint private _totalAssets;
 
+    // mapping(address internalAccount => uint balancePT) intAccBalancePT;;
+
+    IPMarket sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
+    IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+    IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
+
     using PendlePYOracleLib for IPMarket;
     using FixedPointMathLib for uint;
 
@@ -90,47 +96,61 @@ contract ozUSDCtoken is ERC4626 {
     ) external returns(uint) {
         console.log('');
 
-        IPMarket sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
-        IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-        IERC20 sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
-
-        // uint underlyingAmount = (amountIn_ * 1e18) / scalingFactor; //maybe this has to be a mulDivDown/Up
         uint underlyingAmount = amountIn_.mulDivUp(1e18, scalingFactor);
+        uint totalUserUnderlyingAmount = balanceOf(owner_).mulDivUp(1e18, scalingFactor);
 
-        console.log('--- in redeem() - ozUSDCtoken ---');
-        console.log('underlyingAmount: ', underlyingAmount);
+        uint userShares = convertToShares(underlyingAmount);
+        uint totalUserShares = convertToShares(totalUserUnderlyingAmount);
+        
+        address intAcc = OZ.getUserAccountData(owner_).internalAccount;
+        uint totalUserPT = sUSDe_PT_26SEP.balanceOf(intAcc);
+        // uint totalUserPT = OZ.getBalancePT(owner_);
+
         console.log('amountIn_: ', amountIn_);
-        console.log('convertToShares with underlyingAmount ****: ', convertToShares(underlyingAmount));
-        console.log('convertToShares with amountIn_: ', convertToShares(amountIn_));
+        console.log('balanceOf(owner_): ', balanceOf(owner_));
+        console.log('underlyingAmount: ', underlyingAmount);
+        console.log('userShares: ', userShares);
+        console.log('totalUserShares: ', totalUserShares);
+        console.log('totalUserPT: ', totalUserPT);
+
+        uint amountInPT = userShares.mulDivDown(totalUserPT, totalUserShares);
+        console.log('amountInPT %%%%%%: ', amountInPT);
+
+        revert('here11');
+        
+        // totalUserShares --- s.intAccBalancePT[owner_]
+        // userShares ---- x
+
+        // console.log('--- in redeem() - ozUSDCtoken ---');
+        // console.log('underlyingAmount: ', underlyingAmount);
+        // console.log('amountIn_: ', amountIn_);
+        // console.log('convertToShares with underlyingAmount ****: ', convertToShares(underlyingAmount));
+        // console.log('convertToShares with amountIn_: ', convertToShares(amountIn_));
 
         _burn(owner_, underlyingAmount);
 
-        revert('here77');
+        // revert('here77');
 
         InternalAccount account = InternalAccount(OZ.getUserAccountData(owner_).internalAccount);
         
-        uint32 twapDuration = 15;
-        uint ptPrice = sUSDeMarket.getPtToAssetRate(twapDuration);
-        ptPrice = tokenOut_ == address(USDC) ? ptPrice / 1e12 : ptPrice;
+        // uint32 twapDuration = 15;
+        // uint ptPrice = sUSDeMarket.getPtToAssetRate(twapDuration);
+        // ptPrice = tokenOut_ == address(USDC) ? ptPrice / 1e12 : ptPrice;
 
-        // 1 ozUSDC --- ptPrice
-        // amountIn --- x 
+        // // 1 ozUSDC --- ptPrice
+        // // amountIn --- x 
 
-        uint amountInPT = amountIn_.mulDivDown(ptPrice, 1e12);
+        // amountInPT = amountIn_.mulDivDown(ptPrice, 1e12);
 
-        console.log('--- in redeem() ---');
-        console.log('amountIn - ozUSDC: ', amountIn_);
-        console.log('ptPrice: ', ptPrice);
-        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
-        console.log('amountInPT: ', amountInPT);
-        console.log('pt bal - intAcc: ', sUSDe_PT_26SEP.balanceOf(address(account)));
+        // // console.log('--- in redeem() ---');
+        // // console.log('amountIn - ozUSDC: ', amountIn_);
+        // // console.log('ptPrice: ', ptPrice);
+        // // console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
+        // // console.log('amountInPT: ', amountInPT);
+        // // console.log('pt bal - intAcc: ', sUSDe_PT_26SEP.balanceOf(address(account)));
 
-        uint ozUSDCtoPTrate = OZ.getExchangeRate();
-        console.log('ozUSDCtoPTrate: ', ozUSDCtoPTrate);
-
-        // amountIn * 1e12
-
-        revert('here');
+        // uint ozUSDCtoPTrate = OZ.getExchangeRate();
+        // console.log('ozUSDCtoPTrate: ', ozUSDCtoPTrate);
 
 
         // 1 ozUSDC --- ozUSDCtoPTrate
@@ -165,5 +185,10 @@ contract ozUSDCtoken is ERC4626 {
     function totalAssets() public view override returns (uint256) {
         return _totalAssets;
     }
+
+    // function _getBalancePT(address owner_) public view returns(uint) {
+    //     address intAcc = OZ.getUserAccountData(owner_).internalAccount;
+    //     return 
+    // }
 
 }
