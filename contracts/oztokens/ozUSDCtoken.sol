@@ -94,6 +94,8 @@ contract ozUSDCtoken is ERC4626 {
         address tokenOut_
     ) external returns(uint) {
         console.log('');
+        console.log('--- in redeem() ---');
+        console.log('amountIn_: ', amountIn_);
 
         uint underlyingAmount = amountIn_.mulDivUp(1e18, scalingFactor);
         uint totalUserUnderlyingAmount = balanceOf(owner_).mulDivUp(1e18, scalingFactor);
@@ -103,47 +105,11 @@ contract ozUSDCtoken is ERC4626 {
         
         address intAcc = OZ.getUserAccountData(owner_).internalAccount;
         uint totalUserPT = sUSDe_PT_26SEP.balanceOf(intAcc);
-        // uint totalUserPT = OZ.getBalancePT(owner_);
-
-        console.log('amountIn_: ', amountIn_);
-        console.log('balanceOf(owner_): ', balanceOf(owner_));
-        console.log('underlyingAmount: ', underlyingAmount);
-        console.log('userShares: ', userShares);
-        console.log('totalUserShares: ', totalUserShares);
-        console.log('totalUserPT: ', totalUserPT);
-
         uint amountInPT = userShares.mulDivDown(totalUserPT, totalUserShares);
-        console.log('amountInPT %%%%%%: ', amountInPT);
-
-        // revert('here11');
-
-        // console.log('--- in redeem() - ozUSDCtoken ---');
-        // console.log('underlyingAmount: ', underlyingAmount);
-        // console.log('amountIn_: ', amountIn_);
-        // console.log('convertToShares with underlyingAmount ****: ', convertToShares(underlyingAmount));
-        // console.log('convertToShares with amountIn_: ', convertToShares(amountIn_));
 
         _burn(owner_, underlyingAmount);
 
-        // InternalAccount account = InternalAccount(OZ.getUserAccountData(owner_).internalAccount);
-        
-        // uint32 twapDuration = 15;
-        // uint ptPrice = sUSDeMarket.getPtToAssetRate(twapDuration);
-        // ptPrice = tokenOut_ == address(USDC) ? ptPrice / 1e12 : ptPrice;
-
-
-        // // console.log('--- in redeem() ---');
-        // // console.log('amountIn - ozUSDC: ', amountIn_);
-        // // console.log('ptPrice: ', ptPrice);
-        // // console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(twapDuration));
-        // // console.log('amountInPT: ', amountInPT);
-        // // console.log('pt bal - intAcc: ', sUSDe_PT_26SEP.balanceOf(address(account)));
-
-        // uint ozUSDCtoPTrate = OZ.getExchangeRate();
-        // console.log('ozUSDCtoPTrate: ', ozUSDCtoPTrate);
-
-        InternalAccount(intAcc).sellPT(amountInPT, tokenOut_);
-
+        InternalAccount(intAcc).sellPT(amountInPT, tokenOut_, receiver_);
     }
 
 

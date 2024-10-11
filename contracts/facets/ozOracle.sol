@@ -121,8 +121,8 @@ contract ozOracle is State {
 
     //not used
     function getBalancePT(address user_) external view returns(uint) {
-        address intAcc = s.usersAccountData[user_].internalAccount;
-        return s.intAccBalancePT[intAcc];
+        // address intAcc = s.usersAccountData[user_].internalAccount;
+        // return s.intAccBalancePT[intAcc];
     }
 
 }

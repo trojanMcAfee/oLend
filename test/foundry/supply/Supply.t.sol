@@ -99,15 +99,19 @@ contract SupplyTest is CoreMethods {
         test_supply_and_rebase_USDC();
 
         uint balancePreRedeemOzUSDC = ozUSDC.balanceOf(second_owner);
-        console.log('balancePreRedeemOzUSDC: ', balancePreRedeemOzUSDC);
-        console.log('supply - pre redeem: ', ozUSDC.totalSupply());
+        uint balancePreRedeemUSDC = USDC.balanceOf(second_owner);
+        assertTrue(ozUSDC.totalSupply() > 0, 'custom: ozUSDC supply is 0');
 
+        //Action
         vm.startPrank(second_owner);
         ozUSDC.redeem(balancePreRedeemOzUSDC, second_owner, second_owner, address(USDC));
         
+        //Post-conditions
         uint balancePostRedeemOzUSDC = ozUSDC.balanceOf(second_owner);
-        console.log('balancePostRedeemOzUSDC: ', balancePostRedeemOzUSDC / 1e1);
-        console.log('supply - post redeem: ', ozUSDC.totalSupply());
+        uint balancePostRedeemUSDC = USDC.balanceOf(second_owner);
+
+        assertTrue(balancePostRedeemOzUSDC == 0, 'custom: ozUSDC bal is not 0');
+        assertTrue(balancePostRedeemUSDC > balancePreRedeemUSDC, 'custom: post-redeem balance not higher');
 
     }
 

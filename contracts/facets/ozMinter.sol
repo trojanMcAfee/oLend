@@ -77,27 +77,7 @@ contract ozMinter is ozTrading {
         _setUserAccountData(tokenIn_, msg.sender, address(account), amountIn_);
 
         uint amountOut = account.buyPT(amountIn_, address(account), tokenIn_);
-        s.intAccBalancePT[address(account)] += amountOut;
-
-        // s.ozTokens[tokenIn_].mint(msg.sender, amountIn_);
         uint shares = s.ozTokens[tokenIn_].deposit(amountIn_, receiver_);
-        
-        // ozIERC20 ozToken = s.ozTokens[tokenIn_];
-        // bytes memory data = abi.encodeWithSelector(ozToken.deposit.selector, msg.sender, amountIn_);
-        // data = address(ozToken).functionDelegateCall(data);
-        // uint shares = abi.decode(data, (uint));
-
-        console.log('shares in lend(): ', shares);
-        console.log('receiver_ in lend() - 2nd owner: ', receiver_);
-        console.log('ozUSDC bal - owner ******: ', s.ozTokens[tokenIn_].balanceOf(receiver_));
-        console.log('ozUSDC address in minter: ', address(s.ozTokens[tokenIn_]));
-
-        // _setInternalRate(amountOut, amountIn_); //perhaps this is not needed
-        // s.lendingOps[msg.sender] += amountOut;
-
-        // console.log('--- in lend() ---');
-        // console.log('amountIn_: ', amountIn_);
-        // console.log('amountOut - PT: ', amountOut);
 
         return amountOut;
 

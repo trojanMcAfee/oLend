@@ -109,14 +109,11 @@ contract InternalAccount {
     }
 
     
-    function sellPT(uint amountInPT_, address tokenOut_) external returns(uint) {
-        console.log('');
-        console.log('--- in selPT ---');
-        console.log('address(this) - intAcc: ', intAcc_);
-        console.log('intAcc: ', intAcc_);
-
+    function sellPT(uint amountInPT_, address tokenOut_, address receiver_) external returns(uint) {
         sUSDe_PT_26SEP.approve(address(pendleRouter), amountInPT_);
         uint minTokenOut = 0;
+
+        console.log('amountInPT_: ', amountInPT_);
 
         (uint sUSDeOut,,) = pendleRouter.swapExactPtForToken(
             address(this), 
@@ -129,18 +126,18 @@ contract InternalAccount {
         console.log('amountOut - sUSDe: ', sUSDeOut);
 
         uint amountOutUSDC;
+
         if (tokenOut_ == address(USDC)) {
             amountOutUSDC = _swapUni(
                 address(sUSDe), 
                 address(USDC), 
-                address(this), 
+                receiver_, 
                 sUSDeOut, 
                 minTokenOut
             );
         }
 
         console.log('amountOutUSDC: ', amountOutUSDC);
-        revert('here88');
 
     }
 
