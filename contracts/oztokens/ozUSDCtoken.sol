@@ -80,9 +80,8 @@ contract ozUSDCtoken is ERC4626 {
     function balanceOf(address account) public view override returns(uint256) {
         uint underlyingBalance = super.balanceOf(account);
 
-        console.log('account: ', account);
-        console.log('underlyingBalance in balanceOf: ', underlyingBalance);
-
+        // console.log('account: ', account);
+        // console.log('underlyingBalance in balanceOf: ', underlyingBalance);
 
         return (underlyingBalance * scalingFactor) / 1e18;
     }
@@ -116,10 +115,7 @@ contract ozUSDCtoken is ERC4626 {
         uint amountInPT = userShares.mulDivDown(totalUserPT, totalUserShares);
         console.log('amountInPT %%%%%%: ', amountInPT);
 
-        revert('here11');
-        
-        // totalUserShares --- s.intAccBalancePT[owner_]
-        // userShares ---- x
+        // revert('here11');
 
         // console.log('--- in redeem() - ozUSDCtoken ---');
         // console.log('underlyingAmount: ', underlyingAmount);
@@ -129,18 +125,12 @@ contract ozUSDCtoken is ERC4626 {
 
         _burn(owner_, underlyingAmount);
 
-        // revert('here77');
-
-        InternalAccount account = InternalAccount(OZ.getUserAccountData(owner_).internalAccount);
+        // InternalAccount account = InternalAccount(OZ.getUserAccountData(owner_).internalAccount);
         
         // uint32 twapDuration = 15;
         // uint ptPrice = sUSDeMarket.getPtToAssetRate(twapDuration);
         // ptPrice = tokenOut_ == address(USDC) ? ptPrice / 1e12 : ptPrice;
 
-        // // 1 ozUSDC --- ptPrice
-        // // amountIn --- x 
-
-        // amountInPT = amountIn_.mulDivDown(ptPrice, 1e12);
 
         // // console.log('--- in redeem() ---');
         // // console.log('amountIn - ozUSDC: ', amountIn_);
@@ -152,14 +142,7 @@ contract ozUSDCtoken is ERC4626 {
         // uint ozUSDCtoPTrate = OZ.getExchangeRate();
         // console.log('ozUSDCtoPTrate: ', ozUSDCtoPTrate);
 
-
-        // 1 ozUSDC --- ozUSDCtoPTrate
-        // amountIn_ ---- x
-
-        // amountIn_.mulDivDown(OZ.getExchangeRate());
-
-
-        account.sellPT(amountIn_, address(account), tokenOut_);
+        InternalAccount(intAcc).sellPT(amountInPT, tokenOut_);
 
     }
 

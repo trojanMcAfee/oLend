@@ -32,6 +32,7 @@ contract InternalAccount {
     IERC20 public constant USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IPMarket public constant sUSDeMarket = IPMarket(0xd1D7D99764f8a52Aff007b7831cc02748b2013b5);
     IPAllActionV3 public constant pendleRouter = IPAllActionV3(0x888888888889758F76e7103c6CbF23ABbF58F946);
+    IERC20 public constant sUSDe_PT_26SEP = IERC20(0x6c9f097e044506712B58EAC670c9a5fd4BCceF13);
 
     ApproxParams defaultApprox = ApproxParams(0, type(uint256).max, 0, 256, 1e14);
     SwapData emptySwap;
@@ -103,24 +104,43 @@ contract InternalAccount {
         );
 
         console.log('amountOutPT: ', amountOutPT);
-        uint32 duration = 15;
-        console.log('getPtToAssetRate: ', sUSDeMarket.getPtToAssetRate(duration));
-        console.log('getPtToSyRate: ', sUSDeMarket.getPtToSyRate(duration));
-        console.log('');
 
         return amountOutPT;
     }
 
     
-    function sellPT(uint amountInPT_, address intAcc_, address tokenOut_) external returns(uint) {
-        
-        // pendleRouter.swapExactPtForToken(
-        //     receiver, 
-        //     market, 
-        //     exactPtIn, 
-        //     output, 
-        //     limit
-        // );
+    function sellPT(uint amountInPT_, address tokenOut_) external returns(uint) {
+        console.log('');
+        console.log('--- in selPT ---');
+        console.log('address(this) - intAcc: ', intAcc_);
+        console.log('intAcc: ', intAcc_);
+
+        sUSDe_PT_26SEP.approve(address(pendleRouter), amountInPT_);
+        uint minTokenOut = 0;
+
+        (uint sUSDeOut,,) = pendleRouter.swapExactPtForToken(
+            address(this), 
+            address(sUSDeMarket), 
+            amountInPT_, 
+            address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap), 
+            emptyLimit
+        );
+
+        console.log('amountOut - sUSDe: ', sUSDeOut);
+
+        uint amountOutUSDC;
+        if (tokenOut_ == address(USDC)) {
+            amountOutUSDC = _swapUni(
+                address(sUSDe), 
+                address(USDC), 
+                address(this), 
+                sUSDeOut, 
+                minTokenOut
+            );
+        }
+
+        console.log('amountOutUSDC: ', amountOutUSDC);
+        revert('here88');
 
     }
 

@@ -26,7 +26,7 @@ abstract contract ozTrading is ozModifiers {
         uint minAmountOut_
     ) internal returns(uint) {
         ISwapRouter swapRouterUni = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
-        // IERC20(tokenIn_).safeApprove(address(swapRouterUni), amountIn_); //<--- not working dont know why
+        // IERC20(tokenIn_).safeApprove(address(swapRouterUni), amountIn_); //<--- not working dont know why (types are diff)
         IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
         uint24 poolFee = 500;
 
