@@ -19,7 +19,7 @@ contract HelpersTest is AppStorageTest {
         address tokenIn_,
         address tokenIntermediate_,
         address tokenOut_
-    ) private returns(ISwapRouter.ExactInputParams memory params) {
+    ) private view returns(ISwapRouter.ExactInputParams memory params) {
         uint24 poolFee = 500;
         uint minAmountOut = 0;
         uint blockStamp = 1725313631;
@@ -33,23 +33,22 @@ contract HelpersTest is AppStorageTest {
         });
     }
 
-    //thia is the firs swapUni <-------- ****
+
     function _mockExactInputUni(Type buy_, address owner_, uint amountIn_) internal {
-        uint minTokenOut;
         uint amountOut;
         address tokenIn;
-        address tokenInt;
+        address tokenIntermediate;
         address tokenOut;
         address receiver;
 
         if (Type.BUY == buy_) {
             tokenIn = address(USDC);
-            tokenInt = address(USDT);
+            tokenIntermediate = address(USDT);
             tokenOut = address(sUSDe);
 
             uint sUSDe_USDC_rate = 1097380919046205400;
-            address intAcc = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
-            receiver = intAcc;
+            address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
+            receiver = internalAccount;
             amountOut = (amountIn_ * 1e12).mulDivDown(1e18, sUSDe_USDC_rate);
         }
         
@@ -57,7 +56,7 @@ contract HelpersTest is AppStorageTest {
             amountIn_,
             receiver,
             tokenIn,
-            tokenInt,
+            tokenIntermediate,
             tokenOut
         );
 
@@ -66,6 +65,8 @@ contract HelpersTest is AppStorageTest {
             abi.encodeWithSelector(ISwapRouter.exactInput.selector, params), 
             abi.encode(amountOut)
         );
+
+        deal(address(sUSDe), receiver, amountOut);
     }
 
 

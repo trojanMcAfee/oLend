@@ -87,7 +87,8 @@ contract InternalAccount {
             );
 
             console.log('sUSDeOut - uniswap: ', sUSDeOut);
-            revert('here17');
+            // console.log('sUSDe bal - intAcc: ', sUSDe.balanceOf(intAcc_));
+            // revert('here19');
         }
 
         sUSDe.approve(address(pendleRouter), sUSDeOut);
@@ -103,6 +104,7 @@ contract InternalAccount {
         );
 
         console.log('amountOutPT: ', amountOutPT);
+        revert('here18');
 
         return amountOutPT;
     }
