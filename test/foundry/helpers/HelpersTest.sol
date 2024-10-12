@@ -2,13 +2,14 @@
 pragma solidity 0.8.26;
 
 
-// import {StateVars} from "../../../contracts/StateVars.sol";
-import {StateVars} from "@contracts/StateVars.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import {SwapUni} from "@test/foundry/AppStorageTest.sol";
+import {AppStorageTest, SwapUni, Type} from "@test/foundry/AppStorageTest.sol";
+import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+ 
 
+contract HelpersTest is AppStorageTest {
 
-contract HelpersTest is StateVars {
+    using FixedPointMathLib for *;
 
     function _constructUniParams(
         uint amountIn_,
@@ -35,6 +36,7 @@ contract HelpersTest is StateVars {
         uint minTokenOut;
         uint amountOut;
         address tokenIn;
+        address tokenInt;
         address tokenOut;
 
         if (Type.BUY == buy_) {
@@ -57,7 +59,7 @@ contract HelpersTest is StateVars {
 
         vm.mockCall(
             address(swapRouterUni), 
-            abi.encodeWithSelector(ISwapRouter.swapRouterUni.selector, params), 
+            abi.encodeWithSelector(ISwapRouter.exactInput.selector, params), 
             abi.encode(amountOut)
         );
 

@@ -33,11 +33,12 @@ import {AppStorageTest} from "./AppStorageTest.sol";
 import {ozLoupe} from "../../contracts/facets/ozLoupe.sol";
 import {ozUSDCtoken} from "../../contracts/ozTokens/ozUSDCtoken.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {HelpersTest} from "@test/foundry/helpers/HelpersTest.sol";
 
 import "forge-std/console.sol";
 
 
-contract Setup is AppStorageTest {
+contract Setup is HelpersTest {
 
     using Address for address;
 

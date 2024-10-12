@@ -4,16 +4,15 @@ pragma solidity >=0.8.23 <0.9.0;
 import "@pendle/core-v2/contracts/interfaces/IPAllActionV3.sol";
 import "@pendle/core-v2/contracts/interfaces/IPMarket.sol";
 import {Tokens} from "../../contracts/AppStorage.sol";
-import {StateVars} from "../../contracts/StateVars.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 // import {IERC20} from "../../contracts/interfaces/IERC20.sol";
-import {HelpersTest} from "./helpers/HelpersTest.sol";
+import {StateVars} from "@contracts/StateVars.sol";
 
 import "forge-std/console.sol";
 
 
-contract AppStorageTest is HelpersTest {
+contract AppStorageTest is StateVars {
 
     using FixedPointMathLib for uint;
 
@@ -230,4 +229,9 @@ struct SwapUni {
     address tokenIn;
     address tokenInt;
     address tokenOut;
+}
+
+enum Type {
+    BUY,
+    SELL
 }
