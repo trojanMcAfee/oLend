@@ -76,14 +76,8 @@ contract InternalAccount {
     function buyPT(uint amountIn_, address intAcc_, address tokenIn_) external returns(uint) {        
         uint sUSDeOut;
         uint minTokenOut = 0;
-
-        // console.log('');
-        // console.log('--- in buyPT() ---');
-        // console.log('amountIn_ - usdc: ', amountIn_);
         
         if (tokenIn_ == address(USDC)) {
-            console.log('here');
-
             sUSDeOut = _swapUni(
                 address(USDC), 
                 address(sUSDe), 
@@ -168,25 +162,6 @@ contract InternalAccount {
                 amountIn: amountIn_,
                 amountOutMinimum: minAmountOut_
             });
-
-        console.log('');
-        console.log('--- in swapUni ---');
-        console.log('tokenIn_: ', tokenIn_);
-        console.log('poolFee: ', poolFee);
-        console.log('USDT: ', address(USDT));
-        console.log('tokenOut_: ', tokenOut_);
-        console.log('receiver_: ', receiver_);
-        console.log('block.timestamp: ', block.timestamp);
-        console.log('amountIn_: ', amountIn_);
-        console.log('minAmountOut_: ', minAmountOut_);
-        console.log('swapRouterUni: ', address(swapRouterUni));
-        console.log('');
-
-        console.logBytes(params.path);
-        console.log('params.recipient: ', params.recipient);
-        console.log('params.deadline: ', params.deadline);
-        console.log('params.amountIn: ', params.amountIn);
-        console.log('params.amountOutMinimum: ', params.amountOutMinimum);
 
         return swapRouterUni.exactInput(params);
     }

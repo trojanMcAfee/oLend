@@ -17,42 +17,20 @@ contract HelpersTest is AppStorageTest {
         uint amountIn_,
         address receiver_,
         address tokenIn_,
-        address tokenInt_,
+        address tokenIntermediate_,
         address tokenOut_
     ) private returns(ISwapRouter.ExactInputParams memory params) {
         uint24 poolFee = 500;
         uint minAmountOut = 0;
         uint blockStamp = 1725313631;
 
-        // ISwapRouter.ExactInputParams memory params2 = ISwapRouter.ExactInputParams({
-        //     path: abi.encodePacked(tokenIn_, poolFee, tokenIn_, poolFee, tokenOut_), //500 -> 0.05
-        //     recipient: receiver_,
-        //     deadline: blockStamp,
-        //     amountIn: amountIn_,
-        //     amountOutMinimum: minAmountOut
-        // });
-
-        // console.logBytes(abi.encodePacked(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48, poolFee, 0xdAC17F958D2ee523a2206206994597C13D831ec7, poolFee, 0x9D39A5DE30e57443BfF2A8307A4256c8797A3497));
-        // console.log('params3.path ^^^^^^^^^^^^^^^^^');
-
         params = ISwapRouter.ExactInputParams({
-            path: abi.encodePacked(tokenIn_, poolFee, tokenInt_, poolFee, tokenOut_), //500 -> 0.05
+            path: abi.encodePacked(tokenIn_, poolFee, tokenIntermediate_, poolFee, tokenOut_), //500 -> 0.05
             recipient: receiver_,
             deadline: blockStamp,
             amountIn: amountIn_,
             amountOutMinimum: minAmountOut
         });
-
-        console.log('');
-        console.log('--- in constructUniParams ---');
-        console.log('tokenIn_: ', tokenIn_);
-        console.log('poolFee: ', poolFee);
-        console.log('USDT: ', address(USDT));
-        console.log('tokenOut_: ', tokenOut_);
-        console.log('receiver_: ', receiver_);
-        console.log('block.timestamp: ', block.timestamp);
-        console.log('amountIn_: ', amountIn_);
-        console.log('minAmountOut: ', minAmountOut);
     }
 
     //thia is the firs swapUni <-------- ****
@@ -83,19 +61,10 @@ contract HelpersTest is AppStorageTest {
             tokenOut
         );
 
-        console.log('swapRouterUni: ', address(swapRouterUni));
-        console.log('');
-
-        console.logBytes(params.path);
-        console.log('params: ', params.recipient);
-        console.log('params: ', params.deadline);
-        console.log('params: ', params.amountIn);
-        console.log('params: ', params.amountOutMinimum);
-
         vm.mockCall(
             address(swapRouterUni), 
             abi.encodeWithSelector(ISwapRouter.exactInput.selector, params), 
-            abi.encode(uint(111))
+            abi.encode(amountOut)
         );
     }
 
