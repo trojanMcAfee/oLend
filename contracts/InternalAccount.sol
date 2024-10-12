@@ -83,9 +83,6 @@ contract InternalAccount {
         
         if (tokenIn_ == address(USDC)) {
             console.log('here');
-            console.log('amountIn_: ', amountIn_);
-
-            revert('here15');
 
             sUSDeOut = _swapUni(
                 address(USDC), 
@@ -96,6 +93,7 @@ contract InternalAccount {
             );
 
             console.log('sUSDeOut - uniswap: ', sUSDeOut);
+            revert('here17');
         }
 
         sUSDe.approve(address(pendleRouter), sUSDeOut);
@@ -162,14 +160,6 @@ contract InternalAccount {
         IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
         uint24 poolFee = 500;
 
-        console.log('');
-        console.log('--- in swapUni ---');
-        console.log('tokenIn_: ', tokenIn_);
-        console.log('tokenOut_: ', tokenOut_);
-        console.log('block.timestamp: ', block.timestamp);
-        console.log('amountIn_: ', amountIn_);
-        console.log('');
-
         ISwapRouter.ExactInputParams memory params =
             ISwapRouter.ExactInputParams({
                 path: abi.encodePacked(tokenIn_, poolFee, address(USDT), poolFee, tokenOut_), //500 -> 0.05
@@ -179,7 +169,24 @@ contract InternalAccount {
                 amountOutMinimum: minAmountOut_
             });
 
-        // revert('here90');
+        console.log('');
+        console.log('--- in swapUni ---');
+        console.log('tokenIn_: ', tokenIn_);
+        console.log('poolFee: ', poolFee);
+        console.log('USDT: ', address(USDT));
+        console.log('tokenOut_: ', tokenOut_);
+        console.log('receiver_: ', receiver_);
+        console.log('block.timestamp: ', block.timestamp);
+        console.log('amountIn_: ', amountIn_);
+        console.log('minAmountOut_: ', minAmountOut_);
+        console.log('swapRouterUni: ', address(swapRouterUni));
+        console.log('');
+
+        console.logBytes(params.path);
+        console.log('params.recipient: ', params.recipient);
+        console.log('params.deadline: ', params.deadline);
+        console.log('params.amountIn: ', params.amountIn);
+        console.log('params.amountOutMinimum: ', params.amountOutMinimum);
 
         return swapRouterUni.exactInput(params);
     }

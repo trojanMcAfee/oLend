@@ -4,6 +4,7 @@ pragma solidity 0.8.26;
 
 import {CoreMethods} from "../CoreMethods.sol";
 import {UserAccountData} from "../../../contracts/AppStorage.sol";
+import {Type} from "@test/foundry/AppStorageTest.sol";
 
 import "forge-std/console.sol";
 
@@ -33,7 +34,7 @@ contract SupplyTest is CoreMethods {
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
 
-        // _mockExactInputUni(Type.BUY, second_owner);
+        _mockExactInputUni(Type.BUY, second_owner, amountIn);
 
         uint amountOutPT = OZ.lend(amountIn, address(USDC), second_owner);
         vm.stopPrank();
