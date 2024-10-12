@@ -5,6 +5,7 @@ pragma solidity 0.8.26;
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import {AppStorageTest, SwapUni, Type} from "@test/foundry/AppStorageTest.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
+import {HelpersLib} from "@contracts/libraries/HelpersLib.sol";
 
 import "forge-std/console.sol";
  
@@ -12,6 +13,7 @@ import "forge-std/console.sol";
 contract HelpersTest is AppStorageTest {
 
     using FixedPointMathLib for *;
+    using HelpersLib for *;
 
     function _constructUniParams(
         uint amountIn_,
@@ -34,7 +36,7 @@ contract HelpersTest is AppStorageTest {
     }
 
 
-    function _mockExactInputUni(Type buy_, address owner_, uint amountIn_) internal {
+    function _mockExactInputUni(Type buy_, uint amountIn_) internal returns(uint) {
         uint amountOut;
         address tokenIn;
         address tokenIntermediate;
@@ -47,7 +49,7 @@ contract HelpersTest is AppStorageTest {
             tokenOut = address(sUSDe);
 
             uint sUSDe_USDC_rate = 1097380919046205400;
-            address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
+            address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294; //second_owner
             receiver = internalAccount;
             amountOut = (amountIn_ * 1e12).mulDivDown(1e18, sUSDe_USDC_rate);
         }
@@ -67,6 +69,28 @@ contract HelpersTest is AppStorageTest {
         );
 
         deal(address(sUSDe), receiver, amountOut);
+        return amountOut;
+    }
+
+
+    function _mockSwapExactTokenForPt(uint amountIn_) internal {
+        address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
+        uint minPTout = 0;
+
+        vm.mockCall(
+            address(pendleRouter),
+            abi.encodeWithSelector(
+                pendleRouter.swapExactTokenForPt.selector, 
+                internalAccount,
+                address(sUSDeMarket),
+                minPTout,
+                defaultApprox,
+                address(sUSDe).createTokenInputStruct(amountIn_, emptySwap),
+                emptyLimit
+            ),
+            abi.encode(uint(222), 0, 0)
+        );
+
     }
 
 
