@@ -223,11 +223,11 @@ contract AppStorageTest is HelpersTest {
 
         return (debtBalance, supplyBalance, postPendleBalance);
     }
+}
 
 
-    struct SwapUni {
-        address tokenIn;
-        address tokenInt;
-        address tokenOut;
-    }
+struct SwapUni {
+    address tokenIn;
+    address tokenInt;
+    address tokenOut;
 }

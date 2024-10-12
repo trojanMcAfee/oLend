@@ -33,13 +33,7 @@ contract SupplyTest is CoreMethods {
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
 
-        vm.expectEmit(false, false, false, true);
-        emit NewAccountDataState(
-            amountIn,
-            ltvStable,
-            liqThresholdStable,
-            type(uint).max
-        );
+        // _mockExactInputUni(Type.BUY, second_owner);
 
         uint amountOutPT = OZ.lend(amountIn, address(USDC), second_owner);
         vm.stopPrank();

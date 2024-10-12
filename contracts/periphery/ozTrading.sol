@@ -25,17 +25,19 @@ abstract contract ozTrading is ozModifiers {
         uint amountIn_, 
         uint minAmountOut_
     ) internal returns(uint) {
+        console.log('here2');
+
         ISwapRouter swapRouterUni = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
         // IERC20(tokenIn_).safeApprove(address(swapRouterUni), amountIn_); //<--- not working dont know why (types are diff)
         IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
         uint24 poolFee = 500;
 
-        console.log('');
-        console.log('--- in swapUni ---');
-        console.log('tokenIn_: ', tokenIn_);
-        console.log('tokenOut_: ', tokenOut_);
-        console.log('block.timestamp: ', block.timestamp);
-        console.log('amountIn_: ', amountIn_);
+        // console.log('');
+        // console.log('--- in swapUni ---');
+        // console.log('tokenIn_: ', tokenIn_);
+        // console.log('tokenOut_: ', tokenOut_);
+        // console.log('block.timestamp: ', block.timestamp);
+        // console.log('amountIn_: ', amountIn_);
 
         ISwapRouter.ExactInputParams memory params =
             ISwapRouter.ExactInputParams({
@@ -46,7 +48,7 @@ abstract contract ozTrading is ozModifiers {
                 amountOutMinimum: minAmountOut_
             });
 
-        revert('here90');
+        // revert('here90');
 
         return swapRouterUni.exactInput(params);
     }

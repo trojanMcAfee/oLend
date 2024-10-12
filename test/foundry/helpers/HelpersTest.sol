@@ -2,9 +2,10 @@
 pragma solidity 0.8.26;
 
 
-import {StateVars} from "../../../contracts/StateVars.sol";
+// import {StateVars} from "../../../contracts/StateVars.sol";
+import {StateVars} from "@contracts/StateVars.sol";
 import {ISwapRouter} from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import 
+import {SwapUni} from "@test/foundry/AppStorageTest.sol";
 
 
 contract HelpersTest is StateVars {
@@ -28,21 +29,37 @@ contract HelpersTest is StateVars {
         });
     }
 
+    //thia is the firs swapUni <-------- ****
+    function _mockExactInputUni(Type buy_, address receiver_) internal {
+        uint amountIn;
+        uint minTokenOut;
+        uint amountOut;
+        address tokenIn;
+        address tokenOut;
 
-    function _mockExactInput(SwapUni memory swap_, uint amountIn_) internal {
+        if (Type.BUY == buy_) {
+            amountIn = 10000000000;
+            tokenIn = address(USDC);
+            tokenInt = address(USDT);
+            tokenOut = address(sUSDe);
+            amountOut = 9112606048127348920058;
+
+            uint sUSDe_USDC_rate = (amountIn * 1e12).mulDivDown(1e18, amountOut);
+        }
+        
         ISwapRouter.ExactInputParams memory params = _constructUniParams(
-            amountIn_,
-            receiver,
-            swap_.tokenIn,
-            swap_.tokenInt,
-            swap_.tokenOut
+            amountIn,
+            receiver_,
+            tokenIn,
+            tokenInt,
+            tokenOut
         );
 
-        // vm.mockCall(
-        //     swapRouterUni, 
-        //     abi.encodeWithSelector(ISwapRouter.swapRouterUni.selector, params);, 
-        //     returnData
-        // );
+        vm.mockCall(
+            address(swapRouterUni), 
+            abi.encodeWithSelector(ISwapRouter.swapRouterUni.selector, params), 
+            abi.encode(amountOut)
+        );
 
 
     }

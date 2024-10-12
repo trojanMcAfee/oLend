@@ -82,6 +82,11 @@ contract InternalAccount {
         // console.log('amountIn_ - usdc: ', amountIn_);
         
         if (tokenIn_ == address(USDC)) {
+            console.log('here');
+            console.log('amountIn_: ', amountIn_);
+
+            revert('here15');
+
             sUSDeOut = _swapUni(
                 address(USDC), 
                 address(sUSDe), 
@@ -89,6 +94,8 @@ contract InternalAccount {
                 amountIn_, 
                 minTokenOut
             );
+
+            console.log('sUSDeOut - uniswap: ', sUSDeOut);
         }
 
         sUSDe.approve(address(pendleRouter), sUSDeOut);
@@ -155,6 +162,14 @@ contract InternalAccount {
         IERC20(tokenIn_).approve(address(swapRouterUni), amountIn_);
         uint24 poolFee = 500;
 
+        console.log('');
+        console.log('--- in swapUni ---');
+        console.log('tokenIn_: ', tokenIn_);
+        console.log('tokenOut_: ', tokenOut_);
+        console.log('block.timestamp: ', block.timestamp);
+        console.log('amountIn_: ', amountIn_);
+        console.log('');
+
         ISwapRouter.ExactInputParams memory params =
             ISwapRouter.ExactInputParams({
                 path: abi.encodePacked(tokenIn_, poolFee, address(USDT), poolFee, tokenOut_), //500 -> 0.05
@@ -163,6 +178,8 @@ contract InternalAccount {
                 amountIn: amountIn_,
                 amountOutMinimum: minAmountOut_
             });
+
+        // revert('here90');
 
         return swapRouterUni.exactInput(params);
     }
