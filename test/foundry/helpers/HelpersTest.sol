@@ -75,7 +75,10 @@ contract HelpersTest is AppStorageTest {
 
     function _mockSwapExactTokenForPt(uint amountIn_) internal {
         address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
+        uint sUSDe_PT_rate = 1106142168328746500;
         uint minPTout = 0;
+
+        uint amountOut = amountIn_.mulDivDown(sUSDe_PT_rate, 1e18);
 
         vm.mockCall(
             address(pendleRouter),
@@ -88,7 +91,7 @@ contract HelpersTest is AppStorageTest {
                 address(sUSDe).createTokenInputStruct(amountIn_, emptySwap),
                 emptyLimit
             ),
-            abi.encode(uint(222), 0, 0)
+            abi.encode(amountOut, 0, 0)
         );
 
     }
