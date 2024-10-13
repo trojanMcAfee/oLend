@@ -85,10 +85,6 @@ contract InternalAccount {
                 amountIn_, 
                 minTokenOut
             );
-
-            console.log('sUSDeOut - uniswap: ', sUSDeOut);
-            // console.log('sUSDe bal - intAcc: ', sUSDe.balanceOf(intAcc_));
-            // revert('here19');
         }
 
         sUSDe.approve(address(pendleRouter), sUSDeOut);
@@ -102,9 +98,6 @@ contract InternalAccount {
             address(sUSDe).createTokenInputStruct(sUSDeOut, emptySwap), 
             emptyLimit
         );
-
-        console.log('amountOutPT: ', amountOutPT);
-        revert('here19');
 
         return amountOutPT;
     }

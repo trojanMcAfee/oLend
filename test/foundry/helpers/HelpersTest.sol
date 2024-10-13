@@ -21,7 +21,7 @@ contract HelpersTest is AppStorageTest {
         address tokenIn_,
         address tokenIntermediate_,
         address tokenOut_
-    ) private view returns(ISwapRouter.ExactInputParams memory params) {
+    ) private pure returns(ISwapRouter.ExactInputParams memory params) {
         uint24 poolFee = 500;
         uint minAmountOut = 0;
         uint blockStamp = 1725313631;
@@ -94,6 +94,7 @@ contract HelpersTest is AppStorageTest {
             abi.encode(amountOut, 0, 0)
         );
 
+        deal(address(sUSDe_PT_26SEP), internalAccount, amountOut);
     }
 
 

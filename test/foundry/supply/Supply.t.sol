@@ -29,13 +29,23 @@ contract SupplyTest is CoreMethods {
 
         assertTrue(amountIn > 0, 'custom: amountIn 0');
         assertTrue(balanceOzUSDC == 0, 'custom: balanceOzUSDC not 0');
+
+        //**** */
+        uint amountOutsUSDe = _mockExactInputUni(Type.BUY, amountIn);
+        _mockSwapExactTokenForPt(amountOutsUSDe);
+        //**** */
         
         //Actions
         vm.startPrank(second_owner);
         USDC.approve(address(OZ), amountIn);
 
-        uint amountOutsUSDe = _mockExactInputUni(Type.BUY, amountIn);
-        _mockSwapExactTokenForPt(amountOutsUSDe);
+        vm.expectEmit(false, false, false, true);
+        emit NewAccountDataState(
+            amountIn,
+            ltvStable,
+            liqThresholdStable,
+            type(uint).max
+        );
 
         uint amountOutPT = OZ.lend(amountIn, address(USDC), second_owner);
         vm.stopPrank();
