@@ -24,7 +24,7 @@ contract SupplyTest is CoreMethods {
     /**
      * Tests that user can lend/supply USDC and mint ozUSDC. 
      */
-    function test_supply_USDC() public {
+    function test_supply_USDC() public returns(uint) {
         //Pre-conditions
         uint amountIn = USDC.balanceOf(second_owner);
         uint balanceOzUSDC = ozUSDC.balanceOf(second_owner);
@@ -56,22 +56,16 @@ contract SupplyTest is CoreMethods {
         assertTrue(USDC.balanceOf(second_owner) == 0, 'custom: USDC bal not 0');
         assertTrue(amountOutPT > 0, 'custom: amountOutPT is 0');
         assertTrue(amountOutPT == sUSDe_PT_26SEP.balanceOf(intAcc), 'custom: PTs dont match');
+
+        return amountIn;
     }
 
 
     function test_supply_and_rebase_USDC() public returns(uint amountIn) {
         //Pre-conditions
-        amountIn = USDC.balanceOf(second_owner);
-        assertTrue(amountIn > 0, 'custom: amountIn is 0');
-
-        vm.startPrank(second_owner);
-        USDC.approve(address(OZ), amountIn);
-        OZ.lend(amountIn, address(USDC), second_owner);
-        vm.stopPrank();
+        amountIn = test_supply_USDC();
 
         uint balanceOwnerOzUSDC_preRebase = ozUSDC.balanceOf(second_owner);
-        console.log('balanceOwnerOzUSDC_preRebase: ', balanceOwnerOzUSDC_preRebase);
-        console.log('amountIn: ', amountIn);
         assertTrue(balanceOwnerOzUSDC_preRebase == amountIn, 'custom: ozUSDC and amountIn diff');
 
         uint supplyRate_preRebase = OZ.getInternalSupplyRate();
@@ -112,6 +106,10 @@ contract SupplyTest is CoreMethods {
 
         uint assetsPreredeem = ozUSDC.totalAssets();
         assertTrue(amountIn == assetsPreredeem, 'custom: totalAssets unequal');
+
+        //***** */
+        _mockSwapExactTokenForPt(Type.SELL, balancePreRedeemOzUSDC);
+        //***** */
 
         //Action
         vm.startPrank(second_owner);

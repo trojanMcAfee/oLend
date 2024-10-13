@@ -109,6 +109,8 @@ contract InternalAccount {
 
         console.log('amountInPT_: ', amountInPT_);
 
+        //******** */
+        //is the fixed APY reflected in this call?? - i think it is (test confirmed) - wait for slack 
         (uint sUSDeOut,,) = pendleRouter.swapExactPtForToken(
             address(this), 
             address(sUSDeMarket), 

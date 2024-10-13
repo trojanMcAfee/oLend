@@ -22,7 +22,7 @@ import "forge-std/console.sol";
 contract ozUSDCtoken is ERC4626 {
 
     ozIDiamond OZ;
-    uint scalingFactor = 1e18;
+    uint public scalingFactor = 1e18;
     uint lastRebaseTime;
     uint rebaseInterval = 24 hours;
     uint previousRatePT;

@@ -85,23 +85,6 @@ contract AppStorageTest is StateVars {
     }
 
 
-    function _advanceInTime(uint amountTime_) internal {
-        vm.warp(block.timestamp + amountTime_);
-
-        (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
-        uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
-        uint ptPrice = OZ.getInternalSupplyRate();
-        uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
-        uint netTotal = ptPrice + netGrowth;
-    
-        vm.mockCall(
-            address(OZ),
-            abi.encodeWithSelector(OZ.getInternalSupplyRate.selector),
-            abi.encode(netTotal)
-        );    
-    }
-
-
     function _advanceInTime2(uint amountTime_, address intAcc_, address token_) internal {
         uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
         (uint supplyAPYformatted, uint pendleFixedAPYformatted) = OZ.getSupplyRates(token_, true);

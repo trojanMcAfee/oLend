@@ -15,6 +15,24 @@ contract HelpersTest is AppStorageTest {
     using FixedPointMathLib for *;
     using HelpersLib for *;
 
+
+    function _advanceInTime(uint amountTime_) internal {
+        vm.warp(block.timestamp + amountTime_);
+
+        (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
+        uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
+        uint ptPrice = OZ.getInternalSupplyRate();
+        uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
+        uint netTotal = ptPrice + netGrowth;
+    
+        vm.mockCall(
+            address(OZ),
+            abi.encodeWithSelector(OZ.getInternalSupplyRate.selector),
+            abi.encode(netTotal)
+        );    
+    }
+    
+
     function _constructUniParams(
         uint amountIn_,
         address receiver_,
@@ -73,35 +91,69 @@ contract HelpersTest is AppStorageTest {
     }
 
 
-    function _mockSwapExactTokenForPt(uint amountIn_) internal {
+    function _mockSwapExactTokenForPt(Type type_, uint amountIn_) internal {
         address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
         uint sUSDe_PT_rate = 1106142168328746500;
         uint minPTout = 0;
+        uint amountOut;
 
-        uint amountOut = amountIn_.mulDivDown(sUSDe_PT_rate, 1e18);
+        if (type_ == Type.BUY) {
+            amountOut = amountIn_.mulDivDown(sUSDe_PT_rate, 1e18);
 
-        vm.mockCall(
-            address(pendleRouter),
-            abi.encodeWithSelector(
-                pendleRouter.swapExactTokenForPt.selector, 
-                internalAccount,
-                address(sUSDeMarket),
-                minPTout,
-                defaultApprox,
-                address(sUSDe).createTokenInputStruct(amountIn_, emptySwap),
-                emptyLimit
-            ),
-            abi.encode(amountOut, 0, 0)
-        );
+            vm.mockCall(
+                address(pendleRouter),
+                abi.encodeWithSelector(
+                    pendleRouter.swapExactTokenForPt.selector, 
+                    internalAccount,
+                    address(sUSDeMarket),
+                    minPTout,
+                    defaultApprox,
+                    address(sUSDe).createTokenInputStruct(amountIn_, emptySwap),
+                    emptyLimit
+                ),
+                abi.encode(amountOut, 0, 0)
+            );
 
-        deal(address(sUSDe_PT_26SEP), internalAccount, amountOut);
+            deal(address(sUSDe_PT_26SEP), internalAccount, amountOut);
+        } else if (type_ == Type.SELL) {
+            uint scalingFactor = ozUSDC.scalingFactor();
+            uint underlyingAmount = amountIn_.mulDivUp(1e18, scalingFactor);
+            uint userShares = ozUSDC.convertToShares(underlyingAmount);
+
+            uint totalUserPT = sUSDe_PT_26SEP.balanceOf(internalAccount);
+
+            uint totalUserUnderlyingAmount = ozUSDC.balanceOf(second_owner).mulDivUp(1e18, scalingFactor);
+            uint totalUserShares = ozUSDC.convertToShares(totalUserUnderlyingAmount);
+
+            uint amountInPT = userShares.mulDivDown(totalUserPT, totalUserShares);
+            uint minTokenOut = 0;
+
+            // 1 sUSDe --- 1106142168328746500 PT
+            //     x ----- amountInPT
+
+            console.log('amountInPT in mockSwap: ', amountInPT);
+
+            vm.mockCall(
+                address(pendleRouter),
+                abi.encodeWithSelector(
+                    pendleRouter.swapExactPtForToken.selector, 
+                    internalAccount,
+                    address(sUSDeMarket),
+                    amountInPT,
+                    address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap),
+                    emptyLimit
+                ),
+                abi.encode(amountOut, 0, 0)
+            );
+
+        }
     }
 
 
     //Mocks the buy/sell of PT for backing up ozUSD and/or rebasing rewards
     function _mockPTswap(Type type_, uint amountIn_) internal {
-        uint amountOutsUSDe = _mockExactInputUni(Type.BUY, amountIn_);
-        _mockSwapExactTokenForPt(amountOutsUSDe);
+        uint amountOutsUSDe = _mockExactInputUni(type_, amountIn_);
+        _mockSwapExactTokenForPt(type_, amountOutsUSDe);
     }
 
 

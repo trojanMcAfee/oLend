@@ -392,12 +392,9 @@ contract RouterTest is CoreMethods {
     }
 
 
-    function test_bit() public {
-        // uint16 ltv = 7500;
-        // uint16 liq = 7800;
-        
-        // uint joint = uint(abi.encodePacked(ltv, liq));
-        // console.log(joint);
+    function test_rate() public {
+        uint ptPrice = sUSDeMarket.getPtToAssetRate(uint32(15));
+        console.log('ptPrice: ', ptPrice);
     }
 
 
