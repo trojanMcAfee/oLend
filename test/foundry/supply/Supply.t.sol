@@ -21,47 +21,6 @@ contract SupplyTest is CoreMethods {
 
 
 
-    /*********** */
-    function test_supply_USDC_2() public {
-        //Pre-conditions
-        uint amountIn = USDC.balanceOf(second_owner);
-        uint balanceOzUSDC = ozUSDC.balanceOf(second_owner);
-
-        assertTrue(amountIn > 0, 'custom: amountIn 0');
-        assertTrue(balanceOzUSDC == 0, 'custom: balanceOzUSDC not 0');
-
-        //**** */
-        uint amountOutsUSDe = _mockExactInputUni(Type.BUY, amountIn);
-        _mockSwapExactTokenForPt(amountOutsUSDe);
-        //**** */
-        
-        //Actions
-        vm.startPrank(second_owner);
-        USDC.approve(address(OZ), amountIn);
-
-        vm.expectEmit(false, false, false, true);
-        emit NewAccountDataState(
-            amountIn,
-            ltvStable,
-            liqThresholdStable,
-            type(uint).max
-        );
-
-        uint amountOutPT = OZ.lend(amountIn, address(USDC), second_owner);
-        vm.stopPrank();
-
-        //Post-conditions
-        address intAcc = OZ.getUserAccountData(second_owner).internalAccount;
-
-        assertTrue(ozUSDC.balanceOf(second_owner) == amountIn, 'custom: ozUSDC bal no match');
-        assertTrue(USDC.balanceOf(second_owner) == 0, 'custom: USDC bal not 0');
-        assertTrue(amountOutPT > 0, 'custom: amountOutPT is 0');
-        assertTrue(amountOutPT == sUSDe_PT_26SEP.balanceOf(intAcc), 'custom: PTs dont match');
-    }
-
-
-    /************* */
-
     /**
      * Tests that user can lend/supply USDC and mint ozUSDC. 
      */
@@ -72,6 +31,8 @@ contract SupplyTest is CoreMethods {
 
         assertTrue(amountIn > 0, 'custom: amountIn 0');
         assertTrue(balanceOzUSDC == 0, 'custom: balanceOzUSDC not 0');
+
+        _mockPTswap(Type.BUY, amountIn);
         
         //Actions
         vm.startPrank(second_owner);

@@ -98,4 +98,11 @@ contract HelpersTest is AppStorageTest {
     }
 
 
+    //Mocks the buy/sell of PT for backing up ozUSD and/or rebasing rewards
+    function _mockPTswap(Type type_, uint amountIn_) internal {
+        uint amountOutsUSDe = _mockExactInputUni(Type.BUY, amountIn_);
+        _mockSwapExactTokenForPt(amountOutsUSDe);
+    }
+
+
 }
