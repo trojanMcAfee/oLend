@@ -87,6 +87,8 @@ contract InternalAccount {
             );
         }
 
+        console.log('sUSDeOut - swapUni: ', sUSDeOut);
+
         sUSDe.approve(address(pendleRouter), sUSDeOut);
         uint minPTout = 0;
 
@@ -99,6 +101,8 @@ contract InternalAccount {
             emptyLimit
         );
 
+        console.log('amountOutPT: ', amountOutPT);
+
         return amountOutPT;
     }
 
@@ -107,7 +111,7 @@ contract InternalAccount {
         sUSDe_PT_26SEP.approve(address(pendleRouter), amountInPT_);
         uint minTokenOut = 0;
 
-        // console.log('amountInPT_: ', amountInPT_);
+        console.log('amountInPT_: ', amountInPT_);
 
         (uint sUSDeOut,,) = pendleRouter.swapExactPtForToken(
             address(this), 
@@ -117,7 +121,7 @@ contract InternalAccount {
             emptyLimit
         );
 
-        // console.log('amountOut - sUSDe: ', sUSDeOut);
+        console.log('amountOut - sUSDe: ', sUSDeOut);
 
         uint amountOutUSDC;
 
@@ -156,6 +160,15 @@ contract InternalAccount {
                 amountIn: amountIn_,
                 amountOutMinimum: minAmountOut_
             });    
+
+        // console.log('');
+        // console.log('--- in _swapUni ---');
+        // console.logBytes(params.path);
+        // console.log('params.recipient: ', params.recipient);
+        // console.log('params.deadline: ', params.deadline);
+        // console.log('params.amountIn: ', params.amountIn);
+        // console.log('params.amountOutMinimum: ', params.amountOutMinimum);
+        // console.log('');
 
         return swapRouterUni.exactInput(params);
     }

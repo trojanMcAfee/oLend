@@ -98,10 +98,6 @@ contract SupplyTest is CoreMethods {
     }
 
 
-    //test all token balances with mock calls, to see if it's profitable, since 
-    //by forking state, the final USDC is less than the initial amountIn pre-rebase,
-    //and this flow is going through a supply rebase, so the final output should be more
-    //than the original
     function test_supply_rebase_redemption_ozUSDC_for_USDC() public {
         //Pre-conditions
         uint amountIn = test_supply_and_rebase_USDC();
@@ -119,6 +115,7 @@ contract SupplyTest is CoreMethods {
         //***** */
 
         //Action
+        console.log('PT before redeem *****: ', sUSDe_PT_26SEP.balanceOf(OZ.getUserAccountData(second_owner).internalAccount));
         vm.startPrank(second_owner);
         ozUSDC.redeem(balancePreRedeemOzUSDC, second_owner, second_owner, address(USDC));
         
