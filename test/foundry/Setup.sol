@@ -277,6 +277,8 @@ contract Setup is HelpersTest {
         vm.label(second_owner, 'secondOwner');
         vm.label(address(loupe), 'ozLoupe');
         vm.label(address(WETH), 'WETH');
+        vm.label(address(USDT), 'USDT');
+        vm.label(0x867B321132B18B5BF3775c0D9040D1872979422E, 'uniPool_sUSDeUSDT');
     }
 
 

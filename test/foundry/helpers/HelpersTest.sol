@@ -18,12 +18,6 @@ contract HelpersTest is AppStorageTest {
 
     function _advanceInTime(uint amountTime_) internal {
         vm.warp(block.timestamp + amountTime_);
-
-        // (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
-        // uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
-        // uint ptPrice = OZ.getInternalSupplyRate();
-        // uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
-        // uint netTotal = ptPrice + netGrowth;
         
         uint netTotal = _addFixedAPY(
             OZ.getInternalSupplyRate(),
@@ -60,27 +54,28 @@ contract HelpersTest is AppStorageTest {
     }
 
 
-    function _mockExactInputUni(Type buy_, uint amountIn_) internal returns(uint) {
-        uint amountOut;
+    function _mockExactInputUni(Type type_, uint amountIn_) internal returns(uint) {
+        address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294; //second_owner
+        uint sUSDe_USDC_rate = 1097380919046205400;
+        address tokenIntermediate = address(USDT);
         address tokenIn;
-        address tokenIntermediate;
         address tokenOut;
-        address receiver;
+        uint amountOut;
 
-        if (Type.BUY == buy_) {
+        if (Type.BUY == type_) {
             tokenIn = address(USDC);
-            tokenIntermediate = address(USDT);
             tokenOut = address(sUSDe);
-
-            uint sUSDe_USDC_rate = 1097380919046205400;
-            address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294; //second_owner
-            receiver = internalAccount;
             amountOut = (amountIn_ * 1e12).mulDivDown(1e18, sUSDe_USDC_rate);
+        } else if (Type.SELL == type_) {
+            tokenIn = address(sUSDe);
+            tokenOut = address(USDC);
+            amountOut = amountIn_.mulDivDown(sUSDe_USDC_rate, 1e18);
+            amountOut = 14;
         }
         
         ISwapRouter.ExactInputParams memory params = _constructUniParams(
             amountIn_,
-            receiver,
+            internalAccount,
             tokenIn,
             tokenIntermediate,
             tokenOut
@@ -92,7 +87,7 @@ contract HelpersTest is AppStorageTest {
             abi.encode(amountOut)
         );
 
-        deal(address(sUSDe), receiver, amountOut);
+        deal(address(sUSDe), internalAccount, amountOut);
         return amountOut;
     }
 
@@ -165,15 +160,6 @@ contract HelpersTest is AppStorageTest {
         int netGrowth = int((ptPrice_ * growthRateTime + 1e18 / 2) / 1e18);
         netGrowth = isSum_ ? netGrowth : -netGrowth;
         uint netTotal = uint(int(ptPrice_) + netGrowth); 
-
-        console.log('');
-        console.log('--- in _addFixedAPY() ---');
-        console.log('pendleFixedAPY: ', pendleFixedAPY);
-        console.log('ptPrice_: ', ptPrice_);
-        console.log('growthRateTime: ', growthRateTime);
-        console.log('netGrowth: ', netGrowth);
-        console.log('netTotal: ', netTotal);
-        console.log('');
 
         return netTotal;
     }

@@ -119,8 +119,6 @@ contract InternalAccount {
 
         console.log('amountOut - sUSDe: ', sUSDeOut);
 
-        revert('here22');
-
         uint amountOutUSDC;
 
         if (tokenOut_ == address(USDC)) {
@@ -134,6 +132,7 @@ contract InternalAccount {
         }
 
         console.log('amountOutUSDC: ', amountOutUSDC);
+        revert('here24');
 
     }
 
