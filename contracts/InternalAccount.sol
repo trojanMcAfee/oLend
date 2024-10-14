@@ -161,15 +161,6 @@ contract InternalAccount {
                 amountOutMinimum: minAmountOut_
             });    
 
-        // console.log('');
-        // console.log('--- in _swapUni ---');
-        // console.logBytes(params.path);
-        // console.log('params.recipient: ', params.recipient);
-        // console.log('params.deadline: ', params.deadline);
-        // console.log('params.amountIn: ', params.amountIn);
-        // console.log('params.amountOutMinimum: ', params.amountOutMinimum);
-        // console.log('');
-
         return swapRouterUni.exactInput(params);
     }
 

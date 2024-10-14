@@ -77,33 +77,6 @@ contract HelpersTest is AppStorageTest {
 
             amountOut = amountIn_.mulDivDown(sUSDe_USDC_rate, 1e18);
             receiver = second_owner;
-
-            // ISwapRouter.ExactInputParams memory params = _constructUniParams(
-            //     amountIn_,
-            //     receiver,
-            //     tokenIn,
-            //     tokenIntermediate,
-            //     tokenOut,
-            //     blockStamp
-            // );
-
-            // console.log('');
-            // console.log('--- in _mockUni ---');
-            // console.logBytes(params.path);
-            // console.log('params.recipient: ', params.recipient);
-            // console.log('params.deadline: ', params.deadline);
-            // console.log('params.amountIn: ', params.amountIn);
-            // console.log('params.amountOutMinimum: ', params.amountOutMinimum);
-            // console.log('');
-
-            // vm.mockCall(
-            //     address(swapRouterUni), 
-            //     abi.encodeWithSelector(ISwapRouter.exactInput.selector, params), 
-            //     abi.encode(76)
-            // );
-
-            // deal(address(USDC), internalAccount, amountOut);
-            // return amountOut;
         }
         
         ISwapRouter.ExactInputParams memory params = _constructUniParams(
@@ -121,7 +94,7 @@ contract HelpersTest is AppStorageTest {
             abi.encode(amountOut)
         );
 
-        deal(address(USDC), internalAccount, amountOut);
+        deal(address(tokenOut), receiver, amountOut);
         return amountOut;
     }
 

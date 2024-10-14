@@ -115,7 +115,6 @@ contract SupplyTest is CoreMethods {
         //***** */
 
         //Action
-        console.log('PT before redeem *****: ', sUSDe_PT_26SEP.balanceOf(OZ.getUserAccountData(second_owner).internalAccount));
         vm.startPrank(second_owner);
         ozUSDC.redeem(balancePreRedeemOzUSDC, second_owner, second_owner, address(USDC));
         
