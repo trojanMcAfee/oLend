@@ -128,32 +128,20 @@ contract HelpersTest is AppStorageTest {
             uint amountInPT = userShares.mulDivDown(totalUserPT, totalUserShares);
             uint minTokenOut = 0;
 
-            // 1 sUSDe --- 1106142168328746500 PT
-            //     x ----- amountInPT
+            amountOut = amountInPT.mulDivDown(1e18, _addFixedAPY(sUSDe_PT_rate, 24 hours)); //rateWithFixedAPY
 
-            console.log('amountInPT in mockSwap: ', amountInPT);
-            uint rateWithFixedAPY = _addFixedAPY(sUSDe_PT_rate, 24 hours);
-
-            console.log('sUSDe_PT_rate - no fixed APY: ', sUSDe_PT_rate);
-            console.log('rateWithFixedAPY: ', rateWithFixedAPY);
-
-            amountOut = amountInPT.mulDivDown(1e18, rateWithFixedAPY);
-            console.log('amountOut: ', amountOut);
-
-            revert('here23');
-
-            // vm.mockCall(
-            //     address(pendleRouter),
-            //     abi.encodeWithSelector(
-            //         pendleRouter.swapExactPtForToken.selector, 
-            //         internalAccount,
-            //         address(sUSDeMarket),
-            //         amountInPT,
-            //         address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap),
-            //         emptyLimit
-            //     ),
-            //     abi.encode(amountOut, 0, 0)
-            // );
+            vm.mockCall(
+                address(pendleRouter),
+                abi.encodeWithSelector(
+                    pendleRouter.swapExactPtForToken.selector, 
+                    internalAccount,
+                    address(sUSDeMarket),
+                    amountInPT,
+                    address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap),
+                    emptyLimit
+                ),
+                abi.encode(amountOut, 0, 0)
+            );
 
         }
     }
@@ -168,7 +156,17 @@ contract HelpersTest is AppStorageTest {
         (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
         uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
         uint netGrowth = (ptPrice_ * growthRateTime + 1e18 / 2) / 1e18;
-        uint netTotal = ptPrice_ + netGrowth; //<----- this is - instead of + ******
+        uint netTotal = ptPrice_ - netGrowth; 
+
+        console.log('');
+        console.log('--- in _addFixedAPY() ---');
+        console.log('pendleFixedAPY: ', pendleFixedAPY);
+        console.log('ptPrice_: ', ptPrice_);
+        console.log('growthRateTime: ', growthRateTime);
+        console.log('netGrowth: ', netGrowth);
+        console.log('netTotal: ', netTotal);
+        console.log('');
+
         return netTotal;
     }
 
