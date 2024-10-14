@@ -87,8 +87,6 @@ contract InternalAccount {
             );
         }
 
-        console.log('sUSDeOut - swapUni: ', sUSDeOut);
-
         sUSDe.approve(address(pendleRouter), sUSDeOut);
         uint minPTout = 0;
 
@@ -101,8 +99,6 @@ contract InternalAccount {
             emptyLimit
         );
 
-        console.log('amountOutPT: ', amountOutPT);
-
         return amountOutPT;
     }
 
@@ -110,8 +106,7 @@ contract InternalAccount {
     function sellPT(uint amountInPT_, address tokenOut_, address receiver_) external returns(uint) {
         sUSDe_PT_26SEP.approve(address(pendleRouter), amountInPT_);
         uint minTokenOut = 0;
-
-        console.log('amountInPT_: ', amountInPT_);
+        uint amountOutUSDC;
 
         (uint sUSDeOut,,) = pendleRouter.swapExactPtForToken(
             address(this), 
@@ -120,10 +115,6 @@ contract InternalAccount {
             address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap), 
             emptyLimit
         );
-
-        console.log('amountOut - sUSDe: ', sUSDeOut);
-
-        uint amountOutUSDC;
 
         if (tokenOut_ == address(USDC)) {
             amountOutUSDC = _swapUni(
@@ -134,8 +125,6 @@ contract InternalAccount {
                 minTokenOut
             );
         }
-
-        console.log('amountOutUSDC - final: ', amountOutUSDC);
     }
 
 

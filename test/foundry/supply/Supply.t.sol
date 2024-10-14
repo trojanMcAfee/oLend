@@ -123,7 +123,6 @@ contract SupplyTest is CoreMethods {
         assertTrue(assetsPostredeem == 0, 'custom: assets not 0');
         assertTrue(balancePostRedeemOzUSDC == 0, 'custom: ozUSDC bal is not 0');
         assertTrue(balancePostRedeemUSDC > balancePreRedeemUSDC, 'custom: post-redeem balance not higher');
-
     }
 
 }

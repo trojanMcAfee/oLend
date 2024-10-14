@@ -80,9 +80,6 @@ contract ozMinter is ozTrading {
         uint shares = s.ozTokens[tokenIn_].deposit(amountIn_, receiver_);
 
         return amountOut;
-
-        // account.depositInAave{value: msgValue}(amountIn_, tokenIn_);
-        // s.relayer.buyPT(amountIn_, address(account), tokenIn_);
     }
 
     
