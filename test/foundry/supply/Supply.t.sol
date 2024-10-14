@@ -108,8 +108,8 @@ contract SupplyTest is CoreMethods {
         assertTrue(amountIn == assetsPreredeem, 'custom: totalAssets unequal');
 
         //***** */
-        _mockSwapExactTokenForPt(Type.SELL, balancePreRedeemOzUSDC);
-        // _mockExactInputUni(Type.SELL, amountIn);
+        uint amountOut = _mockSwapExactTokenForPt(Type.SELL, balancePreRedeemOzUSDC);
+        _mockExactInputUni(Type.SELL, amountOut);
         //***** */
 
         //Action

@@ -60,26 +60,46 @@ contract HelpersTest is AppStorageTest {
         address tokenIntermediate = address(USDT);
         address tokenIn;
         address tokenOut;
+        address receiver;
         uint amountOut;
 
         if (Type.BUY == type_) {
             tokenIn = address(USDC);
             tokenOut = address(sUSDe);
             amountOut = (amountIn_ * 1e12).mulDivDown(1e18, sUSDe_USDC_rate);
+            receiver = internalAccount;
         } else if (Type.SELL == type_) {
             tokenIn = address(sUSDe);
             tokenOut = address(USDC);
             amountOut = amountIn_.mulDivDown(sUSDe_USDC_rate, 1e18);
-            amountOut = 14;
+            receiver = second_owner;
         }
         
         ISwapRouter.ExactInputParams memory params = _constructUniParams(
             amountIn_,
-            internalAccount,
+            receiver,
             tokenIn,
             tokenIntermediate,
             tokenOut
         );
+
+        // console.log('');
+        // console.log('--- in _mockSwapUni ---');
+        // console.log('tokenIn_: ', tokenIn);
+        // console.log('USDT: ', address(USDT));
+        // console.log('tokenOut_: ', tokenOut);
+        // console.log('receiver_: ', internalAccount);
+        // console.log('block.timestamp: ', block.timestamp);
+        // console.log('amountIn_: ', amountIn_);
+        // console.log('swapRouterUni: ', address(swapRouterUni));
+        // console.log('');
+
+        // console.logBytes(params.path);
+
+        // console.log('params.recipient: ', params.recipient);
+        // console.log('params.deadline: ', params.deadline);
+        // console.log('params.amountIn: ', params.amountIn);
+        // console.log('params.amountOutMinimum: ', params.amountOutMinimum);
 
         vm.mockCall(
             address(swapRouterUni), 
@@ -87,12 +107,12 @@ contract HelpersTest is AppStorageTest {
             abi.encode(amountOut)
         );
 
-        deal(address(sUSDe), internalAccount, amountOut);
+        deal(address(USDC), internalAccount, amountOut);
         return amountOut;
     }
 
 
-    function _mockSwapExactTokenForPt(Type type_, uint amountIn_) internal {
+    function _mockSwapExactTokenForPt(Type type_, uint amountIn_) internal returns(uint) {
         address internalAccount = 0x5B0091f49210e7B2A57B03dfE1AB9D08289d9294;
         uint sUSDe_PT_rate = 1106142168328746500;
         uint minPTout = 0;
@@ -146,6 +166,8 @@ contract HelpersTest is AppStorageTest {
 
             deal(address(sUSDe), internalAccount, amountOut);
         }
+
+        return amountOut;
     }
 
     //Mocks the buy/sell of PT for backing up ozUSD and/or rebasing rewards
