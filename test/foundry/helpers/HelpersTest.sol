@@ -159,8 +159,13 @@ contract HelpersTest is AppStorageTest {
 
     //Mocks the buy/sell of PT for backing up ozUSD and/or rebasing rewards
     function _mockPTswap(Type type_, uint amountIn_) internal {
-        uint amountOutsUSDe = _mockExactInputUni(type_, amountIn_);
-        _mockSwapExactTokenForPt(type_, amountOutsUSDe);
+        if (type_ == Type.BUY) {
+            uint amountOutsUSDe = _mockExactInputUni(type_, amountIn_);
+            _mockSwapExactTokenForPt(type_, amountOutsUSDe);
+        } else if (type_ == Type.SELL) {
+            uint amountOut = _mockSwapExactTokenForPt(Type.SELL, amountIn_);
+            _mockExactInputUni(Type.SELL, amountOut);
+        }
     }
 
     function _addFixedAPY(uint ptPrice_, uint amountTime_, bool isSum_) internal view returns(uint) {
