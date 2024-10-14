@@ -31,7 +31,7 @@ contract HelpersTest is AppStorageTest {
             abi.encode(netTotal)
         );    
     }
-    
+
 
     function _constructUniParams(
         uint amountIn_,
@@ -132,28 +132,44 @@ contract HelpersTest is AppStorageTest {
             //     x ----- amountInPT
 
             console.log('amountInPT in mockSwap: ', amountInPT);
+            uint rateWithFixedAPY = _addFixedAPY(sUSDe_PT_rate, 24 hours);
 
-            vm.mockCall(
-                address(pendleRouter),
-                abi.encodeWithSelector(
-                    pendleRouter.swapExactPtForToken.selector, 
-                    internalAccount,
-                    address(sUSDeMarket),
-                    amountInPT,
-                    address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap),
-                    emptyLimit
-                ),
-                abi.encode(amountOut, 0, 0)
-            );
+            console.log('sUSDe_PT_rate - no fixed APY: ', sUSDe_PT_rate);
+            console.log('rateWithFixedAPY: ', rateWithFixedAPY);
+
+            amountOut = amountInPT.mulDivDown(1e18, rateWithFixedAPY);
+            console.log('amountOut: ', amountOut);
+
+            revert('here23');
+
+            // vm.mockCall(
+            //     address(pendleRouter),
+            //     abi.encodeWithSelector(
+            //         pendleRouter.swapExactPtForToken.selector, 
+            //         internalAccount,
+            //         address(sUSDeMarket),
+            //         amountInPT,
+            //         address(sUSDe).createTokenOutputStruct(minTokenOut, emptySwap),
+            //         emptyLimit
+            //     ),
+            //     abi.encode(amountOut, 0, 0)
+            // );
 
         }
     }
-
 
     //Mocks the buy/sell of PT for backing up ozUSD and/or rebasing rewards
     function _mockPTswap(Type type_, uint amountIn_) internal {
         uint amountOutsUSDe = _mockExactInputUni(type_, amountIn_);
         _mockSwapExactTokenForPt(type_, amountOutsUSDe);
+    }
+
+    function _addFixedAPY(uint ptPrice_, uint amountTime_) internal returns(uint) {
+        (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
+        uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
+        uint netGrowth = (ptPrice_ * growthRateTime + 1e18 / 2) / 1e18;
+        uint netTotal = ptPrice_ + netGrowth; //<----- this is - instead of + ******
+        return netTotal;
     }
 
 
