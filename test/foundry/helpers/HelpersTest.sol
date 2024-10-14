@@ -143,6 +143,7 @@ contract HelpersTest is AppStorageTest {
                 abi.encode(amountOut, 0, 0)
             );
 
+            deal(address(sUSDe), internalAccount, amountOut);
         }
     }
 
