@@ -19,11 +19,17 @@ contract HelpersTest is AppStorageTest {
     function _advanceInTime(uint amountTime_) internal {
         vm.warp(block.timestamp + amountTime_);
 
-        (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
-        uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
-        uint ptPrice = OZ.getInternalSupplyRate();
-        uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
-        uint netTotal = ptPrice + netGrowth;
+        // (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
+        // uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
+        // uint ptPrice = OZ.getInternalSupplyRate();
+        // uint netGrowth = (ptPrice * growthRateTime + 1e18 / 2) / 1e18;
+        // uint netTotal = ptPrice + netGrowth;
+        
+        uint netTotal = _addFixedAPY(
+            OZ.getInternalSupplyRate(),
+            amountTime_,
+            true
+        );
     
         vm.mockCall(
             address(OZ),
@@ -128,7 +134,7 @@ contract HelpersTest is AppStorageTest {
             uint amountInPT = userShares.mulDivDown(totalUserPT, totalUserShares);
             uint minTokenOut = 0;
 
-            amountOut = amountInPT.mulDivDown(1e18, _addFixedAPY(sUSDe_PT_rate, 24 hours)); //rateWithFixedAPY
+            amountOut = amountInPT.mulDivDown(1e18, _addFixedAPY(sUSDe_PT_rate, 24 hours, false)); //rateWithFixedAPY
 
             vm.mockCall(
                 address(pendleRouter),
@@ -153,11 +159,12 @@ contract HelpersTest is AppStorageTest {
         _mockSwapExactTokenForPt(type_, amountOutsUSDe);
     }
 
-    function _addFixedAPY(uint ptPrice_, uint amountTime_) internal returns(uint) {
+    function _addFixedAPY(uint ptPrice_, uint amountTime_, bool isSum_) internal returns(uint) {
         (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
         uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
-        uint netGrowth = (ptPrice_ * growthRateTime + 1e18 / 2) / 1e18;
-        uint netTotal = ptPrice_ - netGrowth; 
+        int netGrowth = int((ptPrice_ * growthRateTime + 1e18 / 2) / 1e18);
+        netGrowth = isSum_ ? netGrowth : -netGrowth;
+        uint netTotal = uint(int(ptPrice_) + netGrowth); 
 
         console.log('');
         console.log('--- in _addFixedAPY() ---');
