@@ -29,6 +29,8 @@ contract SupplyTest is CoreMethods {
         uint amountIn = USDC.balanceOf(second_owner);
         uint balanceOzUSDC = ozUSDC.balanceOf(second_owner);
 
+        console.log('amountInUSDC - initial: ', amountIn);
+
         assertTrue(amountIn > 0, 'custom: amountIn 0');
         assertTrue(balanceOzUSDC == 0, 'custom: balanceOzUSDC not 0');
 
@@ -52,6 +54,8 @@ contract SupplyTest is CoreMethods {
         //Post-conditions
         address intAcc = OZ.getUserAccountData(second_owner).internalAccount;
 
+        console.log('ozUSDC bal: ', ozUSDC.balanceOf(second_owner));
+
         assertTrue(ozUSDC.balanceOf(second_owner) == amountIn, 'custom: ozUSDC bal no match');
         assertTrue(USDC.balanceOf(second_owner) == 0, 'custom: USDC bal not 0');
         assertTrue(amountOutPT > 0, 'custom: amountOutPT is 0');
@@ -73,6 +77,8 @@ contract SupplyTest is CoreMethods {
         //Actions
         _advanceInTime(24 hours);
         ozUSDC.rebase();
+
+        console.log('ozUSDC bal - rebased 24h: ', ozUSDC.balanceOf(second_owner));
 
         //Post-conditions
         uint supplyRate_postRebase = OZ.getInternalSupplyRate();

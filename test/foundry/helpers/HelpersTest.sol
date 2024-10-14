@@ -176,7 +176,7 @@ contract HelpersTest is AppStorageTest {
         _mockSwapExactTokenForPt(type_, amountOutsUSDe);
     }
 
-    function _addFixedAPY(uint ptPrice_, uint amountTime_, bool isSum_) internal returns(uint) {
+    function _addFixedAPY(uint ptPrice_, uint amountTime_, bool isSum_) internal view returns(uint) {
         (, uint pendleFixedAPY) = OZ.getSupplyRates(address(0), false);
         uint growthRateTime = amountTime_.mulDivDown(pendleFixedAPY, 365 days);
         int netGrowth = int((ptPrice_ * growthRateTime + 1e18 / 2) / 1e18);

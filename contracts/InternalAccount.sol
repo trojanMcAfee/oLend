@@ -107,7 +107,7 @@ contract InternalAccount {
         sUSDe_PT_26SEP.approve(address(pendleRouter), amountInPT_);
         uint minTokenOut = 0;
 
-        console.log('amountInPT_: ', amountInPT_);
+        // console.log('amountInPT_: ', amountInPT_);
 
         (uint sUSDeOut,,) = pendleRouter.swapExactPtForToken(
             address(this), 
@@ -117,7 +117,7 @@ contract InternalAccount {
             emptyLimit
         );
 
-        console.log('amountOut - sUSDe: ', sUSDeOut);
+        // console.log('amountOut - sUSDe: ', sUSDeOut);
 
         uint amountOutUSDC;
 
@@ -131,9 +131,7 @@ contract InternalAccount {
             );
         }
 
-        console.log('amountOutUSDC: ', amountOutUSDC);
-        revert('here24');
-
+        console.log('amountOutUSDC - final: ', amountOutUSDC);
     }
 
 
@@ -157,31 +155,9 @@ contract InternalAccount {
                 deadline: block.timestamp,
                 amountIn: amountIn_,
                 amountOutMinimum: minAmountOut_
-            });
-
-        // console.log('');
-        // console.log('--- in swapUni ---');
-        // console.log('tokenIn_: ', tokenIn_);
-        // console.log('poolFee: ', poolFee);
-        // console.log('USDT: ', address(USDT));
-        // console.log('tokenOut_: ', tokenOut_);
-        // console.log('receiver_: ', receiver_);
-        // console.log('block.timestamp: ', block.timestamp);
-        // console.log('amountIn_: ', amountIn_);
-        // console.log('minAmountOut_: ', minAmountOut_);
-        // console.log('swapRouterUni: ', address(swapRouterUni));
-        // console.log('');
-
-        // console.logBytes(params.path);
-
-        // console.log('params.recipient: ', params.recipient);
-        // console.log('params.deadline: ', params.deadline);
-        // console.log('params.amountIn: ', params.amountIn);
-        // console.log('params.amountOutMinimum: ', params.amountOutMinimum);
+            });    
 
         return swapRouterUni.exactInput(params);
-        console.log('1');
-        return x;
     }
 
 }
