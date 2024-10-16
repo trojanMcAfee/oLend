@@ -125,7 +125,10 @@ contract SupplyTest is CoreMethods {
     function test_borrow_and_mint_ozUSD() public {
         uint amountIn = test_supply_USDC();
 
+        uint availableBorrowsBase = OZ.getUserAccountData(second_owner).availableBorrowsBase;
+        console.log('availableBorrowsBase: ', availableBorrowsBase);
 
+        // OZ.borrow();
     }
 
 }

@@ -39,6 +39,7 @@ import {IPool as IPoolBal, IVault} from "../interfaces/IBalancer.sol";
 import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "../interfaces/ICurve.sol";
 import {ozTrading} from "../periphery/ozTrading.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
+import {ozIDiamond} from "@contracts/interfaces/ozIDiamond.sol";
 
 import {console} from "../../lib/forge-std/src/Test.sol";
 
@@ -122,7 +123,7 @@ contract DiamondInit is ozTrading {
         s.USDC_WBTC = _createCrvSwap(tokens_.WBTC);
 
         //System config
-        s.OZ = sys_.OZ;
+        s.OZ = ozIDiamond(sys_.OZ);
         s.relayer = ozRelayer(sys_.relayer);
         s.ETH = sys_.ETH;
         s.SCALE = 1e18;

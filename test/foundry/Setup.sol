@@ -34,6 +34,7 @@ import {ozLoupe} from "../../contracts/facets/ozLoupe.sol";
 import {ozUSDCtoken} from "../../contracts/ozTokens/ozUSDCtoken.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {HelpersTest} from "@test/foundry/helpers/HelpersTest.sol";
+import {ozTokenDebt} from "@contracts/oztokens/ozTokenDebt.sol";
 
 import "forge-std/console.sol";
 
@@ -163,7 +164,7 @@ contract Setup is HelpersTest {
         ozUSDC = ozIERC20(address(ozToken));
         ozIERC20[1] memory ozTokens = [ozUSDC];
 
-        ozTokenDebt ozUSDCdebt = new ozTokenDebt('Ozel Debt USDC', ozUSDCdebt);
+        ozTokenDebt ozUSDCdebt = new ozTokenDebt('Ozel Debt USDC', 'ozUSDCdebt', address(USDC));
 
         SysConfig memory sys = SysConfig(
             address(OZ), 

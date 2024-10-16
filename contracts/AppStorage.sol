@@ -15,6 +15,7 @@ import {IPool as IPoolBal, IVault, IAsset} from "./interfaces/IBalancer.sol";
 import {ICrvRouter, ICrvAddressProvider, ICrvMetaRegistry, IPoolCrv} from "./interfaces/ICurve.sol";
 import {ozIERC20} from "./interfaces/ozIERC20.sol";
 import {ICreditDelegationToken} from "@aave/core-v3/contracts/interfaces/ICreditDelegationToken.sol";
+import {ozIDiamond} from "@contracts/interfaces/ozIDiamond.sol";
 
 
 struct AppStorage {
@@ -75,7 +76,7 @@ struct AppStorage {
 
 
     //System config
-    address OZ;
+    ozIDiamond OZ;
     uint[] openOrders; //not used
     mapping(address user => InternalAccount account) internalAccounts; //not used
     ozRelayer relayer;
