@@ -27,6 +27,8 @@ import {ozTrading} from "../periphery/ozTrading.sol";
 import {HelpersLib} from "../libraries/HelpersLib.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 import "../OZErrors.sol";
+import {PercentageMath} from "@contracts/libraries/PercentageMath.sol";
+import {WadRayMath} from "@contracts/libraries/WadRayMath.sol";
 
 import "forge-std/console.sol";
 
@@ -38,6 +40,8 @@ contract ozMinter is ozTrading {
     using Address for address;
     using FixedPointMathLib for uint;
     using HelpersLib for address;
+    using PercentageMath for uint;
+    using WadRayMath for uint;
 
     event NewAccountCreated(address account);
     event NewAccountDataState(
@@ -246,20 +250,15 @@ contract ozMinter is ozTrading {
     }
 
 
-    /**
-     * Current implementation hardcodes an extra 10 bps (0.1%) on the discount that's
-     * available for borrowing (0.1% less borrowable amount from Aave).
-     * 
-     * Once the order book is properly set up, an algorithm for this function must be created
-     * to better reflect the relationship between the value of PT in assetRate (USDC, USDe)
-     * the applied discount to PT repurchase (currently at 5%), and the original availableBorrowsBase
-     * from Aave when lending user's tokens.
-     *
-     * availableBorrowsBase's is almost the same as PT value in assetRate. 
-     */
-    // function _applyDiscount(uint singleState_) private view returns(uint) {
-    //     return (singleState_ - (s.ptDiscount + 10).mulDivDown(singleState_, 10_000)) / 1e2;
-    // }
+    function _calculateHealthFactor(
+        uint totalCollateralInETH,
+        uint totalDebtInETH,
+        uint liquidationThreshold
+    ) private pure returns (uint) {
+    if (totalDebtInETH == 0) return type(uint).max;
+
+    return (totalCollateralInETH.percentMul(liquidationThreshold)).wadDiv(totalDebtInETH);
+  }
 
 
 }
