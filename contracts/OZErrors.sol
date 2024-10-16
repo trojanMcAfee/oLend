@@ -27,3 +27,9 @@ error OZError04(); //func: rebase()
  error OZError06(); //func: rayToWad()
  //Math division by zero
  error OZError07(); //func: wayDiv() - rayDiv() / percentDiv()
+
+ /**
+  * ozTokenDebt.sol
+  */
+  //Operation not supported
+  error OZError08(); //funcs: all the ones that apply to transfers 

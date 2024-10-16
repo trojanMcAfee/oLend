@@ -158,10 +158,12 @@ contract Setup is HelpersTest {
 
         Params memory stableModel = Params(ltvStable, liqThresholdStable);
 
-        //Create ozTokens
+        //Create ozTokens and ozTokensDebt
         ozUSDCtoken ozToken = new ozUSDCtoken('Ozel USDC', 'ozUSDC', address(OZ), address(USDC));
         ozUSDC = ozIERC20(address(ozToken));
         ozIERC20[1] memory ozTokens = [ozUSDC];
+
+        ozTokenDebt ozUSDCdebt = new ozTokenDebt('Ozel Debt USDC', ozUSDCdebt);
 
         SysConfig memory sys = SysConfig(
             address(OZ), 

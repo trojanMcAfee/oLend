@@ -111,7 +111,9 @@ contract ozMinter is ozTrading {
 
 
     function borrow(uint amountToBorrow_, address borrowedToken_, address receiver_) external {
-        
+        bytes memory data = abi.encodeWithSelector(OZ.getBorrowingRates.selector, address(s.USDC), true, false);
+        data = address(OZ).functionDelegateCall(data);
+        uint borrowingRate = abi.decode(data, (uint));
 
 
     }
