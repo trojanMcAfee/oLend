@@ -392,9 +392,12 @@ contract RouterTest is CoreMethods {
     }
 
 
-    function test_rate() public {
-        uint ptPrice = sUSDeMarket.getPtToAssetRate(uint32(15));
-        console.log('ptPrice: ', ptPrice);
+    function test_rate() public view {
+        uint apy = OZ.getBorrowingRates(address(USDC), true, true);
+        console.log('apy: ', apy);
+
+        uint apr = OZ.getBorrowingRates(address(USDC), true, false);
+        console.log('apr: ', apr);
     }
 
 
@@ -416,6 +419,6 @@ happens when redeeming.
    > Divide the APY in 1 month from a year and simulate the balance of:
        < PT increase in respected to its underlying (USDe, USDC)
        < aUSDCVariableDebt increase, so it's money that's owed.
-       < ozUSDtoken that gets minted and check that it's always solved.
+       < ozUSDtoken that gets minted and check that it's always solvent.
            ^ Solvent: can always redeem 1 ozUSDtoken for 1 of any underlying (USDe, USDC, etc) --> 1:1 relationship
  */

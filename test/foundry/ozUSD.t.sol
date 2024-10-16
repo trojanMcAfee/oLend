@@ -80,7 +80,7 @@ contract ozUSDTest is CoreMethods {
 
         revert('here87');
 
-        uint borrowingRate = OZ.getBorrowingRates(testToken, false);
+        uint borrowingRate = OZ.getBorrowingRates(testToken, false, true);
         console.log('borrowingRate aave lentToken - apy: ', borrowingRate);
 
         (uint aaveSupplyAPY, uint pendleFixedAPY) = OZ.getSupplyRates(testToken, false);

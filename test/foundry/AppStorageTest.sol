@@ -86,7 +86,7 @@ contract AppStorageTest is StateVars {
 
 
     function _advanceInTime2(uint amountTime_, address intAcc_, address token_) internal {
-        uint borrowAPYformatted = OZ.getBorrowingRates(token_, true);
+        uint borrowAPYformatted = OZ.getBorrowingRates(token_, true, true);
         (uint supplyAPYformatted, uint pendleFixedAPYformatted) = OZ.getSupplyRates(token_, true);
         address debtToken;
         address aToken;
